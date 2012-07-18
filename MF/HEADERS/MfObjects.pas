@@ -1,6 +1,6 @@
 // FactoryX
 //
-// Copyright ©2003 - 2012 by FactoryX, Sefferweich Germany (EU)
+// Copyright Â©2003 - 2012 by FactoryX, Sefferweich Germany (EU)
 // Project: Media Foundation - MFPack
 // Module: Media Foundation interfaces - MfObjects.pas
 // Kind: Pascal Unit
@@ -8,15 +8,13 @@
 // Language: ENU
 //
 // Version: 1.0.0.1
-// Description: MfObjects <= Win 8
+// Description: Requires Windows Vista or later.
 //
-// LastEdited by: Tony (maXcomX)
-// EditDate: updt 270612a
+// LastEdited by: Peter (ozships)
+// EditDate: updp 080712a
 //----------------------------------------------------------------------------
 // Changes
 //----------------------------------------------------------------------------
-// Date
-// ---------- ------------------ ---------------------------------------------
 // 2012/07/08 Peter (ozships)    Added ole2 to the Uses clause, required for
 //                               variant definitions (eg VT_UI4)
 //                               Correct typo
