@@ -4,7 +4,7 @@
 
 MFPack follows mainly the structures from Microsoft (http://msdn.microsoft.com/en-us/library/windows/desktop/ee663260 MSDN),
 
-In that way we broke with the tradition used by former Delphi translations, where C Builder directives where build in the translations of the official headers. Also translations to *T*Delphityoe and *P*DelhiPointer are abandoned. The main reason is that wE want to keep this software for free and not suitable for commercial implementations. Also: It makes it easier to read and interpret the issues on MSDN in relation to the Delphi translations.
+In that way we broke with the tradition used by former Delphi translations, where C Builder directives where build in the translations of the official headers. Also translations to *TDelphitype* and *PDelhiPointer* are abandoned. The main reason is that we want to keep this software for free and not suitable for commercial implementations. Also: It makes it easier to read and interpret the issues on MSDN in relation to the Delphi translations.
 If you need a pointer to an object, you are free to do so.
 
 ===MIDL===
