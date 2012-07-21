@@ -1,0 +1,16 @@
+#labels Featured
+=Media Foundation=
+
+== What it is ==
+
+Microsoft Media Foundation is part of the brand new platforms to play, record, stream etc. multimedia of any kind.
+
+_MFPack is using the name *Media Foundation*, to cover all platforms related to Multimedia for the Windows Operating System (OS)._
+
+Here the overview list MFPack will cover:
+  *  *Core Audio APIs* : A low-level API for audio capture and audio rendering, which can be used to achieve minimum latency or to implement features that might not be entirely supported by higher-level media APIs.
+  *  *Microsoft Media Foundation* : An end-to-end media pipeline, which supports p playback, audio/video capture, and encoding (successor to DirectShow).
+  *  *Windows Media Library Sharing Services* : Enables applications to discover media devices on the home network, and share media libraries on the home network and the Internet.
+
+*Note:*
+DirectShow and DirectSound are not part of MFPack. These platforms are included in the newest Delphi Compilers and maintenanced by [http://www.clootie.ru/delphi/index.html Clootie] and  [http://www.progdigy.com DSPack]  and on [http://code.google.com/p/dspack/downloads/list code.google] (Henry Gourvest)
