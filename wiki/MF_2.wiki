@@ -1,5 +1,3 @@
-#summary One-sentence summary of this page.
-
 = Structure of MFPack =
 
 MFPack follows mainly the structures from Microsoft (http://msdn.microsoft.com/en-us/library/windows/desktop/ee663260 MSDN),
