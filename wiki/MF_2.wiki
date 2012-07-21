@@ -1,0 +1,17 @@
+#summary One-sentence summary of this page.
+
+= Structure of MFPack =
+
+MFPack follows mainly the structures from Microsoft (http://msdn.microsoft.com/en-us/library/windows/desktop/ee663260 MSDN),
+
+In that way we broke with the tradition used by former Delphi translations, where C Builder directives where build in the translations of the official headers. Also translations to TDelphityoe and PDelhiPointer are abandoned. The main reason is that w want to keep this software for free and not suitable for commercial implementations. Also: It makes it easier to read and interpret the issues on MSDN in relation to the Delphi translations.
+If you need a pointer to an object, you are free to do so.
+
+===MIDL===
+Most translations are translated from MIDL (Microsoft Interface Definition Language) headers. MIn the first translations you may find specific idl names translated to cwFriendlyName. The latest transltions have the idl name shortened to _headerfilename_idl digits.
+
+_*Example:*
+
+_ __MIDL___MIDL_itf_dxva2api_0000_0000_0003 is shortened to: _dxva2api_0000_0000_0003_
+
+This will it make some easier to read back documentation and the SDK headerfiles. 
