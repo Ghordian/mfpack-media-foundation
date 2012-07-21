@@ -8,7 +8,7 @@ In that way we broke with the tradition used by former Delphi translations, wher
 If you need a pointer to an object, you are free to do so.
 
 ===MIDL===
-Most translations are translated from MIDL (Microsoft Interface Definition Language) headers. MIn the first translations you may find specific idl names translated to cwFriendlyName. The latest transltions have the idl name shortened to _headerfilename_idl digits.
+Most translations are translated from MIDL (Microsoft Interface Definition Language) headers. In the first translations you may find specific idl names translated to cwFriendlyName. The latest translations have the idl name shortened to _headerfilename_idl digits.
 
 _*Example:*
 
