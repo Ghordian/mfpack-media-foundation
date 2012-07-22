@@ -8,7 +8,7 @@ Translated headers have the following structure:
   *  Interface
   *  Uses clause
   *  Blocks(s) of per-defined constants and types
-  *  Type block with forwarded interface declarations following the Interfaces
+  *  Type block with forwarded interface declarations followed by the Interfaces themselves.
   *  Additional block: Here all helpers and Delphi specific additions are placed (in between the comment blocks "//Additional Prototypes for ALL interfaces" and "//End of Additional Prototypes". So, here the translations might differ from the official Microsoft implementations.
   *  implementation: All functions, classes etc. defined (if needed) from the earlier blocks.
 
