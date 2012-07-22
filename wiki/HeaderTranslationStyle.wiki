@@ -1,6 +1,9 @@
 #labels Phase-Implementation,Featured,uc
 = The Header Translation Style =
 
+The translated headers are as close to the original headers, unless there is no possible way to insert or to alter.
+These translations differ from the earlier translation styles in a way that Delphi pointers and types, as well C++ Builder compiler directives are no longer supported.
+ 
 Translated headers have the following structure:
 
   *  Header, containing information about origin, project, copyrights, license etc.
