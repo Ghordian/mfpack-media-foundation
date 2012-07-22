@@ -14,3 +14,5 @@ Here the overview list MFPack will cover:
 
 *Note:*
 DirectShow and DirectSound are not part of MFPack. These platforms are included in the newest Delphi Compilers and maintenanced by [http://www.clootie.ru/delphi/index.html Clootie] and  [http://www.progdigy.com DSPack]  and on [http://code.google.com/p/dspack/downloads/list code.google] (Henry Gourvest)
+
+NOTE: This page is under construction.
