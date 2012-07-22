@@ -1,0 +1,16 @@
+#labels Phase-Implementation,Featured,uc
+= The Header Translation Style =
+
+Translated headers have the following structure:
+
+  * - Header, containing information about origin, project, copyrights, license etc.
+  * - Unit: Name of the unit. The unitname is capitalized but has the the same name as the original header (.h) file.
+  * - Interface
+  * - Uses clause
+  * - Blocks(s) of per-defined constants and types
+  * - Type block with forwarded interface declarations following the Interfaces
+  * - Additional block: Here all helpers and Delphi specific additions are placed (in between the comment blocks "//Additional Prototypes for ALL interfaces" and "//End of Additional Prototypes". So, here the translations differ from the official Microsoft implementations.
+  * - implementation: All functions, classes etc. defined (if needed) from the earlier blocks.
+
+
+
