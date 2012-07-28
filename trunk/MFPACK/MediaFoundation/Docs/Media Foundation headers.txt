@@ -1,0 +1,58 @@
+MFPack - Media Foundation headers
+
+Headers and libraries that define all of the Media Foundation APIs.
+
+
+To find the header and library for a specific API element,
+please consult the reference pages in the Media Foundation Programming Reference on 
+MSDN (http://msdn.microsoft.com/en-us/library/windows/desktop/ee663600)
+
+
+
+HEADERS
+  dxva2api.h
+  dxvahd.h
+  evr.h
+  evr9.h
+  mfapi.h
+  mfmp2dlna.h
+  mferrors.h
+  mfidl.h
+  mfobjects.h
+  mfplay.h
+  mfreadwrite.h
+  mftransform.h
+  opmapi.h
+  wmcontainer.h
+
+DELPHI UNITS
+  dxva2api.pas
+  dxvahd.pas
+  evr.pas
+  evr9.pas
+  mfapi.pas
+  mfmp2dlna.pas
+  mferrors.pas
+  mfidl.pas
+  mfobjects.pas
+  mfplay.pas
+  mfreadwrite.pas
+  mftransform.pas
+  opmapi.pas
+  wmcontainer.pas
+
+
+LIBRARIES
+  dxva2.lib
+  evr.lib
+  mf.lib
+  mfplat.lib
+  mfplay.lib
+  mfreadwrite.lib
+
+REMARKS:
+
+Every Delphi unit has a section that contains helpers specific for the Delphi programming language.
+If, however, a helper or utility covers more units, then this will be added in the Delphi helper unit (D_MFUtils,pas) or the D_MFPackUtils.pas
+
+
