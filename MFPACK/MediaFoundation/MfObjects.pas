@@ -1,3 +1,4 @@
+﻿//###################>>>>> LOOK for ##TEMP  for commented out sections
 // FactoryX
 //
 // Copyright ©2003 - 2012 by FactoryX, Sefferweich Germany (EU)
@@ -15,10 +16,8 @@
 //----------------------------------------------------------------------------
 // Changes
 //----------------------------------------------------------------------------
-// 2012/07/08 Peter (ozships)    Added ole2 to the Uses clause, required for
-//                               variant definitions (eg VT_UI4)
-//                               Correct typo
-//>> look for "//## old" for the old lines, new lines underneath
+// 2012/07/08 Peter (ozships)    Added ole2 to the Uses clause, missing from
+//                               translation
 //----------------------------------------------------------------------------
 //
 // Remarks:
@@ -52,15 +51,18 @@ unit MfObjects;
 interface
 
 uses
-//#### old  Windows, ComObj, PropSys, MediaObj;
-  DirectShow9,
-  Windows, ole2, ComObj, PropSys{, MediaObj};
-
-//header files
+// rpc.h
+// rpcndr.h
+  Windows, ole2,
 // unknwn.h
+  PropSys;
+//##TEMP, MediaObj;
+//##TEMP, ComObj,  not in header
+// <mmreg.h>
 
 
 const
+  IID_IMFAsyncCallback                  : TGUID = '{a27003cf-2354-4f2a-8d6a-ab7cff15437e}';
   IID_IMFAttributes                     : TGUID = '{2cd2d921-c447-44a7-a13c-4adabfc247e3}';
   IID_IMFMediaBuffer                    : TGUID = '{045FA593-8799-42b8-BC8D-8968C6453507}';
   IID_IMFSample                         : TGUID = '{c40a00f2-b93a-4d80-ae8c-5a1c634f58e4}';
@@ -69,7 +71,6 @@ const
   IID_IMFAudioMediaType                 : TGUID = '{26a0adc3-ce26-4672-9304-69552edd3faf}';
   IID_IMFVideoMediaType                 : TGUID = '{b99f381f-a8f9-47a2-a5af-ca3a225a3890}';
   IID_IMFAsyncResult                    : TGUID = '{ac6b7889-0740-4d51-8619-905994a55cc6}';
-  IID_IMFAsyncCallback                  : TGUID = '{a27003cf-2354-4f2a-8d6a-ab7cff15437e}';
   IID_IMFMediaEvent                     : TGUID = '{DF598932-F10C-4E39-BBA2-C308F101DAA3}';
   IID_IMFMediaEventGenerator            : TGUID = '{2CD0BD52-BCD5-4B89-B62C-EADC0C031E7D}';
   IID_IMFRemoteAsyncCallback            : TGUID = '{a27003d0-2354-4f2a-8d6a-ab7cff15437e}';
@@ -77,7 +78,6 @@ const
   IID_IMFMediaEventQueue                : TGUID = '{36f846fc-2256-48b6-b58e-e2b638316581}';
   IID_IMFActivate                       : TGUID = '{7FEE9E9A-4A89-47a6-899C-B6A53A70FB67}';
   IID_IMFPluginControl                  : TGUID = '{5c6c44bf-1db6-435b-9249-e8cd10fdec96}';
-
 
   //Interface IMFMediaType
   {$EXTERNALSYM MF_MEDIATYPE_EQUAL_MAJOR_TYPES}
@@ -152,8 +152,8 @@ const
 	MEReconnectStart                      : MediaEventType	= 126;
 	MEReconnectEnd                        : MediaEventType	= 127;
 	MERendererEvent                       : MediaEventType	= 128;
-	MESessionStreamSinkFormatChanged      : MediaEventType	= 129;
-	MESessionV1Anchor                     : MediaEventType	= MESessionStreamSinkFormatChanged;
+	MESessionStreamSinkFormatChanged      = MediaEventType(129);
+	MESessionV1Anchor                     = MediaEventType(MESessionStreamSinkFormatChanged);
 	MESourceUnknown                       : MediaEventType	= 200;
 	MESourceStarted                       : MediaEventType	= 201;
 	MEStreamStarted                       : MediaEventType	= 202;
@@ -176,8 +176,8 @@ const
 	MESourceCharacteristicsChanged        : MediaEventType	= 219;
 	MESourceRateChangeRequested           : MediaEventType	= 220;
 	MESourceMetadataChanged               : MediaEventType	= 221;
-	MESequencerSourceTopologyUpdated      : MediaEventType	= 222;
-	MESourceV1Anchor                      : MediaEventType	= MESequencerSourceTopologyUpdated;
+	MESequencerSourceTopologyUpdated      = MediaEventType(222);
+	MESourceV1Anchor                      = MediaEventType(MESequencerSourceTopologyUpdated);
 	MESinkUnknown                         : MediaEventType	= 300;
 	MEStreamSinkStarted                   : MediaEventType	= 301;
 	MEStreamSinkStopped                   : MediaEventType	= 302;
@@ -199,13 +199,13 @@ const
 	MEAudioSessionIconChanged             : MediaEventType	= 318;
 	MEAudioSessionFormatChanged           : MediaEventType	= 319;
 	MEAudioSessionDisconnected            : MediaEventType	= 320;
-	MEAudioSessionExclusiveModeOverride   : MediaEventType	= 321;
-	MESinkV1Anchor                        : MediaEventType	= MEAudioSessionExclusiveModeOverride;
+	MEAudioSessionExclusiveModeOverride   = MediaEventType(321);
+	MESinkV1Anchor                        = MediaEventType(MEAudioSessionExclusiveModeOverride);
 	METrustUnknown                        : MediaEventType	= 400;
 	MEPolicyChanged                       : MediaEventType	= 401;
 	MEContentProtectionMessage            : MediaEventType	= 402;
-	MEPolicySet                           : MediaEventType	= 403;
-	METrustV1Anchor                       : MediaEventType	= MEPolicySet;
+	MEPolicySet                           = MediaEventType(403);
+	METrustV1Anchor                       = MediaEventType(MEPolicySet);
 	MEWMDRMLicenseBackupCompleted         : MediaEventType	= 500;
 	MEWMDRMLicenseBackupProgress          : MediaEventType	= 501;
 	MEWMDRMLicenseRestoreCompleted        : MediaEventType	= 502;
@@ -215,13 +215,13 @@ const
 	MEWMDRMIndividualizationProgress      : MediaEventType	= 513;
 	MEWMDRMProximityCompleted             : MediaEventType	= 514;
 	MEWMDRMLicenseStoreCleaned            : MediaEventType	= 515;
-	MEWMDRMRevocationDownloadCompleted    : MediaEventType	= 516;
-	MEWMDRMV1Anchor                       : MediaEventType	= MEWMDRMRevocationDownloadCompleted;
-	METransformUnknown                    : MediaEventType	= 600;
-	METransformNeedInput                  : MediaEventType	= ( METransformUnknown + 1 );
-	METransformHaveOutput                 : MediaEventType	= ( METransformNeedInput + 1);
-	METransformDrainComplete              : MediaEventType	= ( METransformHaveOutput + 1);
-	METransformMarker                     : MediaEventType	= ( METransformDrainComplete + 1);
+	MEWMDRMRevocationDownloadCompleted    = MediaEventType(516);
+	MEWMDRMV1Anchor                       = MediaEventType(MEWMDRMRevocationDownloadCompleted);
+	METransformUnknown                    = MediaEventType(600);
+	METransformNeedInput                  = MediaEventType( METransformUnknown + 1 );
+	METransformHaveOutput                 = MediaEventType( METransformNeedInput + 1);
+	METransformDrainComplete              = MediaEventType( METransformHaveOutput + 1);
+	METransformMarker                     = MediaEventType( METransformDrainComplete + 1);
 	MEReservedMax                         : MediaEventType	= 10000;
 
   //Interface IMFMediaEventGenerator
@@ -315,6 +315,7 @@ type
 
 type
   {$EXTERNALSYM _MF_ATTRIBUTE_TYPE}
+
   _MF_ATTRIBUTE_TYPE    = (
 	MF_ATTRIBUTE_UINT32   = VT_UI4,
 	MF_ATTRIBUTE_UINT64   = VT_UI8,
