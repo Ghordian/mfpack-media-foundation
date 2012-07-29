@@ -12,8 +12,13 @@
 //
 // Intiator(s): Tony (maXcomX), Peter (OzShips)
 //
-// LastEdited by: Tony
-// EditDate: updt 070712b
+//----------------------------------------------------------------------------
+// CHANGE LOG
+// Date      Person               Reason
+// --------- -------------------- --------------------------------------------
+// 2012Jul07 Tony Kalf            Initial conversion
+// 2012Jul29 Peter Larson         Add external function references, minor changes
+//----------------------------------------------------------------------------
 //
 // Remarks: MFAPI.pas is the unit containing the APIs for using the MF platform.
 //
@@ -58,19 +63,21 @@ unit MfApi;
 interface
 
 uses
-  Windows, ComObj, MfObjects, MmReg;
+  Windows, ComObj, MfObjects;
+//##TEMP  , MmReg;
 
 
   //#if !defined(MF_VERSION)
   //#if (WINVER >= _WIN32_WINNT_WIN7)
 
+const      //##added
   {$EXTERNALSYM MF_SDK_VERSION}
   MF_SDK_VERSION                      = $0002;
 
   //{else} // Vista
 
   {$EXTERNALSYM MF_SDK_VERSION}
-  MF_SDK_VERSION                      = $0001;
+//##TEMP: duplicate  MF_SDK_VERSION                      = $0001;
 
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
 
@@ -129,6 +136,7 @@ uses
 // MF workitem functions ///////////////////////////////////////////////////////
 
   {$EXTERNALSYM MFWORKITEM_KEY}
+Type  //##added
   MFWORKITEM_KEY = UInt64;
 
   function MFPutWorkItem(dwQueue: DWORD; pCallback: IMFAsyncCallback; pState: IUnknown): HResult; stdcall;
@@ -1820,5 +1828,106 @@ implementation
     begin
       Result:= DEFINE_MEDIATYPE_GUID(dwConst);
     end;
+
+//--------------------- External definitions ---------------------------------
+
+  function MFStartup: HRESULT;           external Mfplat.dll name 'MFStartup';
+  function MFStartup: HRESULT;           external Mfplat.dll name 'MFStartup';
+  function MFShutdown: HRESULT;          external Mfplat.dll name 'MFShutdown';
+  function MFLockPlatform: HRESULT;      external Mfplat.dll name 'MFLockPlatform';
+  function MFUnlockPlatform: HRESULT;    external Mfplat.dll name 'MFUnlockPlatform';
+  function MFPutWorkItem: HRESULT;       external Mfplat.dll name 'MFPutWorkItem';
+  function MFPutWorkItemEx: HRESULT;     external Mfplat.dll name 'MFPutWorkItemEx';
+  function MFScheduleWorkItem: HRESULT;  external Mfplat.dll name 'MFScheduleWorkItem';
+  function MFScheduleWorkItemEx: HRESULT;  external Mfplat.dll name 'MFScheduleWorkItemEx';
+  function MFCancelWorkItem: HRESULT;    external Mfplat.dll name 'MFCancelWorkItem';
+  function MFGetTimerPeriodicity: HRESULT;  external Mfplat.dll name 'MFGetTimerPeriodicity';
+  function MFAddPeriodicCallback: HRESULT;  external Mfplat.dll name 'MFAddPeriodicCallback';
+  function MFRemovePeriodicCallback: HRESULT;  external Mfplat.dll name 'MFRemovePeriodicCallback';
+  function MFAllocateWorkQueueEx: HRESULT;  external Mfplat.dll name 'MFAllocateWorkQueueEx';
+  function MFAllocateWorkQueue: HRESULT;  external Mfplat.dll name 'MFAllocateWorkQueue';
+  function MFLockWorkQueue: HRESULT;     external Mfplat.dll name 'MFLockWorkQueue';
+  function MFUnlockWorkQueue: HRESULT;   external Mfplat.dll name 'MFUnlockWorkQueue';
+  function MFBeginRegisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFBeginRegisterWorkQueueWithMMCSS';
+  function MFEndRegisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFEndRegisterWorkQueueWithMMCSS';
+  function MFBeginUnregisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFBeginUnregisterWorkQueueWithMMCSS';
+  function MFEndUnregisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFEndUnregisterWorkQueueWithMMCSS';
+  function MFGetWorkQueueMMCSSClass: HRESULT;  external Mfplat.dll name 'MFGetWorkQueueMMCSSClass';
+  function MFGetWorkQueueMMCSSTaskId: HRESULT;  external Mfplat.dll name 'MFGetWorkQueueMMCSSTaskId';
+  function MFCreateAsyncResult: HRESULT;  external Mfplat.dll name 'MFCreateAsyncResult';
+  function MFInvokeCallback: HRESULT;    external Mfplat.dll name 'MFInvokeCallback';
+  function MFCreateFile: HRESULT;        external Mfplat.dll name 'MFCreateFile';
+  function MFCreateTempFile: HRESULT;    external Mfplat.dll name 'MFCreateTempFile';
+  function MFBeginCreateFile: HRESULT;   external Mfplat.dll name 'MFBeginCreateFile';
+  function MFEndCreateFile: HRESULT;     external Mfplat.dll name 'MFEndCreateFile';
+  function MFCancelCreateFile: HRESULT;  external Mfplat.dll name 'MFCancelCreateFile';
+  function MFCreateMemoryBuffer: HRESULT;  external Mfplat.dll name 'MFCreateMemoryBuffer';
+  function MFCreateMediaBufferWrapper: HRESULT;  external Mfplat.dll name 'MFCreateMediaBufferWrapper';
+  function MFCreateLegacyMediaBufferOnMFMediaBuffer: HRESULT;  external Mfplat.dll name 'MFCreateLegacyMediaBufferOnMFMediaBuffer';
+  function MFCreateDXSurfaceBuffer: HRESULT;  external Mfplat.dll name 'MFCreateDXSurfaceBuffer';
+  function MFCreateAlignedMemoryBuffer: HRESULT;  external Mfplat.dll name 'MFCreateAlignedMemoryBuffer';
+  function MFCreateMediaEvent: HRESULT;  external Mfplat.dll name 'MFCreateMediaEvent';
+  function MFCreateEventQueue: HRESULT;  external Mfplat.dll name 'MFCreateEventQueue';
+  function MFCreateSample: HRESULT;      external Mfplat.dll name 'MFCreateSample';
+  function MFCreateAttributes: HRESULT;  external Mfplat.dll name 'MFCreateAttributes';
+  function MFInitAttributesFromBlob: HRESULT;  external Mfplat.dll name 'MFInitAttributesFromBlob';
+  function MFGetAttributesAsBlobSize: HRESULT;  external Mfplat.dll name 'MFGetAttributesAsBlobSize';
+  function MFGetAttributesAsBlob: HRESULT;  external Mfplat.dll name 'MFGetAttributesAsBlob';
+  function MFTRegister: HRESULT;         external Mfplat.dll name 'MFTRegister';
+  function MFTUnregister: HRESULT;       external Mfplat.dll name 'MFTUnregister';
+  function MFTRegisterLocal: HRESULT;    external Mfplat.dll name 'MFTRegisterLocal';
+  function MFTUnregisterLocal: HRESULT;  external Mfplat.dll name 'MFTUnregisterLocal';
+  function MFTRegisterLocalByCLSID: HRESULT;  external Mfplat.dll name 'MFTRegisterLocalByCLSID';
+  function MFTUnregisterLocalByCLSID: HRESULT;  external Mfplat.dll name 'MFTUnregisterLocalByCLSID';
+  function MFTEnum: HRESULT;             external Mfplat.dll name 'MFTEnum';
+  function MFTEnumEx: HRESULT;           external Mfplat.dll name 'MFTEnumEx';
+  function MFTGetInfo: HRESULT;          external Mfplat.dll name 'MFTGetInfo';
+  function MFGetPluginControl: HRESULT;  external Mfplat.dll name 'MFGetPluginControl';
+  function MFGetMFTMerit: HRESULT;       external Mfplat.dll name 'MFGetMFTMerit';
+  function MFValidateMediaTypeSize: HRESULT;  external Mfplat.dll name 'MFValidateMediaTypeSize';
+  function MFCreateMediaType: HRESULT;   external Mfplat.dll name 'MFCreateMediaType';
+  function MFCreateMFVideoFormatFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateMFVideoFormatFromMFMediaType';
+  function MFCreateWaveFormatExFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateWaveFormatExFromMFMediaType';
+  function MFInitMediaTypeFromVideoInfoHeader: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader';
+  function MFInitMediaTypeFromVideoInfoHeader2: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader2';
+  function MFInitMediaTypeFromMPEG1VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG1VideoInfo';
+  function MFInitMediaTypeFromMPEG2VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG2VideoInfo';
+  function MFCalculateBitmapImageSize: HRESULT;  external Mfplat.dll name 'MFCalculateBitmapImageSize';
+  function MFCreateWaveFormatExFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateWaveFormatExFromMFMediaType';
+  function MFInitMediaTypeFromVideoInfoHeader: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader';
+  function MFInitMediaTypeFromVideoInfoHeader2: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader2';
+  function MFInitMediaTypeFromMPEG1VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG1VideoInfo';
+  function MFInitMediaTypeFromMPEG2VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG2VideoInfo';
+  function MFCalculateBitmapImageSize: HRESULT;  external Mfplat.dll name 'MFCalculateBitmapImageSize';
+  function MFCalculateImageSize: HRESULT;  external Mfplat.dll name 'MFCalculateImageSize';
+  function MFFrameRateToAverageTimePerFrame: HRESULT;  external Mfplat.dll name 'MFFrameRateToAverageTimePerFrame';
+  function MFAverageTimePerFrameToFrameRate: HRESULT;  external Mfplat.dll name 'MFAverageTimePerFrameToFrameRate';
+  function MFInitMediaTypeFromMFVideoFormat: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMFVideoFormat';
+  function MFInitMediaTypeFromWaveFormatEx: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromWaveFormatEx';
+  function MFInitMediaTypeFromAMMediaType: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromAMMediaType';
+  function MFInitAMMediaTypeFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFInitAMMediaTypeFromMFMediaType';
+  function MFCreateAMMediaTypeFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateAMMediaTypeFromMFMediaType';
+  function MFCompareFullToPartialMediaType: BOOL;  external Mfplat.dll name 'MFCompareFullToPartialMediaType';
+  function MFWrapMediaType: HRESULT;     external Mfplat.dll name 'MFWrapMediaType';
+  function MFUnwrapMediaType: HRESULT;   external Mfplat.dll name 'MFUnwrapMediaType';
+  function MFCreateVideoMediaTypeFromVideoInfoHeader: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromVideoInfoHeader';
+  function MFCreateVideoMediaTypeFromVideoInfoHeader2: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromVideoInfoHeader2';
+  function MFCreateVideoMediaType: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaType';
+  function MFCreateVideoMediaTypeFromSubtype: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromSubtype';
+  function MFIsFormatYUV: BOOL;          external Mfplat.dll name 'MFIsFormatYUV';
+  function MFCreateVideoMediaTypeFromBitMapInfoHeader: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromBitMapInfoHeader';
+  function MFGetStrideForBitmapInfoHeader: HRESULT;  external Mfplat.dll name 'MFGetStrideForBitmapInfoHeader';
+  function MFGetPlaneSize: HRESULT;      external Mfplat.dll name 'MFGetPlaneSize';
+  function MFCreateVideoMediaTypeFromBitMapInfoHeaderEx: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromBitMapInfoHeaderEx';
+  function MFCreateMediaTypeFromRepresentation: HRESULT;  external Mfplat.dll name 'MFCreateMediaTypeFromRepresentation';
+  function MFCreateAudioMediaType: HRESULT;  external Mfplat.dll name 'MFCreateAudioMediaType';
+  function MFInitVideoFormat: HRESULT;   external Mfplat.dll name 'MFInitVideoFormat';
+  function MFInitVideoFormat_RGB: HRESULT;  external Mfplat.dll name 'MFInitVideoFormat_RGB';
+  function MFConvertColorInfoToDXVA: HRESULT;  external Mfplat.dll name 'MFConvertColorInfoToDXVA';
+  function MFConvertColorInfoFromDXVA: HRESULT;  external Mfplat.dll name 'MFConvertColorInfoFromDXVA';
+  function MFCopyImage: HRESULT;         external Mfplat.dll name 'MFCopyImage';
+  function MFConvertFromFP16Array: HRESULT;  external Mfplat.dll name 'MFConvertFromFP16Array';
+  function MFConvertToFP16Array: HRESULT;  external Mfplat.dll name 'MFConvertToFP16Array';
+  function MFCreateCollection: HRESULT;  external Mfplat.dll name 'MFCreateCollection';
 
 end.
