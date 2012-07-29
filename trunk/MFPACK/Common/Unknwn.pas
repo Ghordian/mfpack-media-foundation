@@ -7,13 +7,13 @@
 // Release date: 08-07-2012
 // Language: ENU
 //
-// Version: 1.0.0.1
+// Version: 1.0.0.2
 // Description: Requires Windows 2000 Pro or later. 
 // 
-// Intiator(s): Tony (maXcomX), Peter (OzShips) 
+// Intiator(s): Tony (maXcomX), Peter (OzShips)
 // 
 // LastEdited by: Tony
-// EditDate: updt 080712a
+// EditDate: updt 080712a, updt 290712b
 //
 // Remarks:   Delphi : The IUnknown entries of functions should be casted like this:
 //            IUnknown(Pointer), IUnknown(Object), IUnknown(Nil) etc.
@@ -100,7 +100,7 @@ type
   //
   //Delphi specific: The IUnknown entries of functions should be casted like this:
   //                 IUnknown(Pointer), IUnknown(Object), IUnknown(Nil) etc.
-  IUnknown = interface(IUnknown)
+  IUnknown = interface   //updt 290712b
   ['{00000000-0000-0000-C000-000000000046}']
     function QueryInterface(const riid: REFIID; ppvObject: PPointer): HResult; stdcall;
     function AddRef(): ULONG; stdcall;
