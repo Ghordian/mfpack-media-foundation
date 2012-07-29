@@ -49,15 +49,15 @@ uses
 
 
 type
-  //-----------------------------------------------------------
-	// Register the application to receive notifications when the
-	// volume level changes on the default process-specific audio
-	// session (with session GUID value GUID_NULL) on the audio
-	// endpoint device with the specified data-flow direction
-	// (eRender or eCapture) and device role.
-	// See for more info:
-	// http://msdn.microsoft.com/en-us/library/windows/desktop/dd370795(v=vs.85).aspx
-	//-----------------------------------------------------------
+ //-----------------------------------------------------------
+ // Register the application to receive notifications when the
+ // volume level changes on the default process-specific audio
+ // session (with session GUID value GUID_NULL) on the audio
+ // endpoint device with the specified data-flow direction
+ // (eRender or eCapture) and device role.
+ // See for more info:
+ // http://msdn.microsoft.com/en-us/library/windows/desktop/dd370795(v=vs.85).aspx
+ //-----------------------------------------------------------
 	TAudioVolumeEvents = class
 	private
 		_hrStatus: HRESULT;
