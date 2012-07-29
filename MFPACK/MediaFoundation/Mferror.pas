@@ -117,6 +117,7 @@ Uses
                                                                                           // 00065.001
                                                                                           // 00066.001
 //  STATUS_SEVERITY                       = (hr)(((hr)>>30)&$3);                            // 00067.001#define STATUS_SEVERITY(hr)  (((hr) >> 30) & 0x3)
+  function STATUS_SEVERITY(hr: HRESULT): LongWord;
                                                                                           // 00068.001
 Type                                                                                          // 00069.001#ifdef RC_INVOKED
   _HRESULT_TYPEDEF_                     = DWORD;                                         // 00070.001#define _HRESULT_TYPEDEF_(_sc) _sc
@@ -2985,6 +2986,17 @@ Const                                                                           
                                                                                           // 02932.001 
 
 implementation
+
+//--------------------- Helper functions -------------------------------------
+
+{-----------------------------------------------------------------------------
+  STATUS_SEVERITY       This macro will return the severity code from the
+                        HR value
+-----------------------------------------------------------------------------}
+function STATUS_SEVERITY(hr: HRESULT): LongWord;
+Begin
+  Result:=(hr shr 30) and $3;
+End;
 
 
 end.
