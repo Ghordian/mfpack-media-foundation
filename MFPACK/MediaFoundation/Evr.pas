@@ -13,8 +13,8 @@
 // Intiator(s): Tony (maXcomX), Peter (OzShips) 
 // 
 //
-// LastEdited by: Peter
-// EditDate: updp 080712b
+// LastEdited by: Tony
+// EditDate: updp 080712b, updt 290712b
 //
 // Remarks: The enhanced video renderer (EVR) is a component that displays video on the user's monitor.
 //          Two versions of the EVR exist:
@@ -28,7 +28,7 @@
 //          unless it's marked with, for example _BOOL, a boolean is returned.
 //          In Delphi it's declared as:
 //          [uses Windows;]
-//          [function FunctionName(vars: -const, out or var-): HResult; stdcall;]
+//          [function FunctionName(vars: -const, out or var-): HRESULT; stdcall;]
 //
 //          Delphi : The IUnknown entries of functions should be casted like this:
 //                   IUnknown(Pointer), IUnknown(Object), IUnknown(Nil) etc.
@@ -63,7 +63,7 @@ unit Evr;
 interface
 
 uses
-  Windows, ComObj, Unknwn, PropIdl, MFIdl, StrmIf;
+  Windows, ComObj, Unknwn, PropIdl, MfIdl, {StrmIf} DirectShow9;                //updt 290712b
 
 const
   IID_IMFVideoPositionMapper           : TGUID = '{1F6A9F17-E70B-4e24-8AE4-0B2C3BA7A4AE}';
@@ -82,7 +82,7 @@ const
   IID_IEVRTrustedVideoPlugin           : TGUID = '{83A4CE40-7710-494b-A893-A472049AF630}';
 
 
-
+type                                                                            //updt 290712b
   PD3dformat = ^TD3dformat;
   {$EXTERNALSYM _D3DFORMAT}
   _D3DFORMAT            = (
@@ -128,6 +128,7 @@ const
   D3DFORMAT = _D3DFORMAT;
   TD3dformat = _D3DFORMAT;
 
+const                                                                           //updt 290712b
   MR_VIDEO_RENDER_SERVICE           : TGuid =  '{1092a86c-ab1a-459a-a336-831fbc4d11ff}';
   MR_VIDEO_MIXER_SERVICE            : TGuid =  '{073cd2fc-6cf4-40b7-8859-e89552c841f8}';
   MR_VIDEO_ACCELERATION_SERVICE     : TGuid =  '{efef5175-5c7d-4ce2-bbbd-34ff8bca6554}';
@@ -312,51 +313,51 @@ type
   IMFVideoPositionMapper = interface(IUnknown)
   ['{1F6A9F17-E70B-4e24-8AE4-0B2C3BA7A4AE}']
     function MapOutputCoordinateToInputStream(const xOut: Single; const yOut: Single; const dwOutputStreamIndex: DWord;
-                                              const dwInputStreamIndex: DWord; out pxIn: Single; out pyIn: Single): HResult; stdcall;
+                                              const dwInputStreamIndex: DWord; out pxIn: Single; out pyIn: Single): HRESULT; stdcall;
   end;
 
 
   //Interface IMFVideoDeviceID
   IMFVideoDeviceID = interface(IUnknown)
   ['{A38D9567-5A9C-4f3c-B293-8EB415B279BA}']
-    function GetDeviceID(out pDeviceID: IID): HResult; stdcall;
+    function GetDeviceID(out pDeviceID: IID): HRESULT; stdcall;
   end;
 
 
   //Interface IMFVideoDisplayControl
   IMFVideoDisplayControl = interface(IUnknown)
   ['{a490b1e4-ab84-4d31-a1b2-181e03b1077a}']
-    function GetNativeVideoSize(var pszVideo: SIZE; var pszARVideo: SIZE): HResult; stdcall;
-    function GetIdealVideoSize(var pszMin: SIZE; var pszMax: SIZE): HResult; stdcall;
-    function SetVideoPosition(const pnrcSource: PMFVideoNormalizedRect; const prcDest: LPRECT): HResult; stdcall;
-    function GetVideoPosition(out pnrcSource: MFVideoNormalizedRect; out prcDest: LPRECT): HResult; stdcall;
-    function SetAspectRatioMode(const dwAspectRatioMode: DWORD): HResult; stdcall;
-    function GetAspectRatioMode(out pdwAspectRatioMode: DWORD): HResult; stdcall;
-    function SetVideoWindow(const hwndVideo: HWND): HResult; stdcall;
-    function GetVideoWindow(out phwndVideo: PHWND): HResult; stdcall;
-    function RepaintVideo(): HResult; stdcall;
-    function GetCurrentImage(var pBih: PBITMAPINFOHEADER; out pDib: PPByte; out pcbDib: PDWORD; var pTimeStamp: PLONGLONG) HResult; stdcall;
-    function SetBorderColor(const Clr: COLORREF): HResult; stdcall;
-    function GetBorderColor(out pClr: COLORREF): HResult; stdcall;
-    function SetRenderingPrefs(const dwRenderFlags: DWORD: HResult; stdcall;
-    function GetRenderingPrefs(out pdwRenderFlags: DWORD): HResult; stdcall;
-    function SetFullscreen(const fFullscreen: BOOL): HResult; stdcall;
-    function GetFullscreen(out pfFullscreen: BOOL): HResult; stdcall;
+    function GetNativeVideoSize(var pszVideo: SIZE; var pszARVideo: SIZE): HRESULT; stdcall;
+    function GetIdealVideoSize(var pszMin: SIZE; var pszMax: SIZE): HRESULT; stdcall;
+    function SetVideoPosition(const pnrcSource: PMFVideoNormalizedRect; const prcDest: LPRECT): HRESULT; stdcall;
+    function GetVideoPosition(out pnrcSource: MFVideoNormalizedRect; out prcDest: LPRECT): HRESULT; stdcall;
+    function SetAspectRatioMode(const dwAspectRatioMode: DWORD): HRESULT; stdcall;
+    function GetAspectRatioMode(out pdwAspectRatioMode: DWORD): HRESULT; stdcall;
+    function SetVideoWindow(const hwndVideo: HWND): HRESULT; stdcall;
+    function GetVideoWindow(out phwndVideo: PHWND): HRESULT; stdcall;
+    function RepaintVideo(): HRESULT; stdcall;
+    function GetCurrentImage(var pBih: PBITMAPINFOHEADER; out pDib: PPByte; out pcbDib: PDWORD; var pTimeStamp: PLONGLONG) HRESULT; stdcall;
+    function SetBorderColor(const Clr: COLORREF): HRESULT; stdcall;
+    function GetBorderColor(out pClr: COLORREF): HRESULT; stdcall;
+    function SetRenderingPrefs(const dwRenderFlags: DWORD: HRESULT; stdcall;
+    function GetRenderingPrefs(out pdwRenderFlags: DWORD): HRESULT; stdcall;
+    function SetFullscreen(const fFullscreen: BOOL): HRESULT; stdcall;
+    function GetFullscreen(out pfFullscreen: BOOL): HRESULT; stdcall;
   end;
 
 
   // interface IMFVideoPresenter
   IMFVideoPresenter = interface(IUnknown)
   ['{29AFF080-182A-4a5d-AF3B-448F3A6346CB}']
-    function ProcessMessage(eMessage: MFVP_MESSAGE_TYPE; ulParam: ULONG_PTR): HResult; stdcall;
-    function GetCurrentMediaType(out ppMediaType: PIMFVideoMediaType): HResult; stdcall;
+    function ProcessMessage(eMessage: MFVP_MESSAGE_TYPE; ulParam: ULONG_PTR): HRESULT; stdcall;
+    function GetCurrentMediaType(out ppMediaType: PIMFVideoMediaType): HRESULT; stdcall;
   end;
 
 
   //Interface IMFDesiredSample
   IMFDesiredSample = interface(IUnknown)
   ['{56C294D0-753E-4260-8D61-A3D8820B1D54}']
-    function GetDesiredSampleTimeAndDuration(out phnsSampleTime: LONGLONG; out phnsSampleDuration: LONGLONG): HResult; stdcall;
+    function GetDesiredSampleTimeAndDuration(out phnsSampleTime: LONGLONG; out phnsSampleDuration: LONGLONG): HRESULT; stdcall;
     procedure SetDesiredSampleTimeAndDuration(const hnsSampleTime: LONGLONG; const hnsSampleDuration: LONGLONG); stdcall;
     procedure Clear(); stdcall;
   end;
@@ -365,48 +366,48 @@ type
   //Interface IMFTrackedSample
   IMFDesiredSample = interface(IUnknown)
   ['{245BF8E9-0755-40f7-88A5-AE0F18D55E17}']
-    function SetAllocator(const pSampleAllocator: IMFAsyncCallback; const pUnkState: IUnknown): HResult; stdcall;
+    function SetAllocator(const pSampleAllocator: IMFAsyncCallback; const pUnkState: IUnknown): HRESULT; stdcall;
   end;
 
 
   //Interface IMFVideoMixerControl
   IMFVideoMixerControl = interface(IUnknown)
   ['{245BF8E9-0755-40f7-88A5-AE0F18D55E17}']
-    function SetStreamZOrder(const dwStreamID: DWORD; const dwZ: DWORD): HResult; stdcall;
-    function GetStreamZOrder(const dwStreamID: DWORD; out pdwZ: PDWORD): HResult; stdcall;
-    function SetStreamOutputRect(const dwStreamID: DWORD; const pnrcOutput: PMFVideoNormalizedRect): HResult; stdcall;
-    function GetStreamOutputRect(const dwStreamID: DWORD; out pnrcOutput: MFVideoNormalizedRect): HResult; stdcall;
+    function SetStreamZOrder(const dwStreamID: DWORD; const dwZ: DWORD): HRESULT; stdcall;
+    function GetStreamZOrder(const dwStreamID: DWORD; out pdwZ: PDWORD): HRESULT; stdcall;
+    function SetStreamOutputRect(const dwStreamID: DWORD; const pnrcOutput: PMFVideoNormalizedRect): HRESULT; stdcall;
+    function GetStreamOutputRect(const dwStreamID: DWORD; out pnrcOutput: MFVideoNormalizedRect): HRESULT; stdcall;
   end;
 
 
   //Interface IMFVideoMixerControl2
   IMFVideoMixerControl2 = interface(IUnknown)
   ['{8459616d-966e-4930-b658-54fa7e5a16d3}']
-    function SetMixingPrefs(const dwMixFlags: DWORD): HResult; stdcall;
-    function GetMixingPrefs(out pdwMixFlags: DWORD): HResult; stdcall;
+    function SetMixingPrefs(const dwMixFlags: DWORD): HRESULT; stdcall;
+    function GetMixingPrefs(out pdwMixFlags: DWORD): HRESULT; stdcall;
   end;
 
 
   //Interface IMFVideoRenderer
   IMFVideoRenderer = interface(IUnknown)
   ['{DFDFD197-A9CA-43d8-B341-6AF3503792CD}']
-    function InitializeRenderer(const pVideoMixer: IMFTransform; const pVideoPresenter: IMFVideoPresenter): HResult; stdcall;
+    function InitializeRenderer(const pVideoMixer: IMFTransform; const pVideoPresenter: IMFVideoPresenter): HRESULT; stdcall;
   end;
 
 
   //Iterface IEVRFilterConfig
   IEVRFilterConfig = interface(IUnknown)
   ['{DFDFD197-A9CA-43d8-B341-6AF3503792CD}']
-    function SetNumberOfStreams(const dwMaxStreams: DWORD): HResult; stdcall;
-    function GetNumberOfStreams(out pdwMaxStreams: DWORD): HResult; stdcall;
+    function SetNumberOfStreams(const dwMaxStreams: DWORD): HRESULT; stdcall;
+    function GetNumberOfStreams(out pdwMaxStreams: DWORD): HRESULT; stdcall;
   end;
 
 
   //Interface IEVRFilterConfigEx
   IEVRFilterConfigEx = interface(IUnknown)
   ['{aea36028-796d-454f-beee-b48071e24304}']
-    function SetConfigPrefs(const dwConfigFlags: DWORD): HResult; stdcall;
-    function GetConfigPrefs(out pdwConfigFlags: DWORD): HResult; stdcall;
+    function SetConfigPrefs(const dwConfigFlags: DWORD): HRESULT; stdcall;
+    function GetConfigPrefs(out pdwConfigFlags: DWORD): HRESULT; stdcall;
   end;
 
 
@@ -414,25 +415,25 @@ type
   IMFTopologyServiceLookup = interface(IUnknown)
   ['{fa993889-4383-415a-a930-dd472a8cf6f7}']
     function LookupService(const Type: MF_SERVICE_LOOKUP_TYPE; const dwIndex: DWORD; const guidService: REFGUID; const riid: REFIID;
-                           out ppvObjects: PPointer; var pnObjects: PDWORD): HResult; stdcall;
+                           out ppvObjects: PPointer; var pnObjects: PDWORD): HRESULT; stdcall;
   end;
 
 
   //Interface IMFTopologyServiceLookupClient
   IMFTopologyServiceLookupClient = interface(IUnknown)
   ['{fa99388a-4383-415a-a930-dd472a8cf6f7}']
-    function InitServicePointers(const pLookup: IMFTopologyServiceLookup): HResult; stdcall;
-    function ReleaseServicePointers(): HResult; stdcall;
+    function InitServicePointers(const pLookup: IMFTopologyServiceLookup): HRESULT; stdcall;
+    function ReleaseServicePointers(): HRESULT; stdcall;
   end;
 
 
   //Interface IEVRTrustedVideoPlugin
   IMFTopologyServiceLookupClient = interface(IUnknown)
   ['{83A4CE40-7710-494b-A893-A472049AF630}']
-    function IsInTrustedVideoMode(out pYes: BOOL): HResult; stdcall;
-    function CanConstrict(out pYes: BOOL): HResult; stdcall
-    function SetConstriction(const dwKPix: DWORD): HResult; stdcall;
-    function DisableImageExport(const bDisable: BOOL): HResult; stdcall;
+    function IsInTrustedVideoMode(out pYes: BOOL): HRESULT; stdcall;
+    function CanConstrict(out pYes: BOOL): HRESULT; stdcall
+    function SetConstriction(const dwKPix: DWORD): HRESULT; stdcall;
+    function DisableImageExport(const bDisable: BOOL): HRESULT; stdcall;
   end;
 
 
