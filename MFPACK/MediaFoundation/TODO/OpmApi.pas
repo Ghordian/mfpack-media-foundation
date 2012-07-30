@@ -501,4 +501,5 @@ function IsNonStandardBusImplementation(ulBusTypeAndImplementation: ULONG): ULON
 begin
   Result:= ulBusTypeAndImplementation and OPM_BUS_IMPLEMENTATION_MODIFIER_NON_STANDARD;
 end;
+
 end.
