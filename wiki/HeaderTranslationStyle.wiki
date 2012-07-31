@@ -12,7 +12,7 @@ Translated headers have the following structure:
   *  *Uses clause*
   *  *Blocks(s) of pre-defined constants, types etc.*
   *  *Type block with forwarded interface declarations* followed by the Interfaces themselves.
-  *  *Additional blocks*: Here all helpers and Delphi specific additions are placed (in between the comment blocks "//Additional Prototypes for all interfaces" and "//End of Additional Prototypes". So, here the translations might differ - or adjusted for Delphi or Free Pascal compliance - from the official Microsoft implementations.
+  *  *Additional blocks*: Here all helpers and Delphi/Free Pascal specific additions are placed (in between the comment blocks "//Additional Prototypes for all interfaces" and "//End of Additional Prototypes". So, here the translations might differ from the official Microsoft implementations.
   *  *implementation*: All functions, classes etc. defined (if needed) in earlier blocks.
 
 NOTE: This page is under construction.
