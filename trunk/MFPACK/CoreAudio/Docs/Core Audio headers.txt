@@ -29,7 +29,7 @@ HEADERS
 
 Core Audio component 	        Header file(s) 
 ====================           ===================
-MMDevice API 	                mmdeviceapi.h
+MMDevice API                   mmdeviceapi.h
 WASAPI                         audioclient.h, 
                                audiopolicy.h, 
                                audiosessiontypes.h (defines constants that are used by WASAPI)
