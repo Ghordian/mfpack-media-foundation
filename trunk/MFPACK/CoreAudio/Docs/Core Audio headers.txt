@@ -28,13 +28,13 @@ MSDN (http://msdn.microsoft.com/en-us/library/windows/desktop/dd370851)
 HEADERS
 
 Core Audio component 	        Header file(s) 
-====================            ===================
+====================           ===================
 MMDevice API 	                mmdeviceapi.h
-WASAPI 	                      audioclient.h, 
+WASAPI                         audioclient.h, 
                                audiopolicy.h, 
                                audiosessiontypes.h (defines constants that are used by WASAPI)
-DeviceTopology API 	          devicetopology.h
-EndpointVolume API 	          endpointvolume.h
+DeviceTopology API             devicetopology.h
+EndpointVolume API             endpointvolume.h
 
 
 
