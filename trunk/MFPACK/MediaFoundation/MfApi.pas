@@ -179,15 +179,18 @@ type
 
 
   {$EXTERNALSYM MFASYNC_WORKQUEUE_TYPE}
-  cwMFASYNC_WORKQUEUE_TYPE  = (
+type                                   //2012aug07 convert
+  MFASYNC_WORKQUEUE_TYPE = DWORD;
+//  cwMFASYNC_WORKQUEUE_TYPE  = (
     // MF_STANDARD_WORKQUEUE: Work queue in a thread without Window
     // message loop.
-    MF_STANDARD_WORKQUEUE = 0,
+const
+    MF_STANDARD_WORKQUEUE = 0;
     // MF_WINDOW_WORKQUEUE: Work queue in a thread running Window
     // Message loop that calls PeekMessage() / DispatchMessage()..
-    MF_WINDOW_WORKQUEUE   = 1,
-  );
-  MFASYNC_WORKQUEUE_TYPE = cwMFASYNC_WORKQUEUE_TYPE;
+    MF_WINDOW_WORKQUEUE   = 1;
+//  );
+//  MFASYNC_WORKQUEUE_TYPE = cwMFASYNC_WORKQUEUE_TYPE;
 
   function MFAllocateWorkQueueEx(const WorkQueueType: MFASYNC_WORKQUEUE_TYPE; out pdwWorkQueue: DWord): HResult; stdcall;
 
