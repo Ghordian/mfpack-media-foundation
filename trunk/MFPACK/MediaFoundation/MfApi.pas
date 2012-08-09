@@ -14,10 +14,11 @@
 //
 //----------------------------------------------------------------------------
 // CHANGE LOG
-// Date      Person               Reason
-// --------- -------------------- --------------------------------------------
-// 2012Jul07 Tony Kalf            Initial conversion
-// 2012Jul29 Peter Larson         Add external function references, minor changes
+// Date       Person               Reason
+// ---------- -------------------- --------------------------------------------
+// 2012Jul07  Tony Kalf            Initial conversion
+// 2012Jul29  Peter Larson         Add external function references, minor changes
+//updt 090812 Peter Larson         minor fixes
 //----------------------------------------------------------------------------
 //
 // Remarks: MFAPI.pas is the unit containing the APIs for using the MF platform.
@@ -63,8 +64,12 @@ unit MfApi;
 interface
 
 uses
+  ActiveX, Direct3d, DirectShow9,                       //updt 090812 for IMediaBuffer, includes
+  MMSystem,                                             //updt 090812 implements MMReg
+// MmReg;
   Windows, ComObj, MfObjects;
-//##TEMP  , MmReg;
+
+{$I MFpack.inc}
 
 
   //#if !defined(MF_VERSION)
@@ -196,15 +201,13 @@ const
 
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
 
-
-
   // Allocate a standard work queue. the behaviour is the same with:
   // MFAllocateWorkQueueEx( MF_STANDARD_WORKQUEUE, pdwWorkQueue )
 
   function MFAllocateWorkQueue(out pdwWorkQueue: DWord): HResult; stdcall;
   function MFLockWorkQueue(const dwWorkQueue: DWord): HResult; stdcall;
   function MFUnlockWorkQueue(const dwWorkQueue: DWord): HResult; stdcall;
-  function MFBeginRegisterWorkQueueWithMMCSS(const dwWorkQueueId: DWord; const wszClass: LPCWSTR: DWord): HResult; stdcall;
+  function MFBeginRegisterWorkQueueWithMMCSS(const dwWorkQueueId: DWord; const wszClass: LPCWSTR;  //updt 090812 > error> DWord): HResult; stdcall;
                                              const dwTaskId: DWord; const pDoneCallback: IMFAsyncCallback; pDoneState: IUnknown): HResult; stdcall;
   function MFEndRegisterWorkQueueWithMMCSS(const pResult: IMFAsyncResult; pdwTaskId: DWord): HResult; stdcall;
   function MFBeginUnregisterWorkQueueWithMMCSS(const dwWorkQueueId: DWord; const pDoneCallback: IMFAsyncCallback; const pDoneState: IUnknown): HResult; stdcall;
@@ -238,7 +241,7 @@ type
   tagMFASYNCRESULT = record
     AsyncResult: IMFAsyncResult;
     overlapped: OVERLAPPED;
-    pCallback: PIMFAsyncCallback;
+    pCallback: IMFAsyncCallback;                 //updt 090812 remove p from  PIMFAsyncCallback
     hrStatusResult: HResult;
     dwBytesTransferred: DWORD;
     hEvent: THandle;
@@ -322,14 +325,14 @@ const
   {$EXTERNALSYM MF_512_BYTE_ALIGNMENT}
   MF_512_BYTE_ALIGNMENT               = $000001FF;
 
-type
+//updt 090812 remove: type
   function MFCreateAlignedMemoryBuffer(const cbMaxLength: DWord; const cbAligment: DWord; out ppBuffer: IMFMediaBuffer): HResult; stdcall;
 
 
-const
+type //updt 090812 replace: const
   // This GUID is used in IMFGetService.GetService calls to retrieve
   // interfaces from the buffer.  Its value is defined in Evr.pas
-  MR_BUFFER_SERVICE : TGuid;
+  MR_BUFFER_SERVICE = TGuid;
 
 
 
@@ -362,13 +365,13 @@ const
   // MF_EVENT_SESSIONCAPS {7E5EBCD0-11B8-4abe-AFAD-10F6599A7F42}
   // Type: UINT32
 
-type
+Const  //updt 090812 replace type
   MF_EVENT_SESSIONCAPS : TGuid =  '{7e5ebcd0-11b8-4abe-afad-10f6599a7f42}';
 
 
   // MF_EVENT_SESSIONCAPS_DELTA {7E5EBCD1-11B8-4abe-AFAD-10F6599A7F42}
   // Type: UINT32
-  MF_EVENT_SESSIONCAPS_DELTA : TGuid =  '{7e5ebcd1-11b8-4abe-afad-10f65997f42}';
+  MF_EVENT_SESSIONCAPS_DELTA : TGuid =  '{7e5ebcd1-11b8-4abe-afad-10f6599a7f42}'; //updt 090812 correct guid value
 
   // Session capabilities bitflags
   {$EXTERNALSYM MFSESSIONCAP_START}
@@ -401,8 +404,8 @@ type
   // MF_TOPOSTATUS_ENDED will arrive for topology n before MF_TOPOSTATUS_READY
   // arrives for topology n+1.
 
-type
-  cwMF_TOPOSTATUS = record
+const //updt 090812 replace: type
+//  cwMF_TOPOSTATUS = record                                      //updt 090812 remove: not a record
     // MF_TOPOSTATUS_INVALID: Invalid value; will not be sent
     MF_TOPOSTATUS_INVALID = 0;
 
@@ -434,8 +437,9 @@ type
     // on the next topology to ensure that the Media Session is no longer
     // using this topology.
     MF_TOPOSTATUS_ENDED = 400;
-    end;
-  MF_TOPOSTATUS = cwMF_TOPOSTATUS;
+//    end;                           //updt 090812 Remove record
+type
+  MF_TOPOSTATUS = DWORD;             //updt 090812 Remove: cwMF_TOPOSTATUS;
 
 const
   // MF_EVENT_TOPOLOGY_STATUS {30C5018D-9A53-454b-AD9E-6D5F8FA7C43B}
@@ -452,7 +456,7 @@ const
 
   // MF_EVENT_PRESENTATION_TIME_OFFSET {5AD914D1-9B45-4a8d-A2C0-81D1E50BFB07}
   // Type: UINT64
-  MF_EVENT_PRESENTATION_TIME_OFFSET           : TGuid = '{5AD914D1-9B45-4a8d-A2C0-81D1E50BFB07);
+  MF_EVENT_PRESENTATION_TIME_OFFSET           : TGuid = '{5ad914d1-9b45-4a8d-a2c0-81d1e50bfb07}';  //updt 090812 correct GUID string
 
   // MF_EVENT_START_PRESENTATION_TIME_AT_OUTPUT {5AD914D2-9B45-4a8d-A2C0-81D1E50BFB07}
   // Type: UINT64
@@ -549,6 +553,7 @@ const
   // Type: UINT32
   // If present and nonzero, indicates that the sample is a clean point (key
   // frame), and decoding can begin at this sample.
+const   //updt 090812 add
   MFSampleExtension_CleanPoint              : TGuid = '{9cdf01d8-a0f0-43ba-b077-eaa06cbd728a}';
 
   // MFSampleExtension_Discontinuity {9cdf01d9-a0f0-43ba-b077-eaa06cbd728a}
@@ -609,6 +614,7 @@ const
   //#endif
 
   // {d6c02d4b-6833-45b4-971a-05a4b04bab91}   MFT_CATEGORY_VIDEO_DECODER
+const           //updt 090812 add
   MFT_CATEGORY_VIDEO_DECODER          : TGuid = '{d6c02d4b-6833-45b4-971a-05a4b04bab91}';
   // {f79eac7d-e545-4387-bdee-d647d7bde42a}   MFT_CATEGORY_VIDEO_ENCODER
   MFT_CATEGORY_VIDEO_ENCODER          : TGuid = '{f79eac7d-e545-4387-bdee-d647d7bde42a}';
@@ -627,7 +633,7 @@ const
 
   //#if (WINVER >= _WIN32_WINNT_WIN7)
   // {302EA3FC-AA5F-47f9-9F7A-C2188BB163021}...MFT_CATEGORY_VIDEO_PROCESSOR
-  MFT_CATEGORY_VIDEO_PROCESSOR        : TGuid = '{302EA3FC-AA5F-47f9-9F7A-C2188BB163021}';
+  MFT_CATEGORY_VIDEO_PROCESSOR        : TGuid = '{302ea3fc-aa5f-47f9-9f7a-c2188bb16302}'; //updt 090812 correct GUID
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
 
   // {90175d57-b7ea-4901-aeb3-933a8747756f}   MFT_CATEGORY_OTHER
@@ -648,7 +654,7 @@ const
                             const cOutputTypes: UINT32; const pOutputTypes: MFT_REGISTER_TYPE_INFO): HResult; stdcall;
   //  Unregister locally registered MFT
   //  If pClassFactory is NULL all local MFTs are unregistered
-  function  MFTUnregisterLocal(const pClassFactory: PIClassFactory): HResult; stdcall;
+  function  MFTUnregisterLocal(const pClassFactory: IClassFactory): HResult; stdcall;     //updt 090812 remove p from IClassFactory
   // Register an MFT class in-process, by CLSID
   function MFTRegisterLocalByCLSID(const clisdMFT: REFCLSID; const guidCategory: REFGUID; const pszName: LPCWSTR;
                                    const Flags: UINT32; const cInputTypes: UINT32; const pInputTypes: MFT_REGISTER_TYPE_INFO;
@@ -666,7 +672,8 @@ const
 
   //#if (WINVER >= _WIN32_WINNT_WIN7)
 
-  cw_MFT_ENUM_FLAG = record
+//updt 090812 remove:  cw_MFT_ENUM_FLAG = record
+const     //updt 090812 add
     MFT_ENUM_FLAG_SYNCMFT        = $00000001;   // Enumerates V1 MFTs. This is default.
     MFT_ENUM_FLAG_ASYNCMFT       = $00000002;   // Enumerates only software async MFTs also known as V2 MFTs
     MFT_ENUM_FLAG_HARDWARE       = $00000004;   // Enumerates V2 hardware async MFTs
@@ -675,8 +682,9 @@ const
     MFT_ENUM_FLAG_TRANSCODE_ONLY = $00000020;   // Enumerates decoder MFTs used by transcode only
     MFT_ENUM_FLAG_SORTANDFILTER  = $00000040;   // Apply system local, do not use and preferred sorting and filtering
     MFT_ENUM_FLAG_ALL            = $0000003F;   // Enumerates all MFTs including SW and HW MFTs and applies filtering
-  end;
-  _MFT_ENUM_FLAG = cw_MFT_ENUM_FLAG;
+//updt 090812 remove:   end;
+type    //upd 090812 add
+  _MFT_ENUM_FLAG = DWORD; //updt 090812 cw_MFT_ENUM_FLAG;
 
 
   // result *pppMFTActivate must be freed with CoTaskMemFree. Each IMFActivate pointer inside this
@@ -690,12 +698,12 @@ const
   // results *pszName, *ppInputTypes, and *ppOutputTypes must be freed with CoTaskMemFree.
   // *ppAttributes must be released.
   function MFTGetInfo(const clsidMFT: CLSID; out pszName: PPWideChar; out ppInputTypes: MFT_REGISTER_TYPE_INFO;
-                    out pcInputTypes: UINT32; out ppOutputTypes: MFT_REGISTER_TYPE_INFO out pcOutputTypes: UINT32;
-                    out ppAttributes: PPIMFAttributes): HResult; stdcall;
+                    out pcInputTypes: UINT32; out ppOutputTypes: MFT_REGISTER_TYPE_INFO; out pcOutputTypes: UINT32; //updt 090812 typo fix
+                    out ppAttributes: IMFAttributes): HResult; stdcall;     //updt 090812 remove pp from IMFAttributes
 
   //#if (WINVER >= _WIN32_WINNT_WIN7)
   //  Get the plugin control API
-  function MFGetPluginControl(out ppPluginControl: PPIMFPluginControl): HResult; stdcall;
+  function MFGetPluginControl(out ppPluginControl: IMFPluginControl): HResult; stdcall;  //updt 090812 remove pp from IMFPluginControl
   //  Get MFT's merit - checking that is has a valid certificate
   function MFGetMFTMerit(var pMFT: IUnknown; const cbVerifier: UINT32; const verifier: Byte; out merit: DWord): HResult; stdcall;
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
@@ -704,6 +712,7 @@ const
 
   /////////////////////////  MFT  Attributes GUIDs ////////////////////////////
   // {53476A11-3F13-49fb-AC42-EE2733C96741} MFT_SUPPORT_DYNAMIC_FORMAT_CHANGE {UINT32 (BOOL)}
+const    //updt 090812 add
   MFT_SUPPORT_DYNAMIC_FORMAT_CHANGE        : TGuid = '{53476A11-3F13-49fb-AC42-EE2733C96741}';
 
   //////////////////////////////  Media Type GUIDs ////////////////////////////
@@ -755,28 +764,13 @@ const
 
 
 // Peter
+Type
+  tCh4 = Array [0..3] of Char;
+
 function FCC(ch4: TCh4): DWord;
-begin
-	Result:=  DWord(ch4[0]) or
-						DWord(ch4[1]) shl 8 or
-						DWord(ch4[2]) shl 16 or
-						DWord(ch4[3]) shl 24;
-end;
 
 // Tony
 function DEFINE_MEDIATYPE_GUID(format: DWord): TGuid;
-begin
-	 with Result do
-		begin
-			D1:= format;
-			D2:= $0000;
-			D3:= $0010;
-			D4[0]:= $80; D4[1]:= $00; D4[2]:= $00; D4[3]:= $aa;
-			D4[4]:= $00; D4[5]:= $38; D4[6]:= $9b; D4[7]:= $71;
-		end;
-end;
-
-
 
 // video media types ///////////////////////////////////////////////////////////
 
@@ -912,6 +906,7 @@ const
 //
 // undef the local D3DFMT definitions to avoid later clashes with D3D headers
 //
+(*
 #ifdef LOCAL_D3DFMT_DEFINES
 #undef D3DFMT_R8G8B8
 #undef D3DFMT_A8R8G8B8
@@ -921,7 +916,7 @@ const
 #undef D3DFMT_P8
 #undef LOCAL_D3DFMT_DEFINES
 #endif
-
+*)
 
 // some legacy formats that don't fit the common pattern ///////////////////////
 
@@ -929,7 +924,7 @@ const
   MFVideoFormat_MPEG2 : TGuid = '{e06d8026-db46-11cf-b4d1-00805f6cbbea}';
 
   {$EXTERNALSYM MFVideoFormat_MPG2}
-  dwMFVideoFormat_MPG2                = MFVideoFormat_MPEG2;
+//updt 090832 doesn't work  dwMFVideoFormat_MPG2                = MFVideoFormat_MPEG2;
 
 
 // audio media types ///////////////////////////////////////////////////////////
@@ -1831,6 +1826,30 @@ implementation
     begin
       Result:= DEFINE_MEDIATYPE_GUID(dwConst);
     end;
+
+//--------------------- Macros converted to functions ------------------------
+
+// Peter
+function FCC(ch4: TCh4): DWord;
+begin
+	Result:=  DWord(ch4[0]) or
+						DWord(ch4[1]) shl 8 or
+						DWord(ch4[2]) shl 16 or
+						DWord(ch4[3]) shl 24;
+end;
+
+// Tony
+function DEFINE_MEDIATYPE_GUID(format: DWord): TGuid;
+begin
+	 with Result do
+		begin
+			D1:= format;
+			D2:= $0000;
+			D3:= $0010;
+			D4[0]:= $80; D4[1]:= $00; D4[2]:= $00; D4[3]:= $aa;
+			D4[4]:= $00; D4[5]:= $38; D4[6]:= $9b; D4[7]:= $71;
+		end;
+end;
 
 //--------------------- External definitions ---------------------------------
 
