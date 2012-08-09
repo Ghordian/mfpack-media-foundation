@@ -1,10 +1,4 @@
-<<<<<<< .mine
 ﻿// FactoryX
-=======
-﻿//###################>>>>> LOOK for ##TEMP  for commented out sections
-// FactoryX
->>>>>>> .r104
-//
 // Copyright Â©2003 - 2012 by FactoryX, Sefferweich Germany (EU)
 // Project: Media Foundation - MFPack
 // Module: Media Foundation interfaces - MfObjects.pas
@@ -22,6 +16,7 @@
 //----------------------------------------------------------------------------
 // 2012/07/08 Peter (ozships)    Added ole2 to the Uses clause, missing from
 //                               translation
+// 2012/08/09 Peter              Remove ole2, added ActiveX
 //Remark: 290712b Tony, Adding Ole2 will generate errors on TGUID.
 //----------------------------------------------------------------------------
 //
@@ -56,19 +51,10 @@ unit MfObjects;
 interface
 
 uses
-<<<<<<< .mine
-	Windows, ComObj, {Ole2,} PropSys, MediaObj, unknwn, DirectShow9;  //updt 290712b
+  ActiveX, Direct3d,                                                  //updt 290712b
+	Windows, ComObj, {Ole2,}  PropSys, {MediaObj, unknwn,} DirectShow9;
 
-=======
-// rpc.h
-// rpcndr.h
-  Windows, ole2,
-// unknwn.h
->>>>>>> .r104
-  PropSys;
-//##TEMP, MediaObj;
-//##TEMP, ComObj,  not in header
-// <mmreg.h>
+{$I MFpack.inc}
 
 const
   IID_IMFAsyncCallback                  : TGUID = '{a27003cf-2354-4f2a-8d6a-ab7cff15437e}';
@@ -612,10 +598,12 @@ type
 
 type
   {$EXTERNALSYM _MFPaletteEntry}
-  _MFPaletteEntry = union
-	ARGB: MFARGB;
-	AYCbCr: MFAYUVSample;
-  end;
+  _MFPaletteEntry = Record                               //updt 2012/08/09
+    case Byte of
+	    0: (ARGB: MFARGB;);
+	    1: (AYCbCr: MFAYUVSample;);
+    end;
+
   {$EXTERNALSYM MFPaletteEntry}
   MFPaletteEntry = _MFPaletteEntry;
 
@@ -650,6 +638,7 @@ type
   end;
   {$EXTERNALSYM MFVIDEOFORMAT}
   MFVIDEOFORMAT = _MFVIDEOFORMAT;
+  pMFVIDEOFORMAT= ^MFVIDEOFORMAT;                        //updt 090812 added
 
 type
   {$EXTERNALSYM _MFStandardVideoFormat}
@@ -678,7 +667,7 @@ type
   MFBYTESTREAM_SEEK_ORIGIN = _MFBYTESTREAM_SEEK_ORIGIN;
 
 type
-  {$EXTERNALSYM __MIDL___MIDL_itf_mfobjects_0000_0013_0001}
+//updt 090812 not found  {$EXTERNALSYM __MIDL___MIDL_itf_mfobjects_0000_0013_0001}
   cwMF_FILE_ACCESSMODE    = (
 	MF_ACCESSMODE_READ      = 1,
 	MF_ACCESSMODE_WRITE     = 2,
@@ -688,7 +677,7 @@ type
   MF_FILE_ACCESSMODE = cwMF_FILE_ACCESSMODE;
 
 type
-  {$EXTERNALSYM __MIDL___MIDL_itf_mfobjects_0000_0013_0002}
+//updt 090812 not found  {$EXTERNALSYM __MIDL___MIDL_itf_mfobjects_0000_0013_0002}
   cwMF_OPENMODE_FAIL_IF_NOT_EXIST = (
   MF_OPENMODE_FAIL_IF_NOT_EXIST   = 0,
 	MF_OPENMODE_FAIL_IF_EXIST       = 1,
@@ -701,7 +690,7 @@ type
 
 
 type
-  {$EXTERNALSYM __MIDL___MIDL_itf_mfobjects_0000_0013_0003}
+//updt 090812 not found  {$EXTERNALSYM __MIDL___MIDL_itf_mfobjects_0000_0013_0003}
   cwMF_FILE_FLAGS                     = (
     MF_FILEFLAGS_NONE                 = 0,
 	MF_FILEFLAGS_NOBUFFERING            = $1,
@@ -887,7 +876,7 @@ type
   }
   IMFAudioMediaType = interface(IMFMediaType)
 	['{26a0adc3-ce26-4672-9304-69552edd3faf}']
-    function GetAudioFormat(): ^WAVEFORMATEX; stdcall;
+    function GetAudioFormat(): pWAVEFORMATEX; stdcall;             //updt 090812 change ^WAVEFORMATEX to pWAVEFORMATEX
   end;
 
   //Interface IMFVideoMediaType
@@ -900,7 +889,7 @@ type
   IMFVideoMediaType = interface(IMFMediaType)
 	['{b99f381f-a8f9-47a2-a5af-ca3a225a3890}']
     //Returns a pointer to an MFVIDEOFORMAT structure that describes the video format. (Deprecated)
-    function GetVideoFormat(): ^MFVIDEOFORMAT; stdcall;
+    function GetVideoFormat(): pMFVIDEOFORMAT; stdcall;                //updt 090812 change ^MFVIDEOFORMAT to pMFVIDEOFORMAT
     //Retrieves an alternative representation of the media type. (Deprecated)
     function GetVideoRepresentation(const guidRepresentation: TGuid; out ppvRepresentation: Pointer; const lStride: LONG): HResult; stdcall;
   end;
@@ -1075,5 +1064,9 @@ type
 
 
 implementation
+
+//updt 090812 added external references
+  function MFSerializeAttributesToStream(pAttr: IMFAttributes; dwOptions: DWord; pStm: IStream): HResult; external 'MFplat.dll' name 'MFSerializeAttributesToStream';
+  function MFDeserializeAttributesFromStream(pAttr: IMFAttributes; dwOptions: DWord; pStm: IStream): HResult; external 'MFplat.dll' name 'MFDeserializeAttributesFromStream';
 
 end.
