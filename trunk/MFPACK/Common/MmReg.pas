@@ -72,6 +72,7 @@ uses
 //  MMREG.H (standard include file for MM defines, like FOURCC and things)
 //***************************************************************************
 
+
 const
   _INC_MMREG = 158;      // version * 100 + revision
 
@@ -490,6 +491,7 @@ const
 const
   // WAVE form wFormatTag IDs
   WAVE_FORMAT_UNKNOWN               = $0000;  // Microsoft Corporation
+  WAVE_FORMAT_PCM                   = $0001;  // updt 100812
   WAVE_FORMAT_ADPCM                 = $0002;  // Microsoft Corporation
   WAVE_FORMAT_IEEE_FLOAT            = $0003;  // Microsoft Corporation
                                               //  IEEE754: range (+1, -1]
@@ -501,6 +503,8 @@ const
   WAVE_FORMAT_MULAW                 = $0007;  // Microsoft Corporation
   WAVE_FORMAT_DTS                   = $0008;  // Microsoft Corporation */
   WAVE_FORMAT_DRM                   = $0009;  // Microsoft Corporation */
+  WAVE_FORMAT_WMAVOICE9             = $000A;  //* Microsoft Corporation *//updt 100812
+  WAVE_FORMAT_WMAVOICE10            = $000B;  //* Microsoft Corporation *//updt 100812
   WAVE_FORMAT_OKI_ADPCM             = $0010;  // OKI
   WAVE_FORMAT_DVI_ADPCM             = $0011;  // Intel Corporation
   WAVE_FORMAT_IMA_ADPCM             = WAVE_FORMAT_DVI_ADPCM; // Intel Corporation
@@ -595,6 +599,10 @@ const
   WAVE_FORMAT_QUALCOMM_HALFRATE     = $0151;  // Qualcomm, Inc. */
   WAVE_FORMAT_TUBGSM                = $0155;  // Ring Zero Systems, Inc. */
   WAVE_FORMAT_MSAUDIO1              = $0160;  // Microsoft Corporation */
+  WAVE_FORMAT_WMAUDIO2              = $0161;  //* Microsoft Corporation *// updt 100812
+  WAVE_FORMAT_WMAUDIO3              = $0162;  //* Microsoft Corporation *// updt 100812
+  WAVE_FORMAT_WMAUDIO_LOSSLESS      = $0163;  //* Microsoft Corporation *// updt 100812
+  WAVE_FORMAT_WMASPDIF              = $0164;  //* Microsoft Corporation *// updt 100812
   WAVE_FORMAT_UNISYS_NAP_ADPCM      = $0170;  // Unisys Corp. */
   WAVE_FORMAT_UNISYS_NAP_ULAW       = $0171;  // Unisys Corp. */
   WAVE_FORMAT_UNISYS_NAP_ALAW       = $0172;  // Unisys Corp. */
@@ -624,6 +632,14 @@ const
   WAVE_FORMAT_LH_CODEC              = $1100;  // Lernout & Hauspie */
   WAVE_FORMAT_NORRIS                = $1400;  // Norris Communications, Inc. */
   WAVE_FORMAT_SOUNDSPACE_MUSICOMPRESS = $1500;  // AT&T Labs, Inc. */
+  WAVE_FORMAT_MPEG_ADTS_AAC           = $1600; //* Microsoft Corporation *//updt 100812 added
+  WAVE_FORMAT_MPEG_RAW_AAC            = $1601; //* Microsoft Corporation *//updt 100812 added
+  WAVE_FORMAT_MPEG_LOAS               = $1602; //* Microsoft Corporation (MPEG-4 Audio Transport Streams (LOAS/LATM) *//updt 100812 added
+  WAVE_FORMAT_NOKIA_MPEG_ADTS_AAC     = $1608; //* Microsoft Corporation *//updt 100812 added
+  WAVE_FORMAT_NOKIA_MPEG_RAW_AAC      = $1609; //* Microsoft Corporation *//updt 100812 added
+  WAVE_FORMAT_VODAFONE_MPEG_ADTS_AAC  = $160A; //* Microsoft Corporation *//updt 100812 added
+  WAVE_FORMAT_VODAFONE_MPEG_RAW_AAC   = $160B; //* Microsoft Corporation *//updt 100812 added
+  WAVE_FORMAT_MPEG_HEAAC              = $1610; //* Microsoft Corporation (MPEG-2 AAC or MPEG-4 HE-AAC v1/v2 streams with any payload (ADTS, ADIF, LOAS/LATM, RAW). Format block includes MP4 AudioSpecificConfig() -- see HEAACWAVEFORMAT below *//updt 100812 added
   WAVE_FORMAT_DVM                   = $2000;  // FAST Multimedia AG */
 
   WAVE_FORMAT_EXTENSIBLE            = $FFFE;  // Microsoft */
