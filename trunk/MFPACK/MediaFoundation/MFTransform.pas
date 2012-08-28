@@ -14,6 +14,14 @@
 //
 // LastEdited by: Tony
 // EditDate: updt 080712a
+//----------------------------------------------------------------------------
+// CHANGE LOG
+// Date       Person               Reason
+// ---------- -------------------- --------------------------------------------
+//updt 280812 Peter Larson         Remove txx and pxx interface definitions and
+//                                 minor bug fixes, remove pointers to interfaces,
+//                                 remove Ole2
+//----------------------------------------------------------------------------
 //
 // Remarks:   Delphi : The IUnknown entries of functions should be casted like this:
 //            IUnknown(Pointer), IUnknown(Object), IUnknown(Nil) etc.
@@ -48,8 +56,17 @@ unit MFTransform;
 interface
 
 uses
-  Windows, ComObj, Ole2, MFObjects, ActiveX;
+  Windows,{ ComObj,} MFObjects, ActiveX;
 
+type
+  GUID =                tGUID;
+
+// Found in BaseTsd.h:
+//#define MAXULONGLONG ((ULONGLONG)~((ULONGLONG)0))
+//#define MINLONGLONG ((LONGLONG)~MAXLONGLONG)
+Const
+  MAXLONGLONG =         9223372036854775807;
+  MINLONGLONG =         -9223372036854775808;
 
   //Forward Declarations
 const
@@ -57,20 +74,17 @@ const
 
 
 type
-  PIMFTransform = ^TIMFTransform;
-  {$EXTERNALSYM IMFTransform}
-  IMFTransform = interface;
-  TIMFTransform = interface;
+//  PIMFTransform = ^TIMFTransform;
+//  {$EXTERNALSYM IMFTransform}
+//  IMFTransform = interface;      //###### DOES NOT COMPILE IF THIS not commented out
+//  TIMFTransform = interface;
 
-
-type
  {$EXTERNALSYM _MFT_INPUT_DATA_BUFFER_FLAGS}
   _MFT_INPUT_DATA_BUFFER_FLAGS = (
     MFT_INPUT_DATA_BUFFER_PLACEHOLDER	= $ffffffff
     );
   MFT_INPUT_DATA_BUFFER_FLAGS = _MFT_INPUT_DATA_BUFFER_FLAGS;
 
-type
   {$EXTERNALSYM _MFT_OUTPUT_DATA_BUFFER_FLAGS}
   _MFT_OUTPUT_DATA_BUFFER_FLAGS = (
     MFT_OUTPUT_DATA_BUFFER_INCOMPLETE	= $1000000,
@@ -78,15 +92,13 @@ type
 	  MFT_OUTPUT_DATA_BUFFER_STREAM_END	= $200,
 	  MFT_OUTPUT_DATA_BUFFER_NO_SAMPLE	= $300
     );
-  MFT_OUTPUT_DATA_BUFFER_FLAGS = _MFT_OUTPUT_DATA_BUFFER_FLAGS
+  MFT_OUTPUT_DATA_BUFFER_FLAGS = _MFT_OUTPUT_DATA_BUFFER_FLAGS;
 
-type
   {$EXTERNALSYM _MFT_INPUT_STATUS_FLAGS}
   _MFT_INPUT_STATUS_FLAGS = (
     MFT_INPUT_STATUS_ACCEPT_DATA	= $1
     );
   MFT_INPUT_STATUS_FLAGS = _MFT_INPUT_STATUS_FLAGS;
-
 
 type
   {$EXTERNALSYM _MFT_OUTPUT_STATUS_FLAGS}
@@ -123,7 +135,6 @@ type
     );
   MFT_OUTPUT_STREAM_INFO_FLAGS = _MFT_OUTPUT_STREAM_INFO_FLAGS;
 
-
 type
   {$EXTERNALSYM _MFT_SET_TYPE_FLAGS}
   _MFT_SET_TYPE_FLAGS = (
@@ -145,7 +156,7 @@ type
 
 type
   {$EXTERNALSYM _MFT_DRAIN_TYPE}
-  _MFT_DRAIN_TYPE
+  _MFT_DRAIN_TYPE = (
     MFT_DRAIN_PRODUCE_TAILS	= 0,
 	  MFT_DRAIN_NO_TAILS	= $1
     );
@@ -208,9 +219,9 @@ type
   {$EXTERNALSYM _MFT_OUTPUT_DATA_BUFFER}
   _MFT_OUTPUT_DATA_BUFFER = record
     dwStreamID: DWORD;
-    pSample: PIMFSample;
-    dwStatus: DWORD;
-    pEvents: PIMFCollection;
+    pSample:            IMFSample;
+    dwStatus:           DWORD;
+    pEvents:            IMFCollection;
   end;
   {$EXTERNALSYM MFT_OUTPUT_DATA_BUFFER}
   MFT_OUTPUT_DATA_BUFFER = _MFT_OUTPUT_DATA_BUFFER;
@@ -219,8 +230,6 @@ type
   PMFT_OUTPUT_DATA_BUFFER = ^_MFT_OUTPUT_DATA_BUFFER;
 
 type
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  //>= Windows 7
   PStreamMedium = ^TStreamMedium;
   {$EXTERNALSYM _STREAM_MEDIUM}
   _STREAM_MEDIUM = record
@@ -232,13 +241,8 @@ type
   TStreamMedium = _STREAM_MEDIUM;
   {$EXTERNALSYM PSTREAM_MEDIUM}
   PSTREAM_MEDIUM = ^_STREAM_MEDIUM;
-  // (WINVER >= _WIN32_WINNT_WIN7)
-  //end >= Windows 7
 
 type
-  {$EXTERNALSYM IMFTransform}
-  IMFTransform = interface;
-
 
 { How to implement this?   I think, we could do without with Delphi
   // redefine all the method names to have MFT at the beginning so they don't class with DMO methods.
@@ -286,23 +290,23 @@ type
 
   //Interface IMFTransform
   IMFTransform = interface(IUnknown)
-  ['{bf94c121-5b05-4e6f-8000-ba598961414d}']
+    ['{bf94c121-5b05-4e6f-8000-ba598961414d}']
     function GetStreamLimits(out pdwInputMinimum: DWORD; out pdwInputMaximum: DWORD; out pdwOutputMinimum: DWORD; out pdwOutputMaximum: DWORD): HResult; stdcall;
     function GetStreamCount(out pcInputStreams: DWORD; out pcOutputStreams: DWORD): HResult; stdcall;
     function GetStreamIDs(const dwInputIDArraySize: DWORD; out pdwInputIDs: DWORD; const dwOutputIDArraySize: DWORD; pdwOutputIDs: DWORD): HResult; stdcall;
     function GetInputStreamInfo(const dwInputStreamID: DWORD; out pStreamInfo: MFT_INPUT_STREAM_INFO): HResult; stdcall;
     function GetOutputStreamInfo(const dwOutputStreamID: DWORD; out pStreamInfo: MFT_OUTPUT_STREAM_INFO): HResult; stdcall;
-    function GetAttributes(out pAttributes: PIMFAttributes): HResult; stdcall;
-    function GetInputStreamAttributes(const dwInputStreamID: DWORD; out pAttributes: PIMFAttributes): HResult; stdcall;
-    function GetOutputStreamAttributes(const dwOutputStreamID: DWORD; out pAttributes: PIMFAttributes): HResult; stdcall;
+    function GetAttributes(out pAttributes: IMFAttributes): HResult; stdcall;
+    function GetInputStreamAttributes(const dwInputStreamID: DWORD; out pAttributes: IMFAttributes): HResult; stdcall;
+    function GetOutputStreamAttributes(const dwOutputStreamID: DWORD; out pAttributes: IMFAttributes): HResult; stdcall;
     function DeleteInputStream(const dwStreamID: DWORD): HResult; stdcall;
     function AddInputStreams(const cStreams: DWORD; const adwStreamIDs: DWORD): HResult; stdcall;
-    function GetInputAvailableType(const dwInputStreamID: DWORD; const dwTypeIndex: DWORD; out ppType: PIMFMediaType): HResult; stdcall;
-    function GetOutputAvailableType(const dwOutputStreamID: DWORD; const dwTypeIndex: DWORD; out var ppType: PIMFMediaType): HResult; stdcall;
+    function GetInputAvailableType(const dwInputStreamID: DWORD; const dwTypeIndex: DWORD; out ppType: IMFMediaType): HResult; stdcall;
+    function GetOutputAvailableType(const dwOutputStreamID: DWORD; const dwTypeIndex: DWORD; var ppType: IMFMediaType): HResult; stdcall;
     function SetInputType(const dwInputStreamID: DWORD; const pType: IMFMediaType; const dwFlags: DWORD): HResult; stdcall;
     function SetOutputType(const dwOutputStreamID: DWORD; const pType: IMFMediaType; const dwFlags: DWORD): HResult; stdcall;
-    function GetInputCurrentType(const dwInputStreamID: DWORD; out ppType: PIMFMediaType): HResult; stdcall;
-    function GetOutputCurrentType(const dwOutputStreamID: DWORD; out ppType: PIMFMediaType): HResult; stdcall;
+    function GetInputCurrentType(const dwInputStreamID: DWORD; out ppType: IMFMediaType): HResult; stdcall;
+    function GetOutputCurrentType(const dwOutputStreamID: DWORD; out ppType: IMFMediaType): HResult; stdcall;
     function GetInputStatus(const dwInputStreamID: DWORD; out pdwFlags: DWORD): HResult; stdcall;
     function GetOutputStatus(out pdwFlags: DWORD): HResult; stdcall;
     function SetOutputBounds(const hnsLowerBound: LONGLONG; const hnsUpperBound: LONGLONG): HResult; stdcall;
@@ -310,8 +314,10 @@ type
     function ProcessMessage(const eMessage: MFT_MESSAGE_TYPE; const ulParam: ULONG_PTR): HResult; stdcall;
     function ProcessInput(const dwInputStreamID: DWORD; const pSample: IMFSample; const  dwFlags: DWORD): HResult; stdcall;
     function ProcessOutput(const dwFlags: DWORD; const cOutputBufferCount: DWORD; var pOutputSamples: MFT_OUTPUT_DATA_BUFFER; out pdwStatus: DWORD): HResult; stdcall;
-   end;
+  end;
 
+  {$EXTERNALSYM MFCreateTransformActivate}
+  function MFCreateTransformActivate(const ppActivate: IMFActivate): HResult; winapi;
 
 const
   // PROPERTYKEYS
@@ -330,8 +336,6 @@ const
   //GUIDS
   MF_SA_D3D_AWARE                           : TGuid = '{eaa35c29-775e-488e-9b61-b3283e49583b}';
   MF_SA_REQUIRED_SAMPLE_COUNT               : TGuid = '{18802c61-324b-4952-abd0-176ff5c696ff}';
-
-#if (WINVER >= _WIN32_WINNT_WIN7)
   MF_TRANSFORM_ASYNC                        : TGuid = '{f81a699a-649a-497d-8c73-29f8fed6ad7a}';
   MF_TRANSFORM_ASYNC_UNLOCK                 : TGuid = '{e5666d6b-3422-4eb6-a421-da7db1f8e207}';
   MF_TRANSFORM_FLAGS_Attribute              : TGuid = '{9359bb7e-6275-46c4-a025-1c01e45f1a86}';
@@ -351,20 +355,8 @@ const
   MFT_CODEC_MERIT_Attribute                 : TGuid = '{88a7cb15-7b07-4a34-9128-e64c6703c4d3}';
   MFT_ENUM_TRANSCODE_ONLY_ATTRIBUTE         : TGuid = '{111ea8cd-b62a-4bdb-89f6-67ffcdc2458b}';
 
-
-type
-  {$EXTERNALSYM MFCreateTransformActivate}
-  function MFCreateTransformActivate(const ppActivate: PIMFActivate): HResult; winapi;
-
-
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-  // end >= Windows 7
-
-
-  //Additional Prototypes for ALL interfaces */
-
-  //end of Additional Prototypes */
-
 implementation
+
+  function MFCreateTransformActivate; external 'Mfplat.dll' name 'MFCreateTransformActivate';
 
 end.
