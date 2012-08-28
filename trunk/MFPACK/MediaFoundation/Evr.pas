@@ -8,13 +8,20 @@
 // Language: ENU
 //
 // Version: 1.0.0.1
-// Description: Requires Windows Vista or later. 
+// Description: Requires Windows Vista or later.
 // 
-// Intiator(s): Tony (maXcomX), Peter (OzShips) 
-// 
+// Intiator(s): Tony (maXcomX), Peter (OzShips)
+//
 //
 // LastEdited by: Tony
 // EditDate: updp 080712b, updt 290712b
+//----------------------------------------------------------------------------
+// CHANGE LOG
+// Date       Person               Reason
+// ---------- -------------------- --------------------------------------------
+//updt 280812 Peter Larson         Remove txxxxx interface definitions, renamed
+//                                 duplicate interface definitions
+//----------------------------------------------------------------------------
 //
 // Remarks: The enhanced video renderer (EVR) is a component that displays video on the user's monitor.
 //          Two versions of the EVR exist:
@@ -63,7 +70,15 @@ unit Evr;
 interface
 
 uses
-  Windows, ComObj, Unknwn, PropIdl, MfIdl, {StrmIf} DirectShow9;                //updt 290712b
+  Windows, ActiveX, MfObjects, MFTransform;
+//   ComObj, Unknwn, PropIdl, MfIdl, StrmIf, DirectShow9;                //updt 290712b
+
+type
+  LPRECT =              tRect;
+  IID =                 tGUID;
+  PHWND =               HWND;
+  PPByte =              ^Byte;
+  PLONGLONG =           ^LONGLONG;
 
 const
   IID_IMFVideoPositionMapper           : TGUID = '{1F6A9F17-E70B-4e24-8AE4-0B2C3BA7A4AE}';
@@ -80,7 +95,6 @@ const
   IID_IMFTopologyServiceLookup         : TGUID = '{fa993889-4383-415a-a930-dd472a8cf6f7}';
   IID_IMFTopologyServiceLookupClient   : TGUID = '{fa99388a-4383-415a-a930-dd472a8cf6f7}';
   IID_IEVRTrustedVideoPlugin           : TGUID = '{83A4CE40-7710-494b-A893-A472049AF630}';
-
 
 type                                                                            //updt 290712b
   PD3dformat = ^TD3dformat;
@@ -231,83 +245,80 @@ type
   MF_SERVICE_LOOKUP_TYPE = _MF_SERVICE_LOOKUP_TYPE;
   TMfServiceLookupType = _MF_SERVICE_LOOKUP_TYPE;
 
-
 type
   // Forward Interfaces Declarations
 
-  PIMFVideoPositionMapper = ^TIMFVideoPositionMapper;
+//  PIMFVideoPositionMapper = ^TIMFVideoPositionMapper;
   {$EXTERNALSYM IMFVideoPositionMapper}
   IMFVideoPositionMapper = interface;
-  TIMFVideoPositionMapper = interface;
+//  TIMFVideoPositionMapper = interface;
 
-  PIMFVideoDeviceID = ^TIMFVideoDeviceID;
+//  PIMFVideoDeviceID = ^TIMFVideoDeviceID;
   {$EXTERNALSYM IMFVideoDeviceID}
   IMFVideoDeviceID = interface;
-  TIMFVideoDeviceID = interface;
+//  TIMFVideoDeviceID = interface;
 
-  PIMFVideoDisplayControl = ^TIMFVideoDisplayControl;
+//  PIMFVideoDisplayControl = ^TIMFVideoDisplayControl;
   {$EXTERNALSYM IMFVideoDisplayControl}
   IMFVideoDisplayControl = interface;
-  TIMFVideoDisplayControl = interface;
+//  TIMFVideoDisplayControl = interface;
 
-  PIMFVideoPresenter = ^TIMFVideoPresenter;
+//  PIMFVideoPresenter = ^TIMFVideoPresenter;
   {$EXTERNALSYM IMFVideoPresenter}
   IMFVideoPresenter = interface;
-  TIMFVideoPresenter = interface;
+//  TIMFVideoPresenter = interface;
 
-  PIMFDesiredSample = ^TIMFDesiredSample;
+//  PIMFDesiredSample = ^TIMFDesiredSample;
   {$EXTERNALSYM IMFDesiredSample}
   IMFDesiredSample = interface;
-  TIMFDesiredSample = interface;
+//  TIMFDesiredSample = interface;
 
-  PIMFTrackedSample = ^TIMFTrackedSample;
+//  PIMFTrackedSample = ^TIMFTrackedSample;
   {$EXTERNALSYM IMFTrackedSample}
   IMFTrackedSample = interface;
-  TIMFTrackedSample = interface;
+//  TIMFTrackedSample = interface;
 
-  PIMFVideoMixerControl = ^TIMFVideoMixerControl;
+//  PIMFVideoMixerControl = ^TIMFVideoMixerControl;
   {$EXTERNALSYM IMFVideoMixerControl}
   IMFVideoMixerControl = interface;
-  TIMFVideoMixerControl = interface;
+//  TIMFVideoMixerControl = interface;
 
-  PIMFVideoMixerControl2 = ^TIMFVideoMixerControl2;
+//  PIMFVideoMixerControl2 = ^TIMFVideoMixerControl2;
   {$EXTERNALSYM IMFVideoMixerControl2}
   IMFVideoMixerControl2 = interface;
-  TIMFVideoMixerControl2 = interface;
+//  TIMFVideoMixerControl2 = interface;
 
-  PIMFVideoRenderer = ^TIMFVideoRenderer;
+//  PIMFVideoRenderer = ^TIMFVideoRenderer;
   {$EXTERNALSYM IMFVideoRenderer}
   IMFVideoRenderer = interface;
-  TIMFVideoRenderer = interface;
+//  TIMFVideoRenderer = interface;
 
-  PIEVRFilterConfig = ^TIEVRFilterConfig;
+//  PIEVRFilterConfig = ^TIEVRFilterConfig;
   {$EXTERNALSYM IEVRFilterConfig}
   IEVRFilterConfig = interface;
-  TIEVRFilterConfig = interface;
+//  TIEVRFilterConfig = interface;
 
-  PIEVRFilterConfigEx = ^TIEVRFilterConfigEx;
+//  PIEVRFilterConfigEx = ^TIEVRFilterConfigEx;
   {$EXTERNALSYM IEVRFilterConfigEx}
   IEVRFilterConfigEx = interface;
-  TIEVRFilterConfigEx = interface;
+//  TIEVRFilterConfigEx = interface;
 
-  PIMFTopologyServiceLookup = ^TIMFTopologyServiceLookup;
+//  PIMFTopologyServiceLookup = ^TIMFTopologyServiceLookup;
   {$EXTERNALSYM IMFTopologyServiceLookup}
   IMFTopologyServiceLookup = interface;
-  TIMFTopologyServiceLookup = interface;
+//  TIMFTopologyServiceLookup = interface;
 
-  PIMFTopologyServiceLookupClient = ^TIMFTopologyServiceLookupClient;
+//  PIMFTopologyServiceLookupClient = ^TIMFTopologyServiceLookupClient;
   {$EXTERNALSYM IMFTopologyServiceLookupClient}
   IMFTopologyServiceLookupClient = interface;
-  TIMFTopologyServiceLookupClient = interface;
+//  TIMFTopologyServiceLookupClient = interface;
 
-  PIEVRTrustedVideoPlugin = ^TIEVRTrustedVideoPlugin;
+//  PIEVRTrustedVideoPlugin = ^TIEVRTrustedVideoPlugin;
   {$EXTERNALSYM IEVRTrustedVideoPlugin}
   IEVRTrustedVideoPlugin = interface;
-  TIEVRTrustedVideoPlugin = interface;
-
+//  TIEVRTrustedVideoPlugin = interface;
 
   // INTERFACES  ///////////////////////////////////////////////////////////////
-
 
   //Interface IMFVideoPositionMapper
   IMFVideoPositionMapper = interface(IUnknown)
@@ -316,13 +327,11 @@ type
                                               const dwInputStreamIndex: DWord; out pxIn: Single; out pyIn: Single): HRESULT; stdcall;
   end;
 
-
   //Interface IMFVideoDeviceID
   IMFVideoDeviceID = interface(IUnknown)
   ['{A38D9567-5A9C-4f3c-B293-8EB415B279BA}']
     function GetDeviceID(out pDeviceID: IID): HRESULT; stdcall;
   end;
-
 
   //Interface IMFVideoDisplayControl
   IMFVideoDisplayControl = interface(IUnknown)
@@ -336,23 +345,21 @@ type
     function SetVideoWindow(const hwndVideo: HWND): HRESULT; stdcall;
     function GetVideoWindow(out phwndVideo: PHWND): HRESULT; stdcall;
     function RepaintVideo(): HRESULT; stdcall;
-    function GetCurrentImage(var pBih: PBITMAPINFOHEADER; out pDib: PPByte; out pcbDib: PDWORD; var pTimeStamp: PLONGLONG) HRESULT; stdcall;
+    function GetCurrentImage(var pBih: PBITMAPINFOHEADER; out pDib: PPByte; out pcbDib: PDWORD; var pTimeStamp: PLONGLONG): HRESULT; stdcall;
     function SetBorderColor(const Clr: COLORREF): HRESULT; stdcall;
     function GetBorderColor(out pClr: COLORREF): HRESULT; stdcall;
-    function SetRenderingPrefs(const dwRenderFlags: DWORD: HRESULT; stdcall;
+    function SetRenderingPrefs(const dwRenderFlags: DWORD): HRESULT; stdcall;
     function GetRenderingPrefs(out pdwRenderFlags: DWORD): HRESULT; stdcall;
     function SetFullscreen(const fFullscreen: BOOL): HRESULT; stdcall;
     function GetFullscreen(out pfFullscreen: BOOL): HRESULT; stdcall;
   end;
 
-
   // interface IMFVideoPresenter
   IMFVideoPresenter = interface(IUnknown)
   ['{29AFF080-182A-4a5d-AF3B-448F3A6346CB}']
     function ProcessMessage(eMessage: MFVP_MESSAGE_TYPE; ulParam: ULONG_PTR): HRESULT; stdcall;
-    function GetCurrentMediaType(out ppMediaType: PIMFVideoMediaType): HRESULT; stdcall;
+    function GetCurrentMediaType(out ppMediaType: IMFVideoMediaType): HRESULT; stdcall;
   end;
-
 
   //Interface IMFDesiredSample
   IMFDesiredSample = interface(IUnknown)
@@ -362,13 +369,11 @@ type
     procedure Clear(); stdcall;
   end;
 
-
   //Interface IMFTrackedSample
-  IMFDesiredSample = interface(IUnknown)
+  IMFTrackedSample = interface(IUnknown)
   ['{245BF8E9-0755-40f7-88A5-AE0F18D55E17}']
     function SetAllocator(const pSampleAllocator: IMFAsyncCallback; const pUnkState: IUnknown): HRESULT; stdcall;
   end;
-
 
   //Interface IMFVideoMixerControl
   IMFVideoMixerControl = interface(IUnknown)
@@ -379,7 +384,6 @@ type
     function GetStreamOutputRect(const dwStreamID: DWORD; out pnrcOutput: MFVideoNormalizedRect): HRESULT; stdcall;
   end;
 
-
   //Interface IMFVideoMixerControl2
   IMFVideoMixerControl2 = interface(IUnknown)
   ['{8459616d-966e-4930-b658-54fa7e5a16d3}']
@@ -387,13 +391,11 @@ type
     function GetMixingPrefs(out pdwMixFlags: DWORD): HRESULT; stdcall;
   end;
 
-
   //Interface IMFVideoRenderer
   IMFVideoRenderer = interface(IUnknown)
   ['{DFDFD197-A9CA-43d8-B341-6AF3503792CD}']
     function InitializeRenderer(const pVideoMixer: IMFTransform; const pVideoPresenter: IMFVideoPresenter): HRESULT; stdcall;
   end;
-
 
   //Iterface IEVRFilterConfig
   IEVRFilterConfig = interface(IUnknown)
@@ -402,7 +404,6 @@ type
     function GetNumberOfStreams(out pdwMaxStreams: DWORD): HRESULT; stdcall;
   end;
 
-
   //Interface IEVRFilterConfigEx
   IEVRFilterConfigEx = interface(IUnknown)
   ['{aea36028-796d-454f-beee-b48071e24304}']
@@ -410,14 +411,12 @@ type
     function GetConfigPrefs(out pdwConfigFlags: DWORD): HRESULT; stdcall;
   end;
 
-
   //Interface IMFTopologyServiceLookup
   IMFTopologyServiceLookup = interface(IUnknown)
   ['{fa993889-4383-415a-a930-dd472a8cf6f7}']
-    function LookupService(const Type: MF_SERVICE_LOOKUP_TYPE; const dwIndex: DWORD; const guidService: REFGUID; const riid: REFIID;
+    function LookupService(const aType: MF_SERVICE_LOOKUP_TYPE; const dwIndex: DWORD; const guidService: REFGUID; const riid: REFIID;
                            out ppvObjects: PPointer; var pnObjects: PDWORD): HRESULT; stdcall;
   end;
-
 
   //Interface IMFTopologyServiceLookupClient
   IMFTopologyServiceLookupClient = interface(IUnknown)
@@ -426,18 +425,15 @@ type
     function ReleaseServicePointers(): HRESULT; stdcall;
   end;
 
-
   //Interface IEVRTrustedVideoPlugin
-  IMFTopologyServiceLookupClient = interface(IUnknown)
+  IEVRTrustedVideoPlugin = interface(IUnknown)
   ['{83A4CE40-7710-494b-A893-A472049AF630}']
     function IsInTrustedVideoMode(out pYes: BOOL): HRESULT; stdcall;
-    function CanConstrict(out pYes: BOOL): HRESULT; stdcall
+    function CanConstrict(out pYes: BOOL): HRESULT; stdcall;
     function SetConstriction(const dwKPix: DWORD): HRESULT; stdcall;
     function DisableImageExport(const bDisable: BOOL): HRESULT; stdcall;
   end;
 
-
-  //updp 070712b, updt 080712b
   //function MFCreateVideoPresenter
   //Creates the default video presenter for the enhanced video renderer (EVR).
   //NOTES:
@@ -502,13 +498,12 @@ type
   {$EXTERNALSYM MFCreateVideoSampleFromSurface}
   function MFCreateVideoSampleFromSurface(pUnkSurface: IUnknown; out ppSample: IMFSample): HRESULT; stdcall;
 
-
 implementation
   //updp 080712b
-  function MFCreateVideoPresenter;         external evr name 'MFCreateVideoPresenter';
-  function MFCreateVideoMixer;             external evr name 'MFCreateVideoMixer';
-  function MFCreateVideoMixerAndPresenter; external evr name 'MFCreateVideoMixerAndPresenter';
-  function MFCreateVideoRenderer;          external evr name 'MFCreateVideoRenderer';
-  function MFCreateVideoSampleFromSurface; external evr name 'MFCreateVideoSampleFromSurface';
+  function MFCreateVideoPresenter;         external 'evr.dll' name 'MFCreateVideoPresenter';
+  function MFCreateVideoMixer;             external 'evr.dll' name 'MFCreateVideoMixer';
+  function MFCreateVideoMixerAndPresenter; external 'evr.dll' name 'MFCreateVideoMixerAndPresenter';
+  function MFCreateVideoRenderer;          external 'evr.dll' name 'MFCreateVideoRenderer';
+  function MFCreateVideoSampleFromSurface; external 'evr.dll' name 'MFCreateVideoSampleFromSurface';
 
 end.
