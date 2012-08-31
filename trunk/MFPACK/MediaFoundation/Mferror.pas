@@ -112,6 +112,8 @@ Notes:                                                                          
 Uses
   windows;
                                                                                           // 00061.001
+Const
+  UnitVersion         = '01.01.0001';
                                                                                           // 00062.001                                                                                          // 00063.001#ifndef _MFERROR_H
 //_MFERROR_H                            = true;                                           // 00064.001#define _MFERROR_H
                                                                                           // 00065.001
