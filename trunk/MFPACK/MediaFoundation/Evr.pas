@@ -73,6 +73,9 @@ uses
   Windows, ActiveX, MfObjects, MFTransform;
 //   ComObj, Unknwn, PropIdl, MfIdl, StrmIf, DirectShow9;                //updt 290712b
 
+Const
+  UnitVersion         = '01.01.0001';
+
 type
   LPRECT =              tRect;
   IID =                 tGUID;
