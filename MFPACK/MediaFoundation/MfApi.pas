@@ -70,6 +70,9 @@ uses
   Windows;
 // ComObj, MfObjects;
 
+Const
+  UnitVersion         = '01.01.0001';
+
 const
 
 //--------------------- Media types
