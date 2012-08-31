@@ -64,36 +64,57 @@ unit MfApi;
 interface
 
 uses
-  ActiveX, Direct3d, DirectShow9,                       //updt 090812 for IMediaBuffer, includes
-  MMSystem,                                             //updt 090812 implements MMReg
+//  ActiveX, Direct3d, DirectShow9,                       //updt 090812 for IMediaBuffer, includes
+//  MMSystem,                                             //updt 090812 implements MMReg
 // MmReg;
-  Windows, ComObj, MfObjects;
+  Windows;
+// ComObj, MfObjects;
 
-{$I MFpack.inc}
+const
 
+//--------------------- Media types
 
-  //#if !defined(MF_VERSION)
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
+// Major types /////////////////////////////////////////////////////////////////
 
-const      //##added
+  MFMediaType_Default                         : TGuid = '{81A412E6-8103-4B06-857F-1862781024AC}';
+  MFMediaType_Audio                           : TGuid = '{73647561-0000-0010-8000-00AA00389B71}';
+  MFMediaType_Video                           : TGuid = '{73646976-0000-0010-8000-00AA00389B71}';
+  MFMediaType_Protected                       : TGuid = '{7b4b6fe6-9d04-4494-be14-7e0bd076c8e4}';
+  MFMediaType_SAMI                            : TGuid = '{e69669a0-3dcd-40cb-9e2e-3708387c0616}';
+  MFMediaType_Script                          : TGuid = '{72178C22-E45B-11D5-BC2A-00B0D0F3F4AB}';
+  MFMediaType_Image                           : TGuid = '{72178C23-E45B-11D5-BC2A-00B0D0F3F4AB}';
+  MFMediaType_HTML                            : TGuid = '{72178C24-E45B-11D5-BC2A-00B0D0F3F4AB}';
+  MFMediaType_Binary                          : TGuid = '{72178C25-E45B-11D5-BC2A-00B0D0F3F4AB}';
+  MFMediaType_FileTransfer                    : TGuid = '{72178C26-E45B-11D5-BC2A-00B0D0F3F4AB}';
+
+//--------------------- Various status/attribute GUIDs
+  MF_EVENT_TOPOLOGY_STATUS                    : TGuid = '{30c5018d-9a53-454b-ad9e-6d5f8fa7c43b}';
+  MF_EVENT_START_PRESENTATION_TIME            : TGuid = '{5ad914d0-9b45-4a8d-a2c0-81d1e50bfb07}';
+  MF_EVENT_PRESENTATION_TIME_OFFSET           : TGuid = '{5ad914d1-9b45-4a8d-a2c0-81d1e50bfb07}';  //updt 090812 correct GUID string
+  MF_EVENT_START_PRESENTATION_TIME_AT_OUTPUT  : TGuid = '{5AD914D2-9B45-4a8d-A2C0-81D1E50BFB07}';
+  MF_EVENT_SOURCE_FAKE_START                  : TGuid = '{a8cc55a7-6b31-419f-845d-ffb351a2434b}';
+  MF_EVENT_SOURCE_PROJECTSTART                : TGuid = '{a8cc55a8-6b31-419f-845d-ffb351a2434b}';
+  MF_EVENT_SOURCE_ACTUAL_START                : TGuid = '{a8cc55a9-6b31-419f-845d-ffb351a2434b}';
+  MF_EVENT_SOURCE_TOPOLOGY_CANCELED           : TGuid = '{DB62F650-9A5E-4704-ACF3-563BC6A73364}';
+  MF_EVENT_SOURCE_CHARACTERISTICS             : TGuid = '{47DB8490-8B22-4f52-AFDA-9CE1B2D3CFA8}';
+  MF_EVENT_SOURCE_CHARACTERISTICS_OLD         : TGuid = '{47DB8491-8B22-4f52-AFDA-9CE1B2D3CFA8}';
+  MF_EVENT_DO_THINNING                        : TGuid = '{321EA6FB-DAD9-46e4-B31D-D2EAE7090E30}';
+  MF_EVENT_SCRUBSAMPLE_TIME                   : TGuid = '{9AC712B3-DCB8-44d5-8D0C-37455A2782E3}';
+  MF_EVENT_OUTPUT_NODE                        : TGuid = '{830f1a8b-c060-46dd-a801-1c95dec9b107}';
+  MF_EVENT_MFT_INPUT_STREAM_ID                : TGuid = '{F29C2CCA-7AE6-42d2-B284-BF837CC874E2}';
+  MF_EVENT_MFT_CONTEXT                        : TGuid = '{B7CD31F1-899E-4b41-80C9-26A896D32977}';
+
+const
   {$EXTERNALSYM MF_SDK_VERSION}
   MF_SDK_VERSION                      = $0002;
 
-  //{else} // Vista
-
   {$EXTERNALSYM MF_SDK_VERSION}
 //##TEMP: duplicate  MF_SDK_VERSION                      = $0001;
-
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
 
   {$EXTERNALSYM MF_API_VERSION}
   MF_API_VERSION                      = $0070;  // This value is unused in the Win7 release and left at its Vista release value
   {$EXTERNALSYM MF_VERSION}
   MF_VERSION                          = (MF_SDK_VERSION shl 16 or MF_API_VERSION);
-
-  //#endif //!defined(MF_VERSION)
-
-
   {$EXTERNALSYM MFSTARTUP_NOSOCKET}
   MFSTARTUP_NOSOCKET                  = $1;
   {$EXTERNALSYM MFSTARTUP_LITE}
@@ -101,7 +122,38 @@ const      //##added
   {$EXTERNALSYM MFSTARTUP_FULL}
   MFSTARTUP_FULL                      = 0;
 
+const //updt 090812 replace: type
+//  cwMF_TOPOSTATUS = record                                      //updt 090812 remove: not a record
+    // MF_TOPOSTATUS_INVALID: Invalid value; will not be sent
+    MF_TOPOSTATUS_INVALID = 0;
 
+    // MF_TOPOSTATUS_READY: The topology has been put in place and is
+    // ready to start.  All GetService calls to the Media Session will use
+    // this topology.
+    MF_TOPOSTATUS_READY     = 100;
+
+    // MF_TOPOSTATUS_STARTED_SOURCE: The Media Session has started to read
+    // and process data from the Media Source(s) in this topology.
+    MF_TOPOSTATUS_STARTED_SOURCE = 200;
+
+    // MF_TOPOSTATUS_DYNAMIC_CHANGED: The topology has been dynamic changed
+    // due to the format change.
+    MF_TOPOSTATUS_DYNAMIC_CHANGED = 210;
+
+    // MF_TOPOSTATUS_SINK_SWITCHED: The Media Sinks in the pipeline have
+    // switched from a previous topology to this topology.
+    // Note that this status does not get sent for the first topology;
+    // applications can assume that the sinks are playing the first
+    // topology when they receive MESessionStarted.
+    MF_TOPOSTATUS_SINK_SWITCHED = 300;
+
+    // MF_TOPOSTATUS_ENDED: Playback of this topology is complete.
+    // Before deleting this topology, however, the application should wait
+    // for either MESessionEnded or the MF_TOPOSTATUS_STARTED_SOURCE status
+    // on the next topology to ensure that the Media Session is no longer
+    // using this topology.
+    MF_TOPOSTATUS_ENDED = 400;
+//    end;                           //updt 090812 Remove record
 
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////   Startup/Shutdown  ////////////////////////////
@@ -115,14 +167,36 @@ const      //##added
   // Application should not call MFStartup / MFShutdown from workqueue threads
   //
   // Default = MFSTARTUP_FULL
-  function MFStartup(const Version: ULONG; const dwFlags: DWORD): HResult; stdcall;
+  function MFStartup(const Version: ULONG; const dwFlags: DWORD): HRESULT; stdcall;
 
 
   // Shuts down the platform object.
   // Releases all resources including threads.
   // Application should call MFShutdown the same number of times as MFStartup
   // Application should not call MFStartup / MFShutdown from workqueue threads
-  function MFShutdown(): HResult; stdcall;
+  function MFShutdown: HRESULT; stdcall;
+
+implementation
+
+  function MFStartup;  external 'Mfplat.dll' name 'MFStartup';
+  function MFShutdown; external 'Mfplat.dll' name 'MFShutdown';
+
+end.
+
+
+
+
+
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+
+
+
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -404,135 +478,9 @@ Const  //updt 090812 replace type
   // MF_TOPOSTATUS_ENDED will arrive for topology n before MF_TOPOSTATUS_READY
   // arrives for topology n+1.
 
-const //updt 090812 replace: type
-//  cwMF_TOPOSTATUS = record                                      //updt 090812 remove: not a record
-    // MF_TOPOSTATUS_INVALID: Invalid value; will not be sent
-    MF_TOPOSTATUS_INVALID = 0;
-
-    // MF_TOPOSTATUS_READY: The topology has been put in place and is
-    // ready to start.  All GetService calls to the Media Session will use
-    // this topology.
-    MF_TOPOSTATUS_READY     = 100;
-
-    // MF_TOPOSTATUS_STARTED_SOURCE: The Media Session has started to read
-    // and process data from the Media Source(s) in this topology.
-    MF_TOPOSTATUS_STARTED_SOURCE = 200;
-
-    //#if (WINVER >= _WIN32_WINNT_WIN7)
-    // MF_TOPOSTATUS_DYNAMIC_CHANGED: The topology has been dynamic changed
-    // due to the format change.
-    MF_TOPOSTATUS_DYNAMIC_CHANGED = 210;
-    //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-
-    // MF_TOPOSTATUS_SINK_SWITCHED: The Media Sinks in the pipeline have
-    // switched from a previous topology to this topology.
-    // Note that this status does not get sent for the first topology;
-    // applications can assume that the sinks are playing the first
-    // topology when they receive MESessionStarted.
-    MF_TOPOSTATUS_SINK_SWITCHED = 300;
-
-    // MF_TOPOSTATUS_ENDED: Playback of this topology is complete.
-    // Before deleting this topology, however, the application should wait
-    // for either MESessionEnded or the MF_TOPOSTATUS_STARTED_SOURCE status
-    // on the next topology to ensure that the Media Session is no longer
-    // using this topology.
-    MF_TOPOSTATUS_ENDED = 400;
-//    end;                           //updt 090812 Remove record
 type
   MF_TOPOSTATUS = DWORD;             //updt 090812 Remove: cwMF_TOPOSTATUS;
 
-const
-  // MF_EVENT_TOPOLOGY_STATUS {30C5018D-9A53-454b-AD9E-6D5F8FA7C43B}
-  // Type: UINT32 {MF_TOPOLOGY_STATUS}
-  MF_EVENT_TOPOLOGY_STATUS                    : TGuid = '{30c5018d-9a53-454b-ad9e-6d5f8fa7c43b}';
-
-
-  // MESessionNotifyPresentationTime attributes
-
-
-  // MF_EVENT_START_PRESENTATION_TIME {5AD914D0-9B45-4a8d-A2C0-81D1E50BFB07}
-  // Type: UINT64
-  MF_EVENT_START_PRESENTATION_TIME            : TGuid = '{5ad914d0-9b45-4a8d-a2c0-81d1e50bfb07}';
-
-  // MF_EVENT_PRESENTATION_TIME_OFFSET {5AD914D1-9B45-4a8d-A2C0-81D1E50BFB07}
-  // Type: UINT64
-  MF_EVENT_PRESENTATION_TIME_OFFSET           : TGuid = '{5ad914d1-9b45-4a8d-a2c0-81d1e50bfb07}';  //updt 090812 correct GUID string
-
-  // MF_EVENT_START_PRESENTATION_TIME_AT_OUTPUT {5AD914D2-9B45-4a8d-A2C0-81D1E50BFB07}
-  // Type: UINT64
-  MF_EVENT_START_PRESENTATION_TIME_AT_OUTPUT  : TGuid = '{5AD914D2-9B45-4a8d-A2C0-81D1E50BFB07}';
-
-
-  // MESourceStarted attributes
-
-  // MF_EVENT_SOURCE_FAKE_START {a8cc55a7-6b31-419f-845d-ffb351a2434b}
-  // Type: UINT32
-  MF_EVENT_SOURCE_FAKE_START                  : TGuid = '{a8cc55a7-6b31-419f-845d-ffb351a2434b}';
-
-  // MF_EVENT_SOURCE_PROJECTSTART {a8cc55a8-6b31-419f-845d-ffb351a2434b}
-  // Type: UINT64
-  MF_EVENT_SOURCE_PROJECTSTART                : TGuid = '{a8cc55a8-6b31-419f-845d-ffb351a2434b}';
-
-  // MF_EVENT_SOURCE_ACTUAL_START {a8cc55a9-6b31-419f-845d-ffb351a2434b}
-  // Type: UINT64
-  MF_EVENT_SOURCE_ACTUAL_START                : TGuid = '{a8cc55a9-6b31-419f-845d-ffb351a2434b}';
-
-
-  // MEEndOfPresentationSegment attributes
-
-  // MF_EVENT_SOURCE_TOPOLOGY_CANCELED {DB62F650-9A5E-4704-ACF3-563BC6A73364}
-  // Type: UINT32
-  MF_EVENT_SOURCE_TOPOLOGY_CANCELED           : TGuid = '{DB62F650-9A5E-4704-ACF3-563BC6A73364}';
-
-
-  // MESourceCharacteristicsChanged attributes
-
-  // MF_EVENT_SOURCE_CHARACTERISTICS {47DB8490-8B22-4f52-AFDA-9CE1B2D3CFA8}
-  // Type: UINT32
-  MF_EVENT_SOURCE_CHARACTERISTICS             : TGuid = '{47DB8490-8B22-4f52-AFDA-9CE1B2D3CFA8}';
-
-  // MF_EVENT_SOURCE_CHARACTERISTICS_OLD {47DB8491-8B22-4f52-AFDA-9CE1B2D3CFA8}
-  // Type: UINT32
-  MF_EVENT_SOURCE_CHARACTERISTICS_OLD         : TGuid = '{47DB8491-8B22-4f52-AFDA-9CE1B2D3CFA8}';
-
-
-  // MESourceRateChangeRequested attributes
-
-  // MF_EVENT_DO_THINNING {321EA6FB-DAD9-46e4-B31D-D2EAE7090E30}
-  // Type: UINT32
-  MF_EVENT_DO_THINNING                        : TGuid = '{321EA6FB-DAD9-46e4-B31D-D2EAE7090E30}';
-
-
-  // MEStreamSinkScrubSampleComplete attributes
-
-  // MF_EVENT_SCRUBSAMPLE_TIME {9AC712B3-DCB8-44d5-8D0C-37455A2782E3}
-  // Type: UINT64
-  MF_EVENT_SCRUBSAMPLE_TIME                   : TGuid = '{9AC712B3-DCB8-44d5-8D0C-37455A2782E3}';
-
-
-  // MESinkInvalidated and MESessionStreamSinkFormatChanged attributes
-
-  // MF_EVENT_OUTPUT_NODE {830f1a8b-c060-46dd-a801-1c95dec9b107}
-  // Type: UINT64
-  MF_EVENT_OUTPUT_NODE                        : TGuid = '{830f1a8b-c060-46dd-a801-1c95dec9b107}';
-
-
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-
-  // METransformNeedInput attributes
-
-  // MF_EVENT_MFT_INPUT_STREAM_ID {F29C2CCA-7AE6-42d2-B284-BF837CC874E2}
-  // Type: UINT32
-  MF_EVENT_MFT_INPUT_STREAM_ID                : TGuid = '{F29C2CCA-7AE6-42d2-B284-BF837CC874E2}';
-
-
-  // METransformDrainComplete and METransformMarker attributes
-
-  // MF_EVENT_MFT_CONTEXT {B7CD31F1-899E-4b41-80C9-26A896D32977}
-  // Type: UINT64
-  MF_EVENT_MFT_CONTEXT                        : TGuid = '{B7CD31F1-899E-4b41-80C9-26A896D32977}';
-
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
 
 
   ////////////////////////////////////////////////////////////////////////////////
@@ -1355,18 +1303,6 @@ const
 ////////////////////////////////////////////////////////////////////////////////
 
 
-// Major types /////////////////////////////////////////////////////////////////
-
-  MFMediaType_Default                         : TGuid = '{81A412E6-8103-4B06-857F-1862781024AC}';
-  MFMediaType_Audio                           : TGuid = '{73647561-0000-0010-8000-00AA00389B71}';
-  MFMediaType_Video                           : TGuid = '{73646976-0000-0010-8000-00AA00389B71}';
-  MFMediaType_Protected                       : TGuid = '{7b4b6fe6-9d04-4494-be14-7e0bd076c8e4}';
-  MFMediaType_SAMI                            : TGuid = '{e69669a0-3dcd-40cb-9e2e-3708387c0616'};
-  MFMediaType_Script                          : TGuid = '{72178C22-E45B-11D5-BC2A-00B0D0F3F4AB}';
-  MFMediaType_Image                           : TGuid = '{72178C23-E45B-11D5-BC2A-00B0D0F3F4AB}';
-  MFMediaType_HTML                            : TGuid = '{72178C24-E45B-11D5-BC2A-00B0D0F3F4AB}';
-  DEFINE_GUID(MFMediaType_Binary              : TGuid = '{72178C25-E45B-11D5-BC2A-00B0D0F3F4AB}';
-  MFMediaType_FileTransfer                    : TGuid = '{72178C26-E45B-11D5-BC2A-00B0D0F3F4AB}';
 
 
 
@@ -1853,9 +1789,6 @@ end;
 
 //--------------------- External definitions ---------------------------------
 
-  function MFStartup: HRESULT;           external Mfplat.dll name 'MFStartup';
-  function MFStartup: HRESULT;           external Mfplat.dll name 'MFStartup';
-  function MFShutdown: HRESULT;          external Mfplat.dll name 'MFShutdown';
   function MFLockPlatform: HRESULT;      external Mfplat.dll name 'MFLockPlatform';
   function MFUnlockPlatform: HRESULT;    external Mfplat.dll name 'MFUnlockPlatform';
   function MFPutWorkItem: HRESULT;       external Mfplat.dll name 'MFPutWorkItem';
