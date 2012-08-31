@@ -53,6 +53,9 @@ interface
 uses
   Windows, ActiveX;
 
+Const
+  UnitVersion         = '01.01.0001';
+
 type
   REFGUID =             tGUID;
   REFPROPVARIANT =      ^PROPVARIANT;   // const PROPVARIANT * __MIDL_CONST
