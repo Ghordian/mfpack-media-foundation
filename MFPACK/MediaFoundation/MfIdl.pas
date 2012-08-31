@@ -59,6 +59,9 @@ Uses
 //## old    WinDef,
 //#include "mftransform.h"  >> !
 
+Const
+  UnitVersion         = '01.01.0001';
+
 const
 
 //--------------------- Interface IIDs
@@ -260,7 +263,7 @@ type
 //--------------------- Interfaces -------------------------------------------
 
   //Interface IMFTopology
-  IMFTopology = interface(IUnknown)
+  IMFTopology = interface(IMFAttributes)
   	[IID_IMFTopology]
     function GetTopologyID(out pID: TOPOID): HResult; stdcall;
     function AddNode(const pNode: IMFTopologyNode): HResult; stdcall;
@@ -342,7 +345,7 @@ type
   end;
 
   //Interface IMFStreamDescriptor
-  IMFStreamDescriptor = interface(IUnknown)
+  IMFStreamDescriptor = interface(IMFAttributes)
 	['{56c03d9c-9dbb-45f5-ab4b-d80f47c05938}']
     function GetStreamIdentifier(out pdwStreamIdentifier: DWord): HResult; stdcall;
     function GetMediaTypeHandler(out ppMediaTypeHandler: IMFMediaTypeHandler): HResult; stdcall;
