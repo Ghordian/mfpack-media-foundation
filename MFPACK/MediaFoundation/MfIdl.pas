@@ -172,6 +172,13 @@ const
 //  {$EXTERNALSYM MFMEDIASOURCE_CHARACTERISTICS}
 //  MFMEDIASOURCE_CHARACTERISTICS = _MFMEDIASOURCE_CHARACTERISTICS;
 
+  MFPMPSESSION_UNPROTECTED_PROCESS = $1;
+//  {$EXTERNALSYM MFPMPSESSION_CREATION_FLAGS}
+//  cwMFPMPSESSION_CREATION_FLAGS      = (
+//    MFPMPSESSION_UNPROTECTED_PROCESS = $1
+//  );
+//  MFPMPSESSION_CREATION_FLAGS = cwMFPMPSESSION_CREATION_FLAGS;
+
 //--------------------- Forward interface deninitions ------------------------
 type
   {$EXTERNALSYM IMFTopology}
@@ -226,8 +233,8 @@ type
     MFCLOCK_STATE_STOPPED = (MFCLOCK_STATE_RUNNING + 1),
     MFCLOCK_STATE_PAUSED  = (MFCLOCK_STATE_STOPPED + 1)
   );
-  {$EXTERNALSYM MFCLOCK_STATE}
-  MFCLOCK_STATE = _MFCLOCK_STATE;
+  {$EXTERNALSYM MF_CLOCK_STATE}
+  MF_CLOCK_STATE = _MFCLOCK_STATE;
 
   {$EXTERNALSYM _MFCLOCK_PROPERTIES}
   _MFCLOCK_PROPERTIES = record
@@ -319,7 +326,7 @@ type
     function GetClockCharacteristics(out pdwCharacteristics: DWord): HResult; stdcall;
     function GetCorrelatedTime(const dwReserved: DWord; out pllClockTime: LongLong; out phnsSystemTime: MFTIME): HResult; stdcall;
     function GetContinuityKey(out pdwContinuityKey: Dword): HResult; stdcall;
-    function GetState(const dwReserved: DWord; out peClockState: MFCLOCK_STATE): HResult; stdcall;
+    function GetState(const dwReserved: DWord; out peClockState: MF_CLOCK_STATE): HResult; stdcall;
     function GetProperties(out pClockProperties: MFCLOCK_PROPERTIES): HResult; stdcall;
   end;
 
@@ -465,14 +472,18 @@ type
   function MFCreateAudioRenderer(const pAudioAttributes: IMFAttributes; out ppSink: IMFMediaSink): HResult; stdcall;
   function MFCreateAudioRendererActivate(out ppActivate: IMFActivate): HResult; stdcall;
   function MFCreateVideoRendererActivate(const hwndVideo: HWND; out ppActivate: IMFActivate): HResult; stdcall;
-//  function MFGetService(const punkObject: IUnknown; const guidService: REFGUID; const riid: REFIID; out ppvObject: Pointer): HResult; stdcall;
   function MFGetService(const punkObject: IUnknown; const guidService: tGUID; const riid: tGUID; out ppvObject: IUnknown): HResult; stdcall;
   function MFCreatePresentationClock(out ppPresentationClock: IMFPresentationClock): HResult; stdcall;
   function MFCreateSystemTimeSource(out ppSystemTimeSource: IMFPresentationTimeSource): HResult; stdcall;
+  function MFCreatePMPMediaSession(const dwCreationFlags: DWORD;
+                                   const pConfiguration: IMFAttributes;
+                                   out ppMediaSession: IMFMediaSession;
+                                   out ppEnablerActivate: IMFActivate): HResult; stdcall;
 
 implementation
 
   function MFCreateMediaSession;          external 'Mf.dll' name 'MFCreateMediaSession';
+  function MFCreatePMPMediaSession;       external 'Mf.dll' name 'MFCreatePMPMediaSession';
   function MFCreateSourceResolver;        external 'Mf.dll' name 'MFCreateSourceResolver';
   function MFCreateTopologyNode;          external 'Mf.dll' name 'MFCreateTopologyNode';
   function MFCreateTopology;              external 'Mf.dll' name 'MFCreateTopology';
@@ -484,6 +495,7 @@ implementation
   function MFGetService;                  external 'Mf.dll' name 'MFGetService';
   function MFCreatePresentationClock;     external 'Mf.dll' name 'MFCreatePresentationClock';
   function MFCreateSystemTimeSource;      external 'Mf.dll' name 'MFCreateSystemTimeSource';
+
 end.
 
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
@@ -958,14 +970,6 @@ type
     MFSESSION_GETFULLTOPOLOGY_CURRENT = $1
   );
   MFSESSION_GETFULLTOPOLOGY_FLAGS = cwMFSESSION_GETFULLTOPOLOGY_FLAGS;
-
-type
-  {$EXTERNALSYM MFPMPSESSION_CREATION_FLAGS}
-  cwMFPMPSESSION_CREATION_FLAGS      = (
-    MFPMPSESSION_UNPROTECTED_PROCESS = $1
-  );
-  MFPMPSESSION_CREATION_FLAGS = cwMFPMPSESSION_CREATION_FLAGS;
-
 
 type
   {$EXTERNALSYM _MF_CONNECT_METHOD}
@@ -2125,8 +2129,6 @@ type
 
   // >= Windows 7
   //Creates an instance of the Media Session inside a Protected Media Path (PMP) process.
-  function MFCreatePMPMediaSession(const dwCreationFlags: Dword; const pConfiguration: IMFAttributes;
-                                   out ppMediaSession: IMFMediaSession; out ppEnablerActivate: IMFActivate): HResult; stdcall;
 
   function CreatePropertyStore(out ppStore: IPropertyStore): HResult; stdcall;
   function MFGetSupportedSchemes(out pPropVarSchemeArray: PROPVARIANT): HResult; stdcall;
