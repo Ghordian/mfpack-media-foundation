@@ -28,13 +28,13 @@ MSDN (http://msdn.microsoft.com/en-us/library/windows/desktop/dd370851)
 HEADERS
 
 Core Audio component 	        Header file(s) 
-====================           ===================
-MMDevice API                   mmdeviceapi.h
-WASAPI                         audioclient.h, 
-                               audiopolicy.h, 
-                               audiosessiontypes.h (defines constants that are used by WASAPI)
-DeviceTopology API             devicetopology.h
-EndpointVolume API             endpointvolume.h
+====================            ===================
+MMDevice API 	                Mmdeviceapi.h
+WASAPI 	                        Audioclient.h, 
+                                Audiopolicy.h, 
+                                Audiosessiontypes.h (defines constants that are used by WASAPI)
+DeviceTopology API 	        Devicetopology.h
+EndpointVolume API 	        Endpointvolume.h
 
 
 
@@ -57,10 +57,10 @@ CoreAudio/Samples               Win78Mixer.pas (A sample unit how to access the 
 
 
 LIBRARIES
-//Todo
 
 
-REMARKS: -
+
+REMARKS:
 
 
 Every Delphi unit has a section that contains helpers specific for the Delphi programming language.
