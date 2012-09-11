@@ -149,21 +149,23 @@ type
 
   //Special functions
 
-  //A special function to translate Delphi boolean to a C++ BOOL (4 bytes) in some rare cases,
-  //like the Get/set Mute functions on Windows Vista, 7 and 8
-  //See: http://blog.delphi-jedi.net/2008/09/25/bool-boolean-and-integer/
+  // A special function to translate Delphi boolean to a C++ BOOL (4 bytes) in some rare cases,
+  // like the Get/set Mute functions, Core Audio on Windows Vista, 7 and 8
+  // See: http://blog.delphi-jedi.net/2008/09/25/bool-boolean-and-integer
   function CBOOL(Value: boolean): DWORD;
+
 
 implementation
 
 
+
 function CBOOL(Value: boolean): DWORD;
 begin
-	if Value = true then
-		Result:= 1
-	else
-		Result:= 0;
-	//As an altenative use: Result:= integer(Value), which does the same
+  if Value = true then
+    Result:= 1
+  else
+    Result:= 0;
+  //as an altenative you could use: Result:= integer(Value), which does the same
 end;
 
 end.
