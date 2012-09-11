@@ -15,7 +15,7 @@
 // Intiator(s): Tony (maXcomX), Peter (OzShips)
 //
 // LastEdited by: Tony (maXcomX)
-// EditDate: 290712b
+// EditDate: 120912b
 //
 // Remarks:
 //
@@ -53,13 +53,16 @@ uses
   procedure SAFE_DELETE(var Obj);
   function OsIsVistaOrHigher(): boolean;
 
+
 implementation
+
 
 procedure SAFE_RELEASE(var Obj);
 begin
   if IUnknown(Obj) <> nil then
     IUnknown(Obj):= nil;
 end;
+
 
 procedure SAFE_DELETE(var Obj);
 var
@@ -70,6 +73,7 @@ begin
   Pointer(Obj):= nil;
   Tmp.Free;
 end;
+
 
 //Vista or higher check
 function OsIsVistaOrHigher(): boolean;
