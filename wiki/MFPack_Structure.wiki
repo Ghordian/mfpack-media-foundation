@@ -67,15 +67,11 @@ To find the header and library for a specific API element, please consult the re
 
 
 
-===LIBRARIES===
-
-
-
 ===REMARKS:===
-
 
 Every MFPack unit has a section that contains helpers specific for the Delphi programming language.
 If, however, a helper or utility covers more units, then this will be added in a MFPack helper unit located in ../Common
+
 
 
 ==MFPack - Media Foundation headers==
@@ -120,14 +116,6 @@ Location: MediaFoundation
   *opmapi.pas
   *wmcontainer.pas
 
-
-===LIBRARIES===
-  *dxva2.lib
-  *evr.lib
-  *mf.lib
-  *mfplat.lib
-  *mfplay.lib
-  *mfreadwrite.lib
 
 ===REMARKS:===
 
