@@ -82,6 +82,63 @@ const
   IID_IMFPresentationTimeSource           : TGUID = '{7FF12CCE-F76F-41c2-863B-1666C8E5E139}';
   IID_IMFClockStateSink                   : TGUID = '{F6696E82-74F7-4f3d-A178-8A5E09C3659F}';
   IID_IMFGetService                       : TGUID = '{fa993888-4383-415a-a930-dd472a8cf6f7}';
+  IID_IMFMediaStream                      : TGUID = '{D182108F-4EC6-443f-AA42-A71106EC825F}';
+  IID_IMFVideoSampleAllocator             : TGUID = '{86cbc910-e533-4751-8e3b-f19b5b806a03}';
+  IID_IMFVideoSampleAllocatorNotify       : TGUID = '{A792CDBE-C374-4e89-8335-278E7B9956A4}';
+  IID_IMFVideoSampleAllocatorCallback     : TGUID = '{992388B4-3372-4f67-8B6F-C84C071F4751}';
+  IID_IMFTimer                            : TGUID = '{e56e4cbd-8f70-49d8-a0f8-edb3d6ab9bf2}';
+  IID_IMFShutdown                         : TGUID = '{97ec2ea4-0e42-4937-97ac-9d6d328824e1}';
+  IID_IMFContentProtectionManager         : TGUID = '{ACF92459-6A61-42bd-B57C-B43E51203CB0}';
+  IID_IMFContentEnabler                   : TGUID = '{D3C4EF59-49CE-4381-9071-D5BCD044C770}';
+  IID_IMFMetadata                         : TGUID = '{F88CFB8C-EF16-4991-B450-CB8C69E51704}';
+  IID_IMFMetadataProvider                 : TGUID = '{56181D2D-E221-4adb-B1C8-3CEE6A53F76F}';
+  IID_IMFRateSupport                      : TGUID = '{0a9ccdbc-d797-4563-9667-94ec5d79292d}';
+  IID_IMFRateControl                      : TGUID = '{88ddcd21-03c3-4275-91ed-55ee3929328f}';
+  IID_IMFTimecodeTranslate                : TGUID = '{ab9d8661-f7e8-4ef4-9861-89f334f94e74}';
+  IID_IMFSimpleAudioVolume                : TGUID = '{089EDF13-CF71-4338-8D13-9E569DBDC319}';
+  IID_IMFAudioStreamVolume                : TGUID = '{76B1BBDB-4EC8-4f36-B106-70A9316DF593}';
+  IID_IMFAudioPolicy                      : TGUID = '{a0638c2b-6465-4395-9ae7-a321a9fd2856}';
+  IID_IMFSampleGrabberSinkCallback        : TGUID = '{8C7B80BF-EE42-4b59-B1DF-55668E1BDCA8}';
+  IID_IMFSampleGrabberSinkCallback2       : TGUID = '{ca86aa50-c46e-429e-ab27-16d6ac6844cb}';
+  IID_IMFWorkQueueServices                : TGUID = '{35FE1BB8-A3A9-40fe-BBEC-EB569C9CCCA3}';
+  IID_IMFQualityManager                   : TGUID = '{8D009D86-5B9F-4115-B1FC-9F80D52AB8AB}';
+  IID_IMFQualityAdvise                    : TGUID = '{EC15E2E9-E36B-4f7c-8758-77D452EF4CE7}';
+  IID_IMFQualityAdvise2                   : TGUID = '{F3706F0D-8EA2-4886-8000-7155E9EC2EAE}';
+  IID_IMFQualityAdviseLimits              : TGUID = '{dfcd8e4d-30b5-4567-acaa-8eb5b7853dc9}';
+  IID_IMFRealTimeClient                   : TGUID = '{2347D60B-3FB5-480c-8803-8DF3ADCD3EF0}';
+  IID_IMFSequencerSource                  : TGUID = '{197CD219-19CB-4de1-A64C-ACF2EDCBE59E}';
+  IID_IMFMediaSourceTopologyProvider      : TGUID = '{0E1D6009-C9F3-442d-8C51-A42D2D49452F}';
+  IID_IMFMediaSourcePresentationProvider  : TGUID = '{0E1D600a-C9F3-442d-8C51-A42D2D49452F}';
+  IID_IMFTopologyNodeAttributeEditor      : TGUID = '{676aa6dd-238a-410d-bb99-65668d01605a}';
+  IID_IMFByteStreamBuffering              : TGUID = '{6d66d782-1d4f-4db7-8c63-cb8c77f1ef5e}';
+  IID_IMFByteStreamCacheControl           : TGUID = '{F5042EA4-7A96-4a75-AA7B-2BE1EF7F88D5}';
+  IID_IMFNetCredential                    : TGUID = '{5b87ef6a-7ed8-434f-ba0e-184fac1628d1}';
+  IID_IMFNetCredentialManager             : TGUID = '{5b87ef6b-7ed8-434f-ba0e-184fac1628d1}';
+  IID_IMFNetCredentialCache               : TGUID = '{5b87ef6c-7ed8-434f-ba0e-184fac1628d1}';
+  IID_IMFSSLCertificateManager            : TGUID = '{61f7d887-1230-4a8b-aeba-8ad434d1a64d}';
+  IID_IMFSourceOpenMonitor                : TGUID = '{059054B3-027C-494C-A27D-9113291CF87F}';
+  IID_IMFNetProxyLocator                  : TGUID = '{e9cd0383-a268-4bb4-82de-658d53574d41}';
+  IID_IMFNetProxyLocatorFactory           : TGUID = '{e9cd0384-a268-4bb4-82de-658d53574d41}';
+  IID_IMFSaveJob                          : TGUID = '{e9931663-80bf-4c6e-98af-5dcf58747d1f}';
+  IID_IMFNetSchemeHandlerConfig           : TGUID = '{7BE19E73-C9BF-468a-AC5A-A5E8653BEC87}';
+  IID_IMFSchemeHandler                    : TGUID = '{6D4C7B74-52A0-4bb7-B0DB-55F29F47A668}';
+  IID_IMFByteStreamHandler                : TGUID = '{BB420AA4-765B-4a1f-91FE-D6A8A143924C}';
+  IID_IMFTrustedInput                     : TGUID = '{542612C4-A1B8-4632-B521-DE11EA64A0B0}';
+  IID_IMFInputTrustAuthority              : TGUID = '{D19F8E98-B126-4446-890C-5DCB7AD71453}';
+  IID_IMFTrustedOutput                    : TGUID = '{D19F8E95-B126-4446-890C-5DCB7AD71453}';
+  IID_IMFOutputPolicy                     : TGUID = '{7F00F10A-DAED-41AF-AB26-5FDFA4DFBA3C}';
+  IID_IMFOutputSchema                     : TGUID = '{7BE0FC5B-ABD9-44FB-A5C8-F50136E71599}';
+  IID_IMFSecureChannel                    : TGUID = '{d0ae555d-3b12-4d97-b060-0990bc5aeb67}';
+  IID_IMFSampleProtection                 : TGUID = '{8e36395f-c7b9-43c4-a54d-512b4af63c95}';
+  IID_IMFFinalizableMediaSink             : TGUID = '{EAECB74A-9A50-42ce-9541-6A7F57AA4AD7}';
+  IID_IMFRemoteProxy                      : TGUID = '{994e23ad-1cc2-493c-b9fa-46f1cb040fa4}';
+  IID_IMFPMPHost                          : TGUID = '{F70CA1A9-FDC7-4782-B994-ADFFB1C98606}';
+  IID_IMFPMPClient                        : TGUID = '{6C4E655D-EAD8-4421-B6B9-54DCDBBDF820}';
+  IID_IMFPMPServer                        : TGUID = '{994e23af-1cc2-493c-b9fa-46f1cb040fa4}';
+  IID_IMFSAMIStyle                        : TGUID = '{A7E025DD-5303-4a62-89D6-E747E1EFAC73}';
+  IID_IMFTranscodeProfile                 : TGUID = '{4ADFDBA3-7AB0-4953-A62B-461E7FF3DA1E}';
+  IID_IMFTranscodeSinkInfoProvider        : TGUID = '{8CFFCD2E-5A03-4a3a-AFF7-EDCD107C620E}';
+  IID_IMFFieldOfUseMFTUnlock              : TGUID = '{508E71D3-EC66-4fc3-8775-B4B9ED6BA847}';
 
 //--------------------- Topology GUIDs
 
@@ -125,6 +182,108 @@ const
   MF_TOPONODE_RATELESS                          : TGUID = '{14932f9d-9087-4bb4-8412-5167145cbe04}';
   MF_TOPONODE_DISABLE_PREROLL                   : TGUID = '{14932f9e-9087-4bb4-8412-5167145cbe04}';
   MF_TOPONODE_PRIMARYOUTPUT                     : TGUID = '{6304ef99-16b2-4ebe-9d67-e4c539b3a259}';
+  MF_SESSION_TOPOLOADER                         : TGUID = '{1e83d482-1f1c-4571-8405-88f4b2181f71}';
+  MF_SESSION_GLOBAL_TIME                        : TGUID = '{1e83d482-1f1c-4571-8405-88f4b2181f72}';
+  MF_SESSION_QUALITY_MANAGER                    : TGUID = '{1e83d482-1f1c-4571-8405-88f4b2181f73}';
+  MF_SESSION_CONTENT_PROTECTION_MANAGER         : TGUID = '{1e83d482-1f1c-4571-8405-88f4b2181f74}';
+  MF_SESSION_SERVER_CONTEXT                     : TGUID = '{afe5b291-50fa-46e8-b9be-0c0c3ce4b3a5}';
+  MF_SESSION_REMOTE_SOURCE_MODE                 : TGUID = '{f4033ef4-9bb3-4378-941f-85a0856bc244}';
+  MF_SESSION_APPROX_EVENT_OCCURRENCE_TIME       : TGUID = '{190e852f-6238-42d1-b5af-69ea338ef850}';
+  MF_PMP_SERVER_CONTEXT                         : TGUID = '{2f00c910-d2cf-4278-8b6a-d077fac3a25f}';
+
+//--------------------- Presentation Descriptor GUIDs
+  MF_PD_PMPHOST_CONTEXT                         : TGUID = '{6c990d31-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_APP_CONTEXT                             : TGUID = '{6c990d32-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_DURATION                                : TGUID = '{6c990d33-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_TOTAL_FILE_SIZE                         : TGUID = '{6c990d34-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_AUDIO_ENCODING_BITRATE                  : TGUID = '{6c990d35-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_VIDEO_ENCODING_BITRATE                  : TGUID = '{6c990d36-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_MIME_TYPE                               : TGUID = '{6c990d37-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_LAST_MODIFIED_TIME                      : TGUID = '{6c990d38-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_PLAYBACK_ELEMENT_ID                     : TGUID = '{6c990d39-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_PREFERRED_LANGUAGE                      : TGUID = '{6c990d3A-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_PLAYBACK_BOUNDARY_TIME                  : TGUID = '{6c990d3b-bb8e-477a-8598-0d5d96fcd88a}';
+  MF_PD_AUDIO_ISVARIABLEBITRATE                 : TGUID = '{33026ee0-e387-4582-ae0a-34a2ad3baa18}';
+
+//--------------------- Stream Descriptor GUIDs
+  MF_SD_LANGUAGE                                : TGUID = '{00af2180-bdc2-423c-abca-f503593bc121}';
+  MF_SD_PROTECTED                               : TGUID = '{00af2181-bdc2-423c-abca-f503593bc121}';
+  MF_SD_STREAM_NAME                             : TGUID = '{4f1b099d-d314-41e5-a781-7fefaa4c501f}';
+  MF_SD_MUTUALLY_EXCLUSIVE                      : TGUID = '{023ef79c-388d-487f-ac17-696cd6e3c6f5}';
+
+//--------------------- Audio renderer GUIDs
+  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS             : TGUID = '{ede4b5e0-f805-4d6c-99b3-db01bf95dfab}';
+  MF_AUDIO_RENDERER_ATTRIBUTE_SESSION_ID        : TGUID = '{ede4b5e3-f805-4d6c-99b3-db01bf95dfab}';
+  MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ID       : TGUID = '{b10aaec3-ef71-4cc3-b873-05a9a08b9f8e}';
+  MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ROLE     : TGUID = '{6ba644ff-27c5-4d02-9887-c28619fdb91b}';
+
+  MFNETSOURCE_STATISTICS_SERVICE                 : TGUID = '{3cb1f275-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_STATISTICS                         : TGUID = '{3cb1f274-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_BUFFERINGTIME                      : TGUID = '{3cb1f276-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ACCELERATEDSTREAMINGDURATION       : TGUID = '{3cb1f277-0505-0c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_MAXUDPACCELERATEDSTREAMINGDURATION : TGUID = '{4aab2879-bbe1-4994-9ff0-5495bd250129}';
+  MFNETSOURCE_MAXBUFFERTIMEMS                    : TGUID = '{408b24e6-4038-4401-b5b2-fe701a9ebf10}';
+  MFNETSOURCE_CONNECTIONBANDWIDTH                : TGUID = '{3cb1f278-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_CACHEENABLED                       : TGUID = '{3cb1f279-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_AUTORECONNECTLIMIT                 : TGUID = '{3cb1f27a-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_RESENDSENABLED                     : TGUID = '{3cb1f27b-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_THINNINGENABLED                    : TGUID = '{3cb1f27c-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROTOCOL                           : TGUID = '{3cb1f27d-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_TRANSPORT                          : TGUID = '{3cb1f27e-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PREVIEWMODEENABLED                 : TGUID = '{3cb1f27f-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_CREDENTIAL_MANAGER                 : TGUID = '{3cb1f280-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PPBANDWIDTH                        : TGUID = '{3cb1f281-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_AUTORECONNECTPROGRESS              : TGUID = '{3cb1f282-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROXYLOCATORFACTORY                : TGUID = '{3cb1f283-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_BROWSERUSERAGENT                   : TGUID = '{3cb1f28b-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_BROWSERWEBPAGE                     : TGUID = '{3cb1f28c-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PLAYERVERSION                      : TGUID = '{3cb1f28d-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PLAYERID                           : TGUID = '{3cb1f28e-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_HOSTEXE                            : TGUID = '{3cb1f28f-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_HOSTVERSION                        : TGUID = '{3cb1f291-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PLAYERUSERAGENT                    : TGUID = '{3cb1f292-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_CLIENTGUID                         : TGUID = '{60a2c4a6-f197-4c14-a5bf-88830d2458af}';
+  MFNETSOURCE_LOGURL                             : TGUID = '{3cb1f293-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ENABLE_UDP                         : TGUID = '{3cb1f294-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ENABLE_TCP                         : TGUID = '{3cb1f295-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ENABLE_MSB                         : TGUID = '{3cb1f296-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ENABLE_RTSP                        : TGUID = '{3cb1f298-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ENABLE_HTTP                        : TGUID = '{3cb1f299-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ENABLE_STREAMING                   : TGUID = '{3cb1f290-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_ENABLE_DOWNLOAD                    : TGUID = '{3cb1f29d-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_UDP_PORT_RANGE                     : TGUID = '{3cb1f29a-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROXYINFO                          : TGUID = '{3cb1f29b-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_DRMNET_LICENSE_REPRESENTATION      : TGUID = '{47eae1bd-bdfe-42e2-82f3-54a48c17962d}';
+  MFNETSOURCE_PROXYSETTINGS                      : TGUID = '{3cb1f287-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROXYHOSTNAME                      : TGUID = '{3cb1f284-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROXYPORT                          : TGUID = '{3cb1f288-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROXYEXCEPTIONLIST                 : TGUID = '{3cb1f285-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROXYBYPASSFORLOCAL                : TGUID = '{3cb1f286-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_PROXYRERUNAUTODETECTION            : TGUID = '{3cb1f289-0505-4c5d-ae71-0a556344efa1}';
+  MFNETSOURCE_STREAM_LANGUAGE                    : TGUID = '{9ab44318-f7cd-4f2d-8d6d-fa35b492cecb}';
+  MFNETSOURCE_LOGPARAMS                          : TGUID = '{64936ae8-9418-453a-8cda-3e0a668b353b}';
+
+  MFCONNECTOR_SPDIF                              : TGUID = '{0b94a712-ad3e-4cee-83ce-ce32e3db6522}';
+  MFCONNECTOR_UNKNOWN                            : TGUID = '{ac3aef5c-ce43-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_PCI                                : TGUID = '{ac3aef5d-ce43-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_PCIX                               : TGUID = '{ac3aef5e-ce43-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_PCI_Express                        : TGUID = '{ac3aef5f-ce43-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_AGP                                : TGUID = '{ac3aef60-ce43-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_VGA                                : TGUID = '{57cd5968-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_SVIDEO                             : TGUID = '{57cd5969-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_COMPOSITE                          : TGUID = '{57cd596a-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_COMPONENT                          : TGUID = '{57cd596b-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_DVI                                : TGUID = '{57cd596c-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_HDMI                               : TGUID = '{57cd596d-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_LVDS                               : TGUID = '{57cd596e-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_D_JPN                              : TGUID = '{57cd5970-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_SDI                                : TGUID = '{57cd5971-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_DISPLAYPORT_EXTERNAL               : TGUID = '{57cd5972-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_DISPLAYPORT_EMBEDDED               : TGUID = '{57cd5973-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_UDI_EXTERNAL                       : TGUID = '{57cd5974-ce47-11d9-92db-000bdb28ff98}';
+  MFCONNECTOR_UDI_EMBEDDED                       : TGUID = '{57cd5975-ce47-11d9-92db-000bdb28ff98}';
+
+  MF_RATE_CONTROL_SERVICE                        : TGUID = '{866fa297-b802-4bf8-9dc9-5e3b6a9f53c9}';
 
 //MF_RESOLUTION
   MF_RESOLUTION_MEDIASOURCE	= $1;
@@ -133,6 +292,7 @@ const
 	MF_RESOLUTION_KEEP_BYTE_STREAM_ALIVE_ON_FAIL	= $20;
 	MF_RESOLUTION_READ = $10000;
 	MF_RESOLUTION_WRITE	= $20000;
+
 
 type
 
@@ -213,6 +373,10 @@ type
   IMFClockStateSink = interface;
   {$EXTERNALSYM IMFGetService}
   IMFGetService = interface;
+  {$EXTERNALSYM IMFRateSupport}
+  IMFRateSupport = interface;
+  {$EXTERNALSYM IMFRateControl}
+  IMFRateControl = interface;
 
 //--------------------- Types and records ------------------------------------
 
@@ -266,6 +430,14 @@ type
   );
   {$EXTERNALSYM MFSTREAMSINK_MARKER_TYPE}
   MFSTREAMSINK_MARKER_TYPE = _MFSTREAMSINK_MARKER_TYPE;
+
+  {$EXTERNALSYM _MFRATE_DIRECTION}
+  _MFRATE_DIRECTION = (
+    MFRATE_FORWARD = 0,
+    MFRATE_REVERSE = (MFRATE_FORWARD  + 1)
+  );
+  {$EXTERNALSYM MFRATE_DIRECTION}
+  MFRATE_DIRECTION = _MFRATE_DIRECTION;
 
 //--------------------- Interfaces -------------------------------------------
 
@@ -454,7 +626,23 @@ type
   //Interface IMFGetService
   IMFGetService = interface(IUnknown)
 	['{83CF873A-F6DA-4bc8-823F-BACFD55DC430}']
-    function GetService(const  guidService: REFGUID; const riid: REFIID; ppvObject: Pointer): HResult; stdcall;
+    function GetService(const  guidService: tGUID; const riid: tGUID; ppvObject: IUnknown): HResult; stdcall;
+//    function GetService(const  guidService: REFGUID; const riid: REFIID; ppvObject: Pointer): HResult; stdcall;
+  end;
+
+  //Interface IMFRateSupport
+  IMFRateSupport = interface(IUnknown)
+	['{0a9ccdbc-d797-4563-9667-94ec5d79292d}']
+    function GetSlowestRate(const eDirection: MFRATE_DIRECTION; const fThin: Bool; out pflRate: Single): HResult; stdcall;
+    function GetFastestRate(const eDirection: MFRATE_DIRECTION; const fThin: Bool; out pflRate: Single): HResult; stdcall;
+    function IsRateSupported(const fThin: Bool; const flRate: Single; var pflNearestSupportedRate: Single): HResult; stdcall;
+  end;
+
+//--------------------- IMFRateControl
+  IMFRateControl = interface(IUnknown)
+  [IID_IMFRateControl]
+    function SetRate(const fThin: BOOL; const flRate: Single): HRESULT; stdcall;
+    function GetRate(var fThin: BOOL; var flRate: Single): HRESULT; stdcall;
   end;
 
 //--------------------- Helper functions -------------------------------------
@@ -508,79 +696,8 @@ end.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 const
-  //Interface ID's
-  IID_IMFMediaStream                      : TGUID = '{D182108F-4EC6-443f-AA42-A71106EC825F}';
-  IID_IMFVideoSampleAllocator             : TGUID = '{86cbc910-e533-4751-8e3b-f19b5b806a03}';
-  // >= Windows 7
-  IID_IMFVideoSampleAllocatorNotify       : TGUID = '{A792CDBE-C374-4e89-8335-278E7B9956A4}';
-  // >= Windows 7
-  IID_IMFVideoSampleAllocatorCallback     : TGUID = '{992388B4-3372-4f67-8B6F-C84C071F4751}';
-  IID_IMFTimer                            : TGUID = '{e56e4cbd-8f70-49d8-a0f8-edb3d6ab9bf2}';
-  IID_IMFShutdown                         : TGUID = '{97ec2ea4-0e42-4937-97ac-9d6d328824e1}';
-  IID_IMFContentProtectionManager         : TGUID = '{ACF92459-6A61-42bd-B57C-B43E51203CB0}';
-  IID_IMFContentEnabler                   : TGUID = '{D3C4EF59-49CE-4381-9071-D5BCD044C770}';
-  IID_IMFMetadata                         : TGUID = '{F88CFB8C-EF16-4991-B450-CB8C69E51704}';
-  IID_IMFMetadataProvider                 : TGUID = '{56181D2D-E221-4adb-B1C8-3CEE6A53F76F}';
-  IID_IMFRateSupport                      : TGUID = '{0a9ccdbc-d797-4563-9667-94ec5d79292d}';
-  IID_IMFTimecodeTranslate                : TGUID = '{ab9d8661-f7e8-4ef4-9861-89f334f94e74}';
-  IID_IMFSimpleAudioVolume                : TGUID = '{089EDF13-CF71-4338-8D13-9E569DBDC319}';
-  IID_IMFAudioStreamVolume                : TGUID = '{76B1BBDB-4EC8-4f36-B106-70A9316DF593}';
-  IID_IMFAudioPolicy                      : TGUID = '{a0638c2b-6465-4395-9ae7-a321a9fd2856}';
-  IID_IMFSampleGrabberSinkCallback        : TGUID = '{8C7B80BF-EE42-4b59-B1DF-55668E1BDCA8}';
-  IID_IMFSampleGrabberSinkCallback2       : TGUID = '{ca86aa50-c46e-429e-ab27-16d6ac6844cb}';
-  IID_IMFWorkQueueServices                : TGUID = '{35FE1BB8-A3A9-40fe-BBEC-EB569C9CCCA3}';
-  IID_IMFQualityManager                   : TGUID = '{8D009D86-5B9F-4115-B1FC-9F80D52AB8AB}';
-  IID_IMFQualityAdvise                    : TGUID = '{EC15E2E9-E36B-4f7c-8758-77D452EF4CE7}';
-  // >= Windows 7
-  IID_IMFQualityAdvise2                   : TGUID = '{F3706F0D-8EA2-4886-8000-7155E9EC2EAE}';
-  IID_IMFQualityAdviseLimits              : TGUID = '{dfcd8e4d-30b5-4567-acaa-8eb5b7853dc9}';
-  // end >= Windows 7
-  IID_IMFRealTimeClient                   : TGUID = '{2347D60B-3FB5-480c-8803-8DF3ADCD3EF0}';
-  IID_IMFSequencerSource                  : TGUID = '{197CD219-19CB-4de1-A64C-ACF2EDCBE59E}';
-  IID_IMFMediaSourceTopologyProvider      : TGUID = '{0E1D6009-C9F3-442d-8C51-A42D2D49452F}';
-  IID_IMFMediaSourcePresentationProvider  : TGUID = '{0E1D600a-C9F3-442d-8C51-A42D2D49452F}';
-  IID_IMFTopologyNodeAttributeEditor      : TGUID = '{676aa6dd-238a-410d-bb99-65668d01605a}';
-  IID_IMFByteStreamBuffering              : TGUID = '{6d66d782-1d4f-4db7-8c63-cb8c77f1ef5e}';
-  IID_IMFByteStreamCacheControl           : TGUID = '{F5042EA4-7A96-4a75-AA7B-2BE1EF7F88D5}';
-  IID_IMFNetCredential                    : TGUID = '{5b87ef6a-7ed8-434f-ba0e-184fac1628d1}';
-  IID_IMFNetCredentialManager             : TGUID = '{5b87ef6b-7ed8-434f-ba0e-184fac1628d1}';
-  IID_IMFNetCredentialCache               : TGUID = '{5b87ef6c-7ed8-434f-ba0e-184fac1628d1}';
-  IID_IMFSSLCertificateManager            : TGUID = '{61f7d887-1230-4a8b-aeba-8ad434d1a64d}';
-  IID_IMFSourceOpenMonitor                : TGUID = '{059054B3-027C-494C-A27D-9113291CF87F}';
-  IID_IMFNetProxyLocator                  : TGUID = '{e9cd0383-a268-4bb4-82de-658d53574d41}';
-  IID_IMFNetProxyLocatorFactory           : TGUID = '{e9cd0384-a268-4bb4-82de-658d53574d41}';
-  IID_IMFSaveJob                          : TGUID = '{e9931663-80bf-4c6e-98af-5dcf58747d1f}';
-  IID_IMFNetSchemeHandlerConfig           : TGUID = '{7BE19E73-C9BF-468a-AC5A-A5E8653BEC87}';
-  IID_IMFSchemeHandler                    : TGUID = '{6D4C7B74-52A0-4bb7-B0DB-55F29F47A668}';
-  IID_IMFByteStreamHandler                : TGUID = '{BB420AA4-765B-4a1f-91FE-D6A8A143924C}';
-  IID_IMFTrustedInput                     : TGUID = '{542612C4-A1B8-4632-B521-DE11EA64A0B0}';
-  IID_IMFInputTrustAuthority              : TGUID = '{D19F8E98-B126-4446-890C-5DCB7AD71453}';
-  IID_IMFTrustedOutput                    : TGUID = '{D19F8E95-B126-4446-890C-5DCB7AD71453}';
-  IID_IMFOutputPolicy                     : TGUID = '{7F00F10A-DAED-41AF-AB26-5FDFA4DFBA3C}';
-  IID_IMFOutputSchema                     : TGUID = '{7BE0FC5B-ABD9-44FB-A5C8-F50136E71599}';
-  IID_IMFSecureChannel                    : TGUID = '{d0ae555d-3b12-4d97-b060-0990bc5aeb67}';
-  IID_IMFSampleProtection                 : TGUID = '{8e36395f-c7b9-43c4-a54d-512b4af63c95}';
-  IID_IMFFinalizableMediaSink             : TGUID = '{EAECB74A-9A50-42ce-9541-6A7F57AA4AD7}';
-  IID_IMFRemoteProxy                      : TGUID = '{994e23ad-1cc2-493c-b9fa-46f1cb040fa4}';
-  IID_IMFPMPHost                          : TGUID = '{F70CA1A9-FDC7-4782-B994-ADFFB1C98606}';
-  IID_IMFPMPClient                        : TGUID = '{6C4E655D-EAD8-4421-B6B9-54DCDBBDF820}';
-  IID_IMFPMPServer                        : TGUID = '{994e23af-1cc2-493c-b9fa-46f1cb040fa4}';
-  IID_IMFSAMIStyle                        : TGUID = '{A7E025DD-5303-4a62-89D6-E747E1EFAC73}';
-  IID_IMFTranscodeProfile                 : TGUID = '{4ADFDBA3-7AB0-4953-A62B-461E7FF3DA1E}';
-  IID_IMFTranscodeSinkInfoProvider        : TGUID = '{8CFFCD2E-5A03-4a3a-AFF7-EDCD107C620E}';
-  IID_IMFFieldOfUseMFTUnlock              : TGUID = '{508E71D3-EC66-4fc3-8775-B4B9ED6BA847}';
 
 
-  // [local] [CLSID] GUIDS
-  //MF_SESSION
-  MF_SESSION_TOPOLOADER                   : TGUID =  '{1e83d482-1f1c4571-840588f4-b2181f71}';
-  MF_SESSION_GLOBAL_TIME                  : TGUID =  '{1e83d482-1f1c4571-840588f4-b2181f72}';
-  MF_SESSION_QUALITY_MANAGER              : TGUID =  '{1e83d482-1f1c4571-840588f4-b2181f73}';
-  MF_SESSION_CONTENT_PROTECTION_MANAGER   : TGUID =  '{1e83d482-1f1c4571-840588f4-b2181f74}';
-  MF_SESSION_SERVER_CONTEXT               : TGUID =  '{afe5b291-50fa46e8-b9be0c0c-3ce4b3a5}';
-  MF_SESSION_REMOTE_SOURCE_MODE           : TGUID =  '{f4033ef4-9bb34378-941f85a0-856bc244}';
-  MF_SESSION_APPROX_EVENT_OCCURRENCE_TIME : TGUID =  '{190e852f-623842d1-b5af69ea-338ef850}';
-  MF_PMP_SERVER_CONTEXT                   : TGUID =  '{2f00c910-d2cf4278-8b6ad077-fac3a25f}';
 
 
 
@@ -645,31 +762,6 @@ const
   MFCLOCK_JITTER_PASSIVE              = 10000;
 
 
-  //PresentationDescriptor
-  MF_PD_PMPHOST_CONTEXT                         : TGUID = '{6c990d31-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_APP_CONTEXT                             : TGUID = '{6c990d32-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_DURATION                                : TGUID = '{6c990d33-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_TOTAL_FILE_SIZE                         : TGUID = '{6c990d34-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_AUDIO_ENCODING_BITRATE                  : TGUID = '{6c990d35-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_VIDEO_ENCODING_BITRATE                  : TGUID = '{6c990d36-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_MIME_TYPE                               : TGUID = '{6c990d37-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_LAST_MODIFIED_TIME                      : TGUID = '{6c990d38-bb8e-477a-8598-0d5d96fcd88a}';
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  // >= Windows 7
-  MF_PD_PLAYBACK_ELEMENT_ID                     : TGUID = '{6c990d39-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_PREFERRED_LANGUAGE                      : TGUID = '{6c990d3A-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_PLAYBACK_BOUNDARY_TIME                  : TGUID = '{6c990d3b-bb8e-477a-8598-0d5d96fcd88a}';
-  MF_PD_AUDIO_ISVARIABLEBITRATE                 : TGUID = '{33026ee0-e387-4582-ae0a-34a2ad3baa18}';
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-
-
-  //StreamDescriptor
-  MF_SD_LANGUAGE                                : TGUID = '{00af2180-bdc2-423c-abca-f503593bc121}';
-  MF_SD_PROTECTED                               : TGUID = '{00af2181-bdc2-423c-abca-f503593bc121}';
-  MF_SD_STREAM_NAME                             : TGUID = '{4f1b099d-d314-41e5-a781-7fefaa4c501f}';
-  MF_SD_MUTUALLY_EXCLUSIVE                      : TGUID = '{023ef79c-388d-487f-ac17-696cd6e3c6f5}';
-
-  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS             : TGUID = '{ede4b5e0-f805-4d6c-99b3-db01bf95dfab}';
 
 
   {$EXTERNALSYM MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_CROSSPROCESS}
@@ -680,10 +772,6 @@ const
   {$EXTERNALSYM MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_DONT_ALLOW_FORMAT_CHANGES}
   MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_DONT_ALLOW_FORMAT_CHANGES = $ 4;
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-
-  MF_AUDIO_RENDERER_ATTRIBUTE_SESSION_ID        : TGUID = '{ede4b5e3-f805-4d6c-99b3-db01bf95dfab}';
-  MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ID       : TGUID = '{b10aaec3-ef71-4cc3-b873-05a9a08b9f8e}';
-  MF_AUDIO_RENDERER_ATTRIBUTE_ENDPOINT_ROLE     : TGUID = '{6ba644ff-27c5-4d02-9887-c28619fdb91b}';
 
   MFENABLETYPE_WMDRMV1_LicenseAcquisition       : TGUID = '{4ff6eeaf-0b43-4797-9b85-abf31815e7b0}';
   MFENABLETYPE_WMDRMV7_LicenseAcquisition       : TGUID = '{003306df-4a06-4884-a097-ef6d22ec84a3}';
@@ -777,89 +865,18 @@ const
 
   MF_TOPONODE_ATTRIBUTE_EDITOR_SERVICE            : TGUID = '{65656e1a-077f-4472-83ef-316f11d5087a}';
 
+  MFNET_SAVEJOB_SERVICE    : TGUID = '{b85a587f-3d02-4e52-9565-55d3ec1e7ff7}';
+
   // >= Windows 7
   MFNETSOURCE_SSLCERTIFICATE_MANAGER              : TGUID = '{55e6cb27-e69b-4267-940c-2d7ec5bb8a0f}';
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
   // end >= Windows 7
 
-  MFNET_SAVEJOB_SERVICE    : TGUID = '{b85a587f-3d02-4e52-9565-55d3ec1e7ff7}';
-
-   MFNETSOURCE_STATISTICS_SERVICE                 : TGUID = '{3cb1f275-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_STATISTICS                         : TGUID = '{3cb1f274-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_BUFFERINGTIME                      : TGUID = '{3cb1f276-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ACCELERATEDSTREAMINGDURATION       : TGUID = '{3cb1f277-0505-0c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_MAXUDPACCELERATEDSTREAMINGDURATION : TGUID = '{4aab2879-bbe1-4994-9ff0-5495bd25129}';  //todo: check
-   MFNETSOURCE_MAXBUFFERTIMEMS                    : TGUID = '{408b24e6-4038-4401-b5b2-fe701a9ebf10}';
-   MFNETSOURCE_CONNECTIONBANDWIDTH                : TGUID = '{3cb1f278-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_CACHEENABLED                       : TGUID = '{3cb1f279-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_AUTORECONNECTLIMIT                 : TGUID = '{3cb1f27a-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_RESENDSENABLED                     : TGUID = '{3cb1f27b-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_THINNINGENABLED                    : TGUID = '{3cb1f27c-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROTOCOL                           : TGUID = '{3cb1f27d-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_TRANSPORT                          : TGUID = '{3cb1f27e-0505-4c5d-ae71-0a556344efa1}';
-   //#if (WINVER >= _WIN32_WINNT_WIN7)
-   MFNETSOURCE_PREVIEWMODEENABLED                 : TGUID = '{3cb1f27f-0505-4c5d-ae71-0a556344efa1}';
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-
-   MFNETSOURCE_CREDENTIAL_MANAGER                 : TGUID = '{3cb1f280-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PPBANDWIDTH                        : TGUID = '{3cb1f281-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_AUTORECONNECTPROGRESS              : TGUID = '{3cb1f282-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROXYLOCATORFACTORY                : TGUID = '{3cb1f283-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_BROWSERUSERAGENT                   : TGUID = '{3cb1f28b-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_BROWSERWEBPAGE                     : TGUID = '{3cb1f28c-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PLAYERVERSION                      : TGUID = '{3cb1f28d-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PLAYERID                           : TGUID = '{3cb1f28e-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_HOSTEXE                            : TGUID = '{3cb1f28f-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_HOSTVERSION                        : TGUID = '{3cb1f291-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PLAYERUSERAGENT                    : TGUID = '{3cb1f292-0505-4c5d-ae71-0a556344efa1}';
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  MFNETSOURCE_CLIENTGUID                          : TGUID = '{60a2c4a6-f197-4c14-a5bf-8883d2458af}';
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-   MFNETSOURCE_LOGURL                             : TGUID = '{3cb1f293-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ENABLE_UDP                         : TGUID = '{3cb1f294-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ENABLE_TCP                         : TGUID = '{3cb1f295-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ENABLE_MSB                         : TGUID = '{3cb1f296-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ENABLE_RTSP                        : TGUID = '{3cb1f298-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ENABLE_HTTP                        : TGUID = '{3cb1f299-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ENABLE_STREAMING                   : TGUID = '{3cb1f290-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_ENABLE_DOWNLOAD                    : TGUID = '{3cb1f29d-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_UDP_PORT_RANGE                     : TGUID = '{3cb1f29a-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROXYINFO                          : TGUID = '{3cb1f29b-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_DRMNET_LICENSE_REPRESENTATION      : TGUID = '{47eae1bd-bdfe-42e2-82f3-54a48c17962d}';
-   MFNETSOURCE_PROXYSETTINGS                      : TGUID = '{3cb1f287-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROXYHOSTNAME                      : TGUID = '{3cb1f284-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROXYPORT                          : TGUID = '{3cb1f288-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROXYEXCEPTIONLIST                 : TGUID = '{3cb1f285-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROXYBYPASSFORLOCAL                : TGUID = '{3cb1f286-0505-4c5d-ae71-0a556344efa1}';
-   MFNETSOURCE_PROXYRERUNAUTODETECTION            : TGUID = '{3cb1f289-0505-4c5d-ae71-0a556344efa1}';
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-   MFNETSOURCE_STREAM_LANGUAGE                    : TGUID = '{9ab44318-f7cd-4f2d-8d6d-fa35b492cecb}';
-   MFNETSOURCE_LOGPARAMS                          : TGUID = '{64936ae8-9418-453a-8cda-3e0a668b353b}';
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
 
     //#if (WINVER >= _WIN32_WINNT_WIN7)
   MF_BYTESTREAMHANDLER_ACCEPTS_SHARE_WRITE        : TGUID = '{a6e1f733-3001-4915-8150-1558a2180ec8);
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
 
-  MFCONNECTOR_SPDIF                               : TGUID = '{0b94a712-ad3e-4cee-83ce-ce32e3db6522}';  //todo; check
-  MFCONNECTOR_UNKNOWN                             : TGUID = '{ac3aef5c-ce43-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_PCI                                 : TGUID = '{ac3aef5d-ce43-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_PCIX                                : TGUID = '{ac3aef5e-ce43-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_PCI_Express                         : TGUID = '{ac3aef5f-ce43-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_AGP                                 : TGUID = '{ac3aef60-ce43-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_VGA                                 : TGUID = '{57cd5968-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_SVIDEO                              : TGUID = '{57cd5969-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_COMPOSITE                           : TGUID = '{57cd596a-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_COMPONENT                           : TGUID = '{57cd596b-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_DVI                                 : TGUID = '{57cd596c-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_HDMI                                : TGUID = '{57cd596d-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_LVDS                                : TGUID = '{57cd596e-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_D_JPN                               : TGUID = '{57cd5970-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_SDI                                 : TGUID = '{57cd5971-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_DISPLAYPORT_EXTERNAL                : TGUID = '{57cd5972-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_DISPLAYPORT_EMBEDDED                : TGUID = '{57cd5973-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_UDI_EXTERNAL                        : TGUID = '{57cd5974-ce47-11d9-92db-000bdb28ff98}';
-  MFCONNECTOR_UDI_EMBEDDED                        : TGUID = '{57cd5975-ce47-11d9-92db-000bdb28ff98}';
 
   // [local]
   // MFPROTECTION_DISABLE schema data
@@ -1125,15 +1142,6 @@ type
   end;
   {$EXTERNALSYM ASF_FLAT_SYNCHRONISED_LYRICS}
   ASF_FLAT_SYNCHRONISED_LYRICS = _ASFFlatSynchronisedLyrics;
-
-type
-  {$EXTERNALSYM _MFRATE_DIRECTION}
-  _MFRATE_DIRECTION = (
-    MFRATE_FORWARD = 0,
-    MFRATE_REVERSE = (MFRATE_FORWARD  + 1)
-  );
-  {$EXTERNALSYM MFRATE_DIRECTION}
-  MFRATE_DIRECTION = _MFRATE_DIRECTION;
 
 type  //MFQualityManager
  {$EXTERNALSYM _MF_QUALITY_DROP_MODE}
@@ -1491,10 +1499,6 @@ type
   IMFMetadata = interface;
   {$EXTERNALSYM IMFMetadataProvider}
   IMFMetadataProvider = interface;
-  {$EXTERNALSYM IMFRateSupport}
-  IMFRateSupport = interface;
-  {$EXTERNALSYM IMFRateControl}
-  IMFRateControl = interface;
   {$EXTERNALSYM IMFTimecodeTranslate}
   IMFTimecodeTranslate = interface;
   {$EXTERNALSYM IMFSimpleAudioVolume}
@@ -1693,13 +1697,6 @@ type
                   const dwFlags; DWord; out ppMFMetadata: IMFMetadata): HResult; stdcall;
   end;
 
-  //Interface IMFRateSupport
-  IMFRateSupport = interface(IUnknown)
-	['{0a9ccdbc-d797-4563-9667-94ec5d79292d}']
-    function GetSlowestRate(const eDirection: MFRATE_DIRECTION; const fThin: Bool; out pflRate: Single): HResult; stdcall;
-    function GetFastestRate(const eDirection: MFRATE_DIRECTION; const fThin: Bool; out pflRate: Single): HResult; stdcall;
-    function IsRateSupported(const fThin: Bool; const flRate: Single; var pflNearestSupportedRate: Single): HResult; stdcall;
-  end;
 
   //#if (WINVER >= _WIN32_WINNT_WIN7)
   // >= Windows 7
