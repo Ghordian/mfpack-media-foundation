@@ -158,6 +158,18 @@ const //updt 090812 replace: type
     MF_TOPOSTATUS_ENDED = 400;
 //    end;                           //updt 090812 Remove record
 
+  // Session capabilities bitflags
+  {$EXTERNALSYM MFSESSIONCAP_START}
+  MFSESSIONCAP_START                  = $00000001;
+  {$EXTERNALSYM MFSESSIONCAP_SEEK}
+  MFSESSIONCAP_SEEK                   = $00000002;
+  {$EXTERNALSYM MFSESSIONCAP_PAUSE}
+  MFSESSIONCAP_PAUSE                  = $00000004;
+  {$EXTERNALSYM MFSESSIONCAP_RATE_FORWARD}
+  MFSESSIONCAP_RATE_FORWARD           = $00000010;
+  {$EXTERNALSYM MFSESSIONCAP_RATE_REVERSE}
+  MFSESSIONCAP_RATE_REVERSE           = $00000020;
+
 ////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////   Startup/Shutdown  ////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -450,17 +462,7 @@ Const  //updt 090812 replace type
   // Type: UINT32
   MF_EVENT_SESSIONCAPS_DELTA : TGuid =  '{7e5ebcd1-11b8-4abe-afad-10f6599a7f42}'; //updt 090812 correct guid value
 
-  // Session capabilities bitflags
-  {$EXTERNALSYM MFSESSIONCAP_START}
-  MFSESSIONCAP_START                  = $00000001;
-  {$EXTERNALSYM MFSESSIONCAP_SEEK}
-  MFSESSIONCAP_SEEK                   = $00000002;
-  {$EXTERNALSYM MFSESSIONCAP_PAUSE}
-  MFSESSIONCAP_PAUSE                  = $00000004;
-  {$EXTERNALSYM MFSESSIONCAP_RATE_FORWARD}
-  MFSESSIONCAP_RATE_FORWARD           = $00000010;
-  {$EXTERNALSYM MFSESSIONCAP_RATE_REVERSE}
-  MFSESSIONCAP_RATE_REVERSE           = $00000020;
+
 
 
   // MESessionTopologyStatus attributes
