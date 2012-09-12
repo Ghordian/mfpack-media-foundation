@@ -89,50 +89,49 @@ please consult the reference pages in the Media Foundation Programming Reference
 Location: MediaFoundation
 
 ===HEADERS===
-  dxva2api.h
-  dxvahd.h
-  evr.h
-  evr9.h
-  mfapi.h
-  mfmp2dlna.h
-  mferrors.h
-  mfidl.h
-  mfobjects.h
-  mfplay.h
-  mfreadwrite.h
-  mftransform.h
-  opmapi.h
-  wmcontainer.h
+  *dxva2api.h
+  *dxvahd.h
+  *evr.h
+  *evr9.h
+  *mfapi.h
+  *mfmp2dlna.h
+  *mferrors.h
+  *mfidl.h
+  *mfobjects.h
+  *mfplay.h
+  *mfreadwrite.h
+  *mftransform.h
+  *opmapi.h
+  *wmcontainer.h
 
 ===DELPHI UNITS===
-  dxva2api.pas
-  dxvahd.pas
-  evr.pas
-  evr9.pas
-  mfapi.pas
-  mfmp2dlna.pas
-  mferrors.pas
-  mfidl.pas (Source Resolver)
-  mfobjects.pas
-  mfplay.pas
-  mfreadwrite.pas
-  mftransform.pas
-  opmapi.pas
-  wmcontainer.pas
+  *dxva2api.pas
+  *dxvahd.pas
+  *evr.pas
+  *evr9.pas
+  *mfapi.pas
+  *mfmp2dlna.pas
+  *mferrors.pas
+  *mfidl.pas (Source Resolver)
+  *mfobjects.pas
+  *mfplay.pas
+  *mfreadwrite.pas
+  *mftransform.pas
+  *opmapi.pas
+  *wmcontainer.pas
 
 
 ===LIBRARIES===
-  dxva2.lib
-  evr.lib
-  mf.lib
-  mfplat.lib
-  mfplay.lib
-  mfreadwrite.lib
+  *dxva2.lib
+  *evr.lib
+  *mf.lib
+  *mfplat.lib
+  *mfplay.lib
+  *mfreadwrite.lib
 
 ===REMARKS:===
 
 Every MFPack unit has a section that contains helpers specific for the Delphi programming language.
-If, however, a Media Foundation (MF) helper or utility covers more units or shares units with CoreAudio, 
-then this will be added in the helper unit MFPack/Common/MfUtils.pas respectivly MFPack/Common/MfPUtils.pas
+If, however, a Media Foundation (MF) helper or utility covers more units or shares units with CoreAudio, then this will be added in the helper unit MFPack/Common/MfUtils.pas respectivly MFPack/Common/MfPUtils.pas
 
  
