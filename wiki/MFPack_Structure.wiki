@@ -1,6 +1,6 @@
-= Structure of MFPack =
+ = Structure of MFPack =
 
-MFPack follows mainly the structures from Microsoft [http://msdn.microsoft.com/en-us/library/windows/desktop/ee663260 MSDN],
+MFPack follows mainly the structures from Microsoft, MSDN: [http://msdn.microsoft.com/en-us/library/windows/desktop/ee663260]
 
 In that way we broke with the tradition used by former Delphi translations, where C Builder directives where build in the translations of the official headers. Also translations to *TDelphitype* and *PDelhiPointer* are abandoned. The main reason is that we want to keep this software for free and not suitable for commercial implementations (see: Introduction page). Also: It makes it easier to read and interpret the issues on MSDN in relation to the Delphi translations.
 If you need a pointer to an object, you are free to do so.
@@ -10,6 +10,138 @@ Most translations are translated from MIDL (Microsoft Interface Definition Langu
 
 _*Example:*
 
-_ __MIDL___MIDL_itf_dxva2api_0000_0000_0003 is shortened to: _dxva2api_0000_0000_0003_
+_ __MIDL___MIDL_itf_dxva2api_0000_0000_0003 is shortened to: _dxva2api_0000_0000_0003
 
-This will it make some easier to read back documentation and the SDK headerfiles. 
+This will it make some easier to read back documentation and the SDK headerfiles.
+
+
+MFPACK DIRECTORY STRUCTURES
+
+= MFPack - Core Audio headers =
+
+
+Headers and libraries that define all of the Core Audio APIs.
+
+The Core Audio APIs are:
+ - Multimedia Device API (MMDevice): 
+   Clients use this API to enumerate the audio endpoint devices in the system.
+ - Windows Audio Session API (WASAPI):
+   Clients use this API to create and manage audio streams to and from audio endpoint devices.
+ - DeviceTopology API:
+   Clients use this API to directly access the topological features (for example, volume controls and multiplexers) that 
+   lie along the data paths inside hardware devices in audio adapters.
+ - EndpointVolume API. Clients use this API to directly access the volume controls on audio endpoint devices. 
+   This API is primarily used by applications that manage exclusive-mode audio streams.
+
+
+
+To find the header and library for a specific API element,
+please consult the reference pages in the Core Audio Programming Reference on 
+MSDN [http://msdn.microsoft.com/en-us/library/windows/desktop/dd370851]
+
+
+
+
+
+
+= HEADERS =
+
+Core Audio component 	        Header file(s) 
+====================           ===================
+MMDevice API...................Mmdeviceapi.h
+WASAPI.........................Audioclient.h 
+                               Audiopolicy.h 
+                               Audiosessiontypes.h (defines constants that are used by WASAPI)
+DeviceTopology API.............Devicetopology.h
+EndpointVolume API.............Endpointvolume.h
+
+
+
+DELPHI UNITS
+
+Location                        Unit(s)
+====================            ===================
+CoreAudio/Common................AudEvCod.pas
+                                AudioAPOTypes.pas
+                                DeviceCategories.pas
+CoreAudio/DeviceTopology........DeviceTopology.pas
+CoreAudio/EndpointVolume........Endpointvolume.pas
+CoreAudio/MMDeviceAPI...........MMDeviceApi.pas
+CoreAudio/WASAPI................AudioClient.pas
+                                AudioPolicy.pas
+                                AudioSessionTypes.pas
+CoreAudio/Utilities.............MMDevApiUtils.pas (This unit contains some usefull functions and helpers)
+CoreAudio/Samples...............Win78Mixer.pas (A sample unit how to access the mixer device in XP, Vista and Windows 7)
+
+
+
+= LIBRARIES =
+
+
+
+= REMARKS: =
+
+
+Every MFPack unit has a section that contains helpers specific for the Delphi programming language.
+If, however, a helper or utility covers more units, then this will be added in a MFPack helper unit located in ../Common
+
+
+= MFPack - Media Foundation headers =
+
+Headers and libraries that define all of the Media Foundation APIs.
+
+
+To find the header and library for a specific API element,
+please consult the reference pages in the Media Foundation Programming Reference on 
+MSDN [http://msdn.microsoft.com/en-us/library/windows/desktop/ee663600]
+
+Location: MediaFoundation
+
+= HEADERS =
+  dxva2api.h
+  dxvahd.h
+  evr.h
+  evr9.h
+  mfapi.h
+  mfmp2dlna.h
+  mferrors.h
+  mfidl.h
+  mfobjects.h
+  mfplay.h
+  mfreadwrite.h
+  mftransform.h
+  opmapi.h
+  wmcontainer.h
+
+= DELPHI UNITS =
+  dxva2api.pas
+  dxvahd.pas
+  evr.pas
+  evr9.pas
+  mfapi.pas
+  mfmp2dlna.pas
+  mferrors.pas
+  mfidl.pas (Source Resolver)
+  mfobjects.pas
+  mfplay.pas
+  mfreadwrite.pas
+  mftransform.pas
+  opmapi.pas
+  wmcontainer.pas
+
+
+= LIBRARIES =
+  dxva2.lib
+  evr.lib
+  mf.lib
+  mfplat.lib
+  mfplay.lib
+  mfreadwrite.lib
+
+= REMARKS: =
+
+Every MFPack unit has a section that contains helpers specific for the Delphi programming language.
+If, however, a Media Foundation (MF) helper or utility covers more units or shares units with CoreAudio, 
+then this will be added in the helper unit MFPack/Common/MfUtils.pas respectivly MFPack/Common/MfPUtils.pas
+
+ 
