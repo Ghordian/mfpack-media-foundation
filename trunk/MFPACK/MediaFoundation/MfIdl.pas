@@ -284,6 +284,16 @@ const
   MFCONNECTOR_UDI_EMBEDDED                       : TGUID = '{57cd5975-ce47-11d9-92db-000bdb28ff98}';
 
   MF_RATE_CONTROL_SERVICE                        : TGUID = '{866fa297-b802-4bf8-9dc9-5e3b6a9f53c9}';
+  MF_METADATA_PROVIDER_SERVICE                   : TGUID = '{db214084-58a4-4d2e-b84f-6f755b2f7a0d}';
+  MF_PROPERTY_HANDLER_SERVICE                    : TGUID = '{a3face02-32b8-41dd-90e7-5fef7c8991b5}';
+  MF_TIMECODE_SERVICE                            : TGUID = '{a0d502a7-0eb3-4885-b1b9-9feb0d083454}';
+  MR_STREAM_VOLUME_SERVICE                       : TGUID = '{f8b5fa2f-32ef-46f5-b172-1321212fb2c4}';
+  MR_AUDIO_POLICY_SERVICE                        : TGUID = '{911fd737-6775-4ab0-a614-297862fdac88}';
+  MR_POLICY_VOLUME_SERVICE                       : TGUID = '{1abaa2ac-9d3b-47c6-ab48-c59506de784d}';
+  MF_SAMPLEGRABBERSINK_SAMPLE_TIME_OFFSET        : TGUID = '{62e3d776-8100-4e03-a6e8-bd3857ac9c47}';
+  MF_SAMPLEGRABBERSINK_IGNORE_CLOCK              : TGUID = '{0efda2c0-0b69-4e2e-ab8d-46dcbff7d25d}';
+  MF_QUALITY_SERVICES                            : TGUID = '{b7e2be11-2f96-4640-b52c-282365bdf16c}';
+  MF_WORKQUEUE_SERVICES                          : TGUID = '{8e37d489-41e0-413a-9068-287c886d8dda}';
 
 //MF_RESOLUTION
   MF_RESOLUTION_MEDIASOURCE	= $1;
@@ -377,6 +387,13 @@ type
   IMFRateSupport = interface;
   {$EXTERNALSYM IMFRateControl}
   IMFRateControl = interface;
+ {$EXTERNALSYM IMFSimpleAudioVolume}
+  IMFSimpleAudioVolume = interface;
+  {$EXTERNALSYM IMFAudioStreamVolume}
+  IMFAudioStreamVolume = interface;
+  {$EXTERNALSYM IMFAudioPolicy}
+  IMFAudioPolicy = interface;
+
 
 //--------------------- Types and records ------------------------------------
 
@@ -645,6 +662,36 @@ type
     function GetRate(var fThin: BOOL; var flRate: Single): HRESULT; stdcall;
   end;
 
+  //Interface IMFSimpleAudioVolume
+  IMFSimpleAudioVolume = interface(IUnknown)
+	['{089EDF13-CF71-4338-8D13-9E569DBDC319}']
+    function SetMasterVolume(const fLevel: Single): HResult; stdcall;
+    function GetMasterVolume(out pfLevel: Single): HResult; stdcall;
+    function SetMute(const bMute: Bool): HResult; stdcall;   //todo: Convert to CBool
+    function GetMute(out pbMute: Bool): HResult; stdcall;    //todo: Convert to CBool
+  end;
+
+  //Interface IMFAudioStreamVolume
+  IMFAudioStreamVolume = interface(IUnknown)
+	['{089EDF13-CF71-4338-8D13-9E569DBDC319}']
+    function GetChannelCount(out pdwCount: UINT32): HResult; stdcall;
+    function SetChannelVolume(const dwIndex: UINT32; const fLevel: Single): HResult; stdcall;
+    function GetChannelVolume(const dwIndex: UINT32; out pfLevel: Single): HResult; stdcall;
+    function SetAllVolumes(const dwCount: UINT32; const pfVolumes: Single): HResult; stdcall;
+    function GetAllVolumes(const dwCount: UINT32; out pfVolumes: Single): HResult; stdcall;
+  end;
+
+  //Interface IMFAudioPolicy
+  IMFAudioPolicy = interface(IUnknown)
+	['{a0638c2b-6465-4395-9ae7-a321a9fd2856}']
+    function SetGroupingParam(const rguidClass: REFGUID): HResult; stdcall;
+    function GetGroupingParam(out pguidClass: TGuid): HResult; stdcall;
+    function SetDisplayName(const pszName: LPCWSTR): HResult; stdcall;
+    function GetDisplayName(out pszName: LPWSTR): HResult; stdcall;
+    function SetIconPath(const pszPath: LPCWSTR): HResult; stdcall;
+    function GetIconPath(out pszPath: LPWSTR): HResult; stdcall;
+  end;
+
 //--------------------- Helper functions -------------------------------------
 
   //Creates the Media Session in the application's process.
@@ -825,31 +872,6 @@ const
   {$EXTERNALSYM STR_HASH_LEN}
   STR_HASH_LEN                        = (SHA_HASH_LEN * 2 + 3);
 
-  //>= Vista
-  MF_METADATA_PROVIDER_SERVICE                    : TGUID = '{db214084-58a4-4d2e-b84f-6f755b2f7a0d}';
-  //>= Windows 7
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  MF_PROPERTY_HANDLER_SERVICE                     : TGUID = '{a3face02-32b8-41dd-90e7-5fef7c8991b5}';
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-
-  //>= Windows 7
-  MF_TIMECODE_SERVICE                             : TGUID = '{a0d502a7-0eb3-4885-b1b9-9feb0d083454}';
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-  // end >= Windows 7
-
-  // [local]
-  MR_STREAM_VOLUME_SERVICE                        : TGUID = '{f8b5fa2f-32ef-46f5-b172-1321212fb2c4}';
-
-  MR_AUDIO_POLICY_SERVICE                         : TGUID = '{911fd737-6775-4ab0-a614-297862fdac88}';
-
-  MF_SAMPLEGRABBERSINK_SAMPLE_TIME_OFFSET         : TGUID = '{62e3d776-8100-4e03-a6e8-bd3857ac9c47}';
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  // >= Windows 7
-  MF_SAMPLEGRABBERSINK_IGNORE_CLOCK               : TGUID = '{0efda2c0-0b69-4e2e-ab8d-46dcbff7d25d}';
-
-  MF_QUALITY_SERVICES                             : TGUID = '{b7e2be11-2f96-4640-b52c-282365bdf16c}';
-
-  MF_WORKQUEUE_SERVICES                           : TGUID = '{8e37d489-41e0-413a-9068-287c886d8dda}';
 
   //MFQualityManager
   MF_QUALITY_NOTIFY_PROCESSING_LATENCY            : TGUID = '{f6b44af8-604d-46fe-a95d-45479b10c9bc};
@@ -1501,12 +1523,6 @@ type
   IMFMetadataProvider = interface;
   {$EXTERNALSYM IMFTimecodeTranslate}
   IMFTimecodeTranslate = interface;
-  {$EXTERNALSYM IMFSimpleAudioVolume}
-  IMFSimpleAudioVolume = interface;
-  {$EXTERNALSYM IMFAudioStreamVolume}
-  IMFAudioStreamVolume = interface;
-  {$EXTERNALSYM IMFAudioPolicy}
-  IMFAudioPolicy = interface;
   {$EXTERNALSYM IMFSampleGrabberSinkCallback}
   IMFSampleGrabberSinkCallback = interface;
   {$EXTERNALSYM IMFSampleGrabberSinkCallback2}
@@ -1707,36 +1723,6 @@ type
     function EndConvertTimecodeToHNS(const pResult: IMFAsyncResult; out phnsTime: MFTIME): HResult; stdcall;
     function BeginConvertHNSToTimecode(const hnsTime: MFTIME: const pCallback: IMFAsyncCallback; const punkState: IUnknown): HResult; stdcall;
     function EndConvertHNSToTimecode(const pResult: IMFAsyncResult; out pPropVarTimecode: PROPVARIANT): HResult; stdcall;
-  end;
-
-  //Interface IMFSimpleAudioVolume
-  IMFSimpleAudioVolume = interface(IUnknown)
-	['{089EDF13-CF71-4338-8D13-9E569DBDC319}']
-    function SetMasterVolume(const fLevel: Single): HResult; stdcall;
-    function GetMasterVolume(out pfLevel: Single): HResult; stdcall;
-    function SetMute(const bMute: Bool): HResult; stdcall;   //todo: Convert to CBool
-    function GetMute(out pbMute: Bool): HResult; stdcall;    //todo: Convert to CBool
-  end;
-
-  //Interface IMFAudioStreamVolume
-  IMFAudioStreamVolume = interface(IUnknown)
-	['{089EDF13-CF71-4338-8D13-9E569DBDC319}']
-    function GetChannelCount(out pdwCount: UINT32): HResult; stdcall;
-    function SetChannelVolume(const dwIndex: UINT32; const fLevel: Single): HResult; stdcall;
-    function GetChannelVolume(const dwIndex: UINT32; out pfLevel: Single): HResult; stdcall;
-    function SetAllVolumes(const dwCount: UINT32; const pfVolumes: Single): HResult; stdcall;
-    function GetAllVolumes(const dwCount: UINT32; out pfVolumes: Single): HResult; stdcall;
-  end;
-
-  //Interface IMFAudioPolicy
-  IMFAudioPolicy = interface(IUnknown)
-	['{a0638c2b-6465-4395-9ae7-a321a9fd2856}']
-    function SetGroupingParam(const rguidClass: REFGUID): HResult; stdcall;
-    function GetGroupingParam(out pguidClass: TGuid): HResult; stdcall;
-    function SetDisplayName(const pszName: LPCWSTR): HResult; stdcall;
-    function GetDisplayName(out pszName: LPWSTR): HResult; stdcall;
-    function SetIconPath(const pszPath: LPCWSTR): HResult; stdcall;
-    function GetIconPath(out pszPath: LPWSTR): HResult; stdcall;
   end;
 
   //Interface IMFSampleGrabberSinkCallback
