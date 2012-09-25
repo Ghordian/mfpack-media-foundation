@@ -60,6 +60,12 @@ interface
 uses
   Windows, ComObj, Unknwn, MFObjects, MFTransform, Evr, DXVa2Api;
 
+type
+  RECT                  = tRect;
+  float                 = Single;
+  PPTGUID               = tGUID;
+  LPGUID                = tGUID;
+
 const
   IID_IEVRVideoStreamControl           : TGUID = '{d0cfe38b-93e7-4772-8957-0400c49a4485}';
   IID_IMFVideoProcessor                : TGUID = '{6AB0000C-FECE-4d1f-A2AC-A9573530656E}';
@@ -81,14 +87,20 @@ type
   TMFVideoAlphaBitmapParams = MFVideoAlphaBitmapParams;
 
 type
+  tMFPackSource = Record
+    hdc:                HDC;
+    pDDS:               IDirect3DSurface9;
+  End;
+
   PMFVideoAlphaBitmap = ^TMFVideoAlphaBitmap;
   {$EXTERNALSYM MFVideoAlphaBitmap}
   MFVideoAlphaBitmap = record
     GetBitmapFromDC: BOOL;
-    bitmap: union
-      hdc: HDC;
-      pDDS: PIDirect3DSurface9;
-    end;
+    Source:          tMFPackSource;
+//    bitmap: union
+//      hdc: HDC;
+//      pDDS: PIDirect3DSurface9;
+//    end;
     params: MFVideoAlphaBitmapParams;
   end;
   TMFVideoAlphaBitmap = MFVideoAlphaBitmap;

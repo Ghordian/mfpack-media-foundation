@@ -53,14 +53,13 @@ unit MfIdl;
 interface
 
 Uses
-  Windows, ActiveX, MFObjects,
+  Windows, ActiveX, MFObjects, mftransform,
   PropSys;
 
 //## old    WinDef,
-//#include "mftransform.h"  >> !
 
 Const
-  UnitVersion         = '01.01.0001';
+  Version               = '0.1.0001';
 
 const
 
@@ -349,6 +348,14 @@ const
 //  );
 //  MFPMPSESSION_CREATION_FLAGS = cwMFPMPSESSION_CREATION_FLAGS;
 
+
+type
+  _MFSHUTDOWN_STATUS = (
+     	MFSHUTDOWN_INITIATED	= 0,
+     	MFSHUTDOWN_COMPLETED	= ( MFSHUTDOWN_INITIATED + 1 )
+    );
+ 	MFSHUTDOWN_STATUS=_MFSHUTDOWN_STATUS;
+
 //--------------------- Forward interface deninitions ------------------------
 type
   {$EXTERNALSYM IMFTopology}
@@ -393,6 +400,12 @@ type
   IMFAudioStreamVolume = interface;
   {$EXTERNALSYM IMFAudioPolicy}
   IMFAudioPolicy = interface;
+  {$EXTERNALSYM IMFVideoSampleAllocator}
+  IMFVideoSampleAllocator = interface;
+  {$EXTERNALSYM IMFVideoSampleAllocatorCallback}
+  IMFVideoSampleAllocatorCallback = interface;
+  {$EXTERNALSYM IMFVideoSampleAllocatorNotify}
+  IMFVideoSampleAllocatorNotify = interface;
 
 
 //--------------------- Types and records ------------------------------------
@@ -692,55 +705,27 @@ type
     function GetIconPath(out pszPath: LPWSTR): HResult; stdcall;
   end;
 
-//--------------------- Helper functions -------------------------------------
+  //Interface IMFVideoSampleAllocator
+  IMFVideoSampleAllocator = interface(IUnknown)
+	['{86cbc910-e533-4751-8e3b-f19b5b806a03}']
+    function SetDirectXManager(const pManager: IUnknown): HResult; stdcall;
+    function UninitializeSampleAllocator(): HResult; stdcall;
+    function InitializeSampleAllocator(const cRequestedFrames: DWord; const pMediaType: IMFMediaType): HResult; stdcall;
+    function AllocateSample(out ppSample: IMFSample): HResult; stdcall;
+  end;
 
-  //Creates the Media Session in the application's process.
-  //If your application does not play protected content, you can use this function to create the Media Session in
-  //the application's process. To use the Media Session for protected content, you must call MFCreatePMPMediaSession.
-  //pConfiguration > Pointer to the IMFAttributes interface. This parameter can be NIL.
-  function MFCreateMediaSession(const pConfiguration: IMFAttributes; out ppMediaSession: IMFMediaSession): HResult; stdcall;
-  function MFCreateSourceResolver(out ppISourceResolver: IMFSourceResolver): HResult; stdcall;
-  function MFCreateTopologyNode(const NodeType: MF_TOPOLOGY_TYPE; out ppNode: IMFTopologyNode): HResult; stdcall;
-  function MFCreateTopology(out ppTopo: IMFTopology): HResult; stdcall;
-  function MFCreateTopoLoader(out ppObj: IMFTopoLoader): HResult; stdcall;
-  function MFShutdownObject(const pUnk: IUnknown): HResult; stdcall;
-  function MFCreateAudioRenderer(const pAudioAttributes: IMFAttributes; out ppSink: IMFMediaSink): HResult; stdcall;
-  function MFCreateAudioRendererActivate(out ppActivate: IMFActivate): HResult; stdcall;
-  function MFCreateVideoRendererActivate(const hwndVideo: HWND; out ppActivate: IMFActivate): HResult; stdcall;
-  function MFGetService(const punkObject: IUnknown; const guidService: tGUID; const riid: tGUID; out ppvObject: IUnknown): HResult; stdcall;
-  function MFCreatePresentationClock(out ppPresentationClock: IMFPresentationClock): HResult; stdcall;
-  function MFCreateSystemTimeSource(out ppSystemTimeSource: IMFPresentationTimeSource): HResult; stdcall;
-  function MFCreatePMPMediaSession(const dwCreationFlags: DWORD;
-                                   const pConfiguration: IMFAttributes;
-                                   out ppMediaSession: IMFMediaSession;
-                                   out ppEnablerActivate: IMFActivate): HResult; stdcall;
+  //Interface IMFVideoSampleAllocatorCallback
+  IMFVideoSampleAllocatorCallback = interface(IUnknown)
+	['{992388B4-3372-4f67-8B6F-C84C071F4751}']
+    function SetCallback(const pNotify: IMFVideoSampleAllocatorNotify): HResult; stdcall;
+    function GetFreeSampleCount(out plSamples: LONG): HResult; stdcall;
+  end;
 
-implementation
-
-  function MFCreateMediaSession;          external 'Mf.dll' name 'MFCreateMediaSession';
-  function MFCreatePMPMediaSession;       external 'Mf.dll' name 'MFCreatePMPMediaSession';
-  function MFCreateSourceResolver;        external 'Mf.dll' name 'MFCreateSourceResolver';
-  function MFCreateTopologyNode;          external 'Mf.dll' name 'MFCreateTopologyNode';
-  function MFCreateTopology;              external 'Mf.dll' name 'MFCreateTopology';
-  function MFCreateTopoLoader;            external 'Mf.dll' name 'MFCreateTopoLoader';
-  function MFShutdownObject;              external 'Mf.dll' name 'MFShutdownObject';
-  function MFCreateAudioRenderer;         external 'Mf.dll' name 'MFCreateAudioRenderer';
-  function MFCreateVideoRendererActivate; external 'Mf.dll' name 'MFCreateVideoRendererActivate';
-  function MFCreateAudioRendererActivate; external 'Mf.dll' name 'MFCreateAudioRendererActivate';
-  function MFGetService;                  external 'Mf.dll' name 'MFGetService';
-  function MFCreatePresentationClock;     external 'Mf.dll' name 'MFCreatePresentationClock';
-  function MFCreateSystemTimeSource;      external 'Mf.dll' name 'MFCreateSystemTimeSource';
-
-end.
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+  //Interface IMFVideoSampleAllocatorNotify
+  IMFVideoSampleAllocatorNotify = interface(IUnknown)
+	['{A792CDBE-C374-4e89-8335-278E7B9956A4}']
+    function NotifyRelease(): HResult; stdcall;
+  end;
 
 const
 
@@ -779,7 +764,7 @@ const
 
 
   // >= Windows 7
-  MF_TIME_FORMAT_ENTRY_RELATIVE           : TGUID =  '{4399f178-46d34504-afda20d3-2e9ba360}';
+  MF_TIME_FORMAT_ENTRY_RELATIVE           : TGUID =  '{4399f178-46d3-4504-afda-20d32e9ba360}';
 
   //MEDIASINK
   {$EXTERNALSYM MEDIASINK_FIXED_STREAMS}
@@ -812,13 +797,11 @@ const
 
 
   {$EXTERNALSYM MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_CROSSPROCESS}
-  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_CROSSPROCESS = $ 1;
+  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_CROSSPROCESS = $1;
   {$EXTERNALSYM MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_NOPERSIST}
-  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_NOPERSIST = $ 2;
-  // >= Windows 7 //#if (WINVER >= _WIN32_WINNT_WIN7)
+  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_NOPERSIST = $2;
   {$EXTERNALSYM MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_DONT_ALLOW_FORMAT_CHANGES}
-  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_DONT_ALLOW_FORMAT_CHANGES = $ 4;
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
+  MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_DONT_ALLOW_FORMAT_CHANGES = $4;
 
   MFENABLETYPE_WMDRMV1_LicenseAcquisition       : TGUID = '{4ff6eeaf-0b43-4797-9b85-abf31815e7b0}';
   MFENABLETYPE_WMDRMV7_LicenseAcquisition       : TGUID = '{003306df-4a06-4884-a097-ef6d22ec84a3}';
@@ -872,32 +855,18 @@ const
   {$EXTERNALSYM STR_HASH_LEN}
   STR_HASH_LEN                        = (SHA_HASH_LEN * 2 + 3);
 
-
-  //MFQualityManager
-  MF_QUALITY_NOTIFY_PROCESSING_LATENCY            : TGUID = '{f6b44af8-604d-46fe-a95d-45479b10c9bc};
-  MF_QUALITY_NOTIFY_SAMPLE_LAG                    : TGUID = '{30d15206-ed2a-4760-be17-eb4a9f12295c};
-
   {$EXTERNALSYM MFSEQUENCER_INVALID_ELEMENT_ID}
   MFSEQUENCER_INVALID_ELEMENT_ID = $ffffffff;
 
   //
-  MF_TIME_FORMAT_SEGMENT_OFFSET                   : TGUID = '{c8b8be77-869c-431d-812e-169693f65a39}'
-
+  MF_QUALITY_NOTIFY_PROCESSING_LATENCY            : TGUID = '{f6b44af8-604d-46fe-a95d-45479b10c9bc}';
+  MF_QUALITY_NOTIFY_SAMPLE_LAG                    : TGUID = '{30d15206-ed2a-4760-be17-eb4a9f12295c}';
+  MF_TIME_FORMAT_SEGMENT_OFFSET                   : TGUID = '{c8b8be77-869c-431d-812e-169693f65a39}';
   MF_SOURCE_PRESENTATION_PROVIDER_SERVICE         : TGUID = '{e002aadc-f4af-4ee5-9847-053edf840426}';
-
   MF_TOPONODE_ATTRIBUTE_EDITOR_SERVICE            : TGUID = '{65656e1a-077f-4472-83ef-316f11d5087a}';
-
-  MFNET_SAVEJOB_SERVICE    : TGUID = '{b85a587f-3d02-4e52-9565-55d3ec1e7ff7}';
-
-  // >= Windows 7
+  MFNET_SAVEJOB_SERVICE                           : TGUID = '{b85a587f-3d02-4e52-9565-55d3ec1e7ff7}';
   MFNETSOURCE_SSLCERTIFICATE_MANAGER              : TGUID = '{55e6cb27-e69b-4267-940c-2d7ec5bb8a0f}';
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-  // end >= Windows 7
-
-
-    //#if (WINVER >= _WIN32_WINNT_WIN7)
-  MF_BYTESTREAMHANDLER_ACCEPTS_SHARE_WRITE        : TGUID = '{a6e1f733-3001-4915-8150-1558a2180ec8);
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
+  MF_BYTESTREAMHANDLER_ACCEPTS_SHARE_WRITE        : TGUID = '{a6e1f733-3001-4915-8150-1558a2180ec8}';
 
 
   // [local]
@@ -938,16 +907,10 @@ const
   MFPROTECTION_ACP                                : TGUID = '{c3fd11c6-f8b7-4d20-b008-1db17d61f2da}';
   MFPROTECTION_WMDRMOTA                           : TGUID = '{a267a6a1-362e-47d0-8805-4628598a23e4}';
   MFPROTECTION_FFT                                : TGUID = '{462a56b2-2866-4bb6-980d-6d8d9edb1a8c}';
-
-  MFPROTECTIONATTRIBUTE_CONSTRICTVIDEO_IMAGESIZE  : TGUID = '{008476fc-4b58-4d80-a790-e7297673161d);
-  MFPROTECTIONATTRIBUTE_HDCP_SRM                  : TGUID = '{6f302107-3477-4468-8a08-eef9db10e20f);
-
+  MFPROTECTIONATTRIBUTE_CONSTRICTVIDEO_IMAGESIZE  : TGUID = '{008476fc-4b58-4d80-a790-e7297673161d}';
+  MFPROTECTIONATTRIBUTE_HDCP_SRM                  : TGUID = '{6f302107-3477-4468-8a08-eef9db10e20f}';
   MF_SampleProtectionSalt                         : TGUID = '{5403deee-b9ee-438f-aa83-3804997e569d}';
-
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  MF_PMP_SERVICE: TGuid;
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-
+//  MF_PMP_SERVICE: TGuid;
   MF_SAMI_SERVICE                                 : TGUID = '{49a89ae7-b4d9-4ef2-aa5c-f65a3e05ae4e}';
   MF_PD_SAMI_STYLELIST                            : TGUID = '{e0b73c7f-486d-484e-9872-4de5192a7bf8}';
   MF_SD_SAMI_LANGUAGE                             : TGUID = '{36fcb98a-6cd0-44cb-acb9-a8f5600dd0bb}';
@@ -984,16 +947,6 @@ const
   MF_DEVSOURCE_ATTRIBUTE_SOURCE_TYPE_VIDCAP_GUID            : TGUID = '{8ac3587a-4ae7-42d8-99e0-0a6013eef90f}';
   MFSampleExtension_DeviceTimestamp                         : TGUID = '{8f3e35e7-2dcd-4887-8622-2a58baa652b0}';
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-
-
-
-
-
-
-
-type
-  //integer types
-
 
 type
   {$EXTERNALSYM MFSESSION_SETTOPOLOGY_FLAGS}
@@ -1183,12 +1136,12 @@ type  //MFQualityManager
   {$EXTERNALSYM _MF_QUALITY_LEVEL}
   _MF_QUALITY_LEVEL           = (
     MF_QUALITY_NORMAL         = 0,
-    MF_QUALITY_NORMAL_MINUS_1 = $ 1,
-    MF_QUALITY_NORMAL_MINUS_2 = $ 2,
-    MF_QUALITY_NORMAL_MINUS_3 = $ 3,
-    MF_QUALITY_NORMAL_MINUS_4 = $ 4,
-    MF_QUALITY_NORMAL_MINUS_5 = $ 5,
-    MF_NUM_QUALITY_LEVELS     = $ 6
+    MF_QUALITY_NORMAL_MINUS_1 = $1,
+    MF_QUALITY_NORMAL_MINUS_2 = $2,
+    MF_QUALITY_NORMAL_MINUS_3 = $3,
+    MF_QUALITY_NORMAL_MINUS_4 = $4,
+    MF_QUALITY_NORMAL_MINUS_5 = $5,
+    MF_NUM_QUALITY_LEVELS     = $6
   );
   {$EXTERNALSYM MF_QUALITY_LEVEL}
   MF_QUALITY_LEVEL = _MF_QUALITY_LEVEL;
@@ -1197,7 +1150,7 @@ type  //MFQualityManager
   //#if (WINVER >= _WIN32_WINNT_WIN7)
   {$EXTERNALSYM _MF_QUALITY_ADVISE_FLAGS}
   _MF_QUALITY_ADVISE_FLAGS    = (
-    MF_QUALITY_CANNOT_KEEP_UP = $ 1
+    MF_QUALITY_CANNOT_KEEP_UP = $1
   );
   {$EXTERNALSYM MF_QUALITY_ADVISE_FLAGS}
   MF_QUALITY_ADVISE_FLAGS = _MF_QUALITY_ADVISE_FLAGS;
@@ -1217,21 +1170,21 @@ type
 
 type
    {$EXTERNALSYM MF_ATTRIBUTE_TYPE}
-    MF_ATTRIBUTE_TYPE = (
+    MF_ATTRIBUTE_TYPE = record
       u32: UINT32;
       u64: UINT64;
       d  : Double;
-    );
+    end;
 
 type
    {$EXTERNALSYM _MFTOPONODE_ATTRIBUTE_UPDATE}
-   _MFTOPONODE_ATTRIBUTE_UPDATE  = (
-         NodeId: TOPOID;
+   _MFTOPONODE_ATTRIBUTE_UPDATE  = record
+         NodeId:           TOPOID;
          guidAttributeKey: TGuid;
-         attrType: MF_ATTRIBUTE_TYPE;
-          );
+         attrType:         MF_ATTRIBUTE_TYPE;
+         end;
    {$EXTERNALSYM MFTOPONODE_ATTRIBUTE_UPDATE}
-   MFTOPONODE_ATTRIBUTE_UPDATE:= _MFTOPONODE_ATTRIBUTE_UPDATE
+   MFTOPONODE_ATTRIBUTE_UPDATE = _MFTOPONODE_ATTRIBUTE_UPDATE;
 
 type
   {$EXTERNALSYM _MF_LEAKY_BUCKET_PAIR}
@@ -1241,6 +1194,7 @@ type
   end;
   {$EXTERNALSYM MF_LEAKY_BUCKET_PAIR}
   MF_LEAKY_BUCKET_PAIR = _MF_LEAKY_BUCKET_PAIR;
+  PMF_LEAKY_BUCKET_PAIR = ^MF_LEAKY_BUCKET_PAIR;
 
 type
   {$EXTERNALSYM _MFBYTESTREAM_BUFFERING_PARAMS}
@@ -1423,21 +1377,14 @@ type
   {$EXTERNALSYM MFINPUTTRUSTAUTHORITY_ACCESS_PARAMS}
   MFINPUTTRUSTAUTHORITY_ACCESS_PARAMS = _MFINPUTTRUSTAUTHORITY_ACCESS_PARAMS;
 
-type
-  {$EXTERNALSYM MFOUTPUTATTRIBUTE_DIGITAL}
-  MFOUTPUTATTRIBUTE_DIGITAL           = DWord($1);
-  {$EXTERNALSYM MFOUTPUTATTRIBUTE_NONSTANDARDIMPLEMENTATION}
-  MFOUTPUTATTRIBUTE_NONSTANDARDIMPLEMENTATION = DWord($2);
-  {$EXTERNALSYM MFOUTPUTATTRIBUTE_VIDEO}
-  MFOUTPUTATTRIBUTE_VIDEO             = DWord($4);
-  {$EXTERNALSYM MFOUTPUTATTRIBUTE_COMPRESSED}
-  MFOUTPUTATTRIBUTE_COMPRESSED        = DWord($08);
-  {$EXTERNALSYM MFOUTPUTATTRIBUTE_SOFTWARE}
-  MFOUTPUTATTRIBUTE_SOFTWARE          = DWord($8);
-  {$EXTERNALSYM MFOUTPUTATTRIBUTE_BUS}
-  MFOUTPUTATTRIBUTE_BUS               = DWord($16);
-  {$EXTERNALSYM MFOUTPUTATTRIBUTE_BUSIMPLEMENTATION}
-  MFOUTPUTATTRIBUTE_BUSIMPLEMENTATION = DWord($0FF00);
+const
+  MFOUTPUTATTRIBUTE_DIGITAL                  =DWORD( $00000001);
+  MFOUTPUTATTRIBUTE_NONSTANDARDIMPLEMENTATION=DWORD( $00000002);
+  MFOUTPUTATTRIBUTE_VIDEO                    =DWORD( $00000004);
+  MFOUTPUTATTRIBUTE_COMPRESSED               =DWORD( $00000008);
+  MFOUTPUTATTRIBUTE_SOFTWARE                 =DWORD( $00000010);
+  MFOUTPUTATTRIBUTE_BUS                      =DWORD( $00000020);
+  MFOUTPUTATTRIBUTE_BUSIMPLEMENTATION        =DWORD( $0000FF00);
 
 type
   cwSAMPLE_PROTECTION_VERSION            = (
@@ -1447,7 +1394,7 @@ type
     SAMPLE_PROTECTION_VERSION_RC4        = 3
   );
   {$EXTERNALSYM SAMPLE_PROTECTION_VERSION}
-  SAMPLE_PROTECTION_VERSION: cwSAMPLE_PROTECTION_VERSION;
+  SAMPLE_PROTECTION_VERSION = cwSAMPLE_PROTECTION_VERSION;
 
 type
  //#if (WINVER >= _WIN32_WINNT_WIN7)
@@ -1472,12 +1419,13 @@ type
   {$EXTERNALSYM _MF_TRANSCODE_SINK_INFO}
   _MF_TRANSCODE_SINK_INFO = record
     dwVideoStreamID: DWORD;
-    pVideoMediaType: PIMFMediaType;
+    pVideoMediaType: IMFMediaType;
     dwAudioStreamID: DWORD;
-    pAudioMediaType: PIMFMediaType;
+    pAudioMediaType: IMFMediaType;
   end;
   {$EXTERNALSYM MF_TRANSCODE_SINK_INFO}
   MF_TRANSCODE_SINK_INFO = _MF_TRANSCODE_SINK_INFO;
+  PMFT_REGISTER_TYPE_INFO = ^MFT_REGISTER_TYPE_INFO;
 
 type
   {$EXTERNALSYM _MFT_REGISTRATION_INFO}
@@ -1503,12 +1451,6 @@ type
 type
   {$EXTERNALSYM IMFMediaStream}
   IMFMediaStream = interface;
-  {$EXTERNALSYM IMFVideoSampleAllocator}
-  IMFVideoSampleAllocator = interface;
-  {$EXTERNALSYM IMFVideoSampleAllocatorNotify}
-  IMFVideoSampleAllocatorNotify = interface;
-  {$EXTERNALSYM IMFVideoSampleAllocatorCallback}
-  IMFVideoSampleAllocatorCallback = interface;
   {$EXTERNALSYM IMFTimer}
   IMFTimer = interface;
   {$EXTERNALSYM IMFShutdown}
@@ -1628,29 +1570,35 @@ type
     function RequestSample(const pToken: IUnknown): HResult; stdcall;
   end;
 
-
-  //Interface IMFVideoSampleAllocator
-  IMFVideoSampleAllocator = interface(IUnknown)
-	['{86cbc910-e533-4751-8e3b-f19b5b806a03}']
-    function SetDirectXManager(const pManager: IUnknown): HResult; stdcall;
-    function UninitializeSampleAllocator(): HResult; stdcall;
-    function InitializeSampleAllocator(const cRequestedFrames: DWord; const pMediaType: IMFMediaType): HResult; stdcall;
-    function AllocateSample(out ppSample: IMFSample): HResult; stdcall;
+  IMFOutputTrustAuthority = interface(IUnknown)
+  ['{D19F8E94-B126-4446-890C-5DCB7AD71453}']
+    function GetAction(out Action: MFPOLICYMANAGER_ACTION): HRESULT; stdcall;
+    function SetPolicy(const Policy: IMFOutputPolicy;
+                       const nPolicy: DWORD;
+                       out bTicket: BYTE;
+                       out cbTicket: DWORD): HRESULT; stdcall;
   end;
 
-  // >= Windows 7
-  //Interface IMFVideoSampleAllocatorNotify
-  IMFVideoSampleAllocatorNotify = interface(IUnknown)
-	['{A792CDBE-C374-4e89-8335-278E7B9956A4}']
-    function NotifyRelease(): HResult; stdcall;
+  IMFMediaSinkPreroll = interface(IUnknown)
+  ['{5dfd4b2a-7674-4110-a4e6-8a68fd5f3688}']
+    function NotifyPreroll(const hnsUpcomingStartTime: MFTIME): HRESULT; stdcall;
   end;
 
-  // >= Windows 7
-  //Interface IMFVideoSampleAllocatorCallback
-  IMFVideoSampleAllocatorCallback = interface(IUnknown)
-	['{992388B4-3372-4f67-8B6F-C84C071F4751}']
-    function SetCallback(const pNotify: IMFVideoSampleAllocatorNotify): HResult; stdcall;
-    function GetFreeSampleCount(out plSamples: LONG): HResult; stdcall;
+  IMFStreamingSinkConfig = interface(IUnknown)
+  ['{9db7aa41-3cc5-40d4-8509-555804ad34cc}']
+     function StartStreaming(const fSeekOffsetIsByteOffset: BOOL;
+                             const qwSeekOffset: QWORD): HRESULT; stdcall;
+  end;
+
+  IMFObjectReferenceStream = interface(IUnknown)
+  ['{09EF5BE3-C8A7-469e-8B70-73BF25BB193F}']
+    function SaveReference(const riid: REFIID; const pUnk: IUnknown): HRESULT; stdcall;
+    function LoadReference(const riid: REFIID; out ppv: Pointer): HRESULT; stdcall;
+  end;
+
+  IMFRemoteDesktopPlugin = interface(IUnknown)
+  ['{1cde6309-cae0-4940-907e-c1ec9c3d1d4a}']
+    function UpdateTopology(var Topology: IMFTopology): HRESULT; stdcall;
   end;
 
 
@@ -1709,8 +1657,10 @@ type
   //Interface IMFMetadataProvider
   IMFMetadataProvider = interface(IUnknown)
 	['{56181D2D-E221-4adb-B1C8-3CEE6A53F76F}']
-    GetMFMetadata(const pPresentationDescriptor: IMFPresentationDescriptor; const dwStreamIdentifier: DWord;
-                  const dwFlags; DWord; out ppMFMetadata: IMFMetadata): HResult; stdcall;
+    function GetMFMetadata(const pPresentationDescriptor: IMFPresentationDescriptor;
+                           const dwStreamIdentifier: DWord;
+                           const dwFlags: DWord;
+                           out ppMFMetadata: IMFMetadata): HResult; stdcall;
   end;
 
 
@@ -1721,7 +1671,7 @@ type
 	['{ab9d8661-f7e8-4ef4-9861-89f334f94e74}']
     function BeginConvertTimecodeToHNS(const pPropVarTimecode: PROPVARIANT; const pCallback: IMFAsyncCallback; const punkState: IUnknown): HResult; stdcall;
     function EndConvertTimecodeToHNS(const pResult: IMFAsyncResult; out phnsTime: MFTIME): HResult; stdcall;
-    function BeginConvertHNSToTimecode(const hnsTime: MFTIME: const pCallback: IMFAsyncCallback; const punkState: IUnknown): HResult; stdcall;
+    function BeginConvertHNSToTimecode(const hnsTime: MFTIME; const pCallback: IMFAsyncCallback; const punkState: IUnknown): HResult; stdcall;
     function EndConvertHNSToTimecode(const pResult: IMFAsyncResult; out pPropVarTimecode: PROPVARIANT): HResult; stdcall;
   end;
 
@@ -1827,10 +1777,9 @@ type
     function GetMediaSourceTopology(const pPresentationDescriptor: IMFPresentationDescriptor; out ppTopology: IMFTopology): HResult; stdcall;
   end;
 
-  //Interface IMFMediaSourcePresentationProvider
-  IMFMediaSourceTopologyProvider = interface(IUnknown)
-	['{0E1D6009-C9F3-442d-8C51-A42D2D49452F}']
-    function ForceEndOfPresentation(const pPresentationDescriptor: IMFPresentationDescriptor): HResult; stdcall;
+  IMFMediaSourcePresentationProvider = interface(IUnknown)
+  ['{0E1D600a-C9F3-442d-8C51-A42D2D49452F}']
+    function ForceEndOfPresentation(const PresentationDescriptor: IMFPresentationDescriptor ): HRESULT; stdcall;
   end;
 
   //Interface IMFTopologyNodeAttributeEditor
@@ -1872,7 +1821,7 @@ type
    end;
 
   //Interface IMFNetCredentialCache
-  IMFNetCredentialManager = interface(IUnknown)
+  IMFNetCredentialCache = interface(IUnknown)
 	['{5b87ef6c-7ed8-434f-ba0e-184fac1628d1}']
     function GetCredential(const pszUrl: LPCWSTR; const pszRealm: LPCWSTR; const dwAuthenticationFlags: DWord;
                            out ppCred: IMFNetCredential; out pdwRequirementsFlags: DWord): HResult; stdcall;
@@ -1880,8 +1829,6 @@ type
     function SetUserOptions(const pCred: IMFNetCredential; const dwOptionsFlags: DWord): HResult; stdcall;
   end;
 
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  // >= Windows 7
   //Interface IMFSSLCertificateManager
   IMFSSLCertificateManager = interface(IUnknown)
 	['{61f7d887-1230-4a8b-aeba-8ad434d1a64d}']
@@ -2046,7 +1993,7 @@ type
   end;
 
   //Interface IMFPMPServer
-  IMFPMPClient = interface(IUnknown)
+  IMFPMPServer = interface(IUnknown)
 	['{994e23af-1cc2-493c-b9fa-46f1cb040fa4}']
     function LockProcess(): HResult; stdcall;
     function UnlockProcess(): HResult; stdcall;
@@ -2096,36 +2043,14 @@ type
     function RegisterMFTs(const pMFTs: MFT_REGISTRATION_INFO; cMFTs: DWord): HResult; stdcall;
   end;
 
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-  // end >= Windows 7
-
-
-
-
-
-// Additional Prototypes for ALL interfaces
-// end of Additional Prototypes
-
-
-
 //OTHER FUNCTIONS
-
-  // >= Windows 7
-  //Creates an instance of the Media Session inside a Protected Media Path (PMP) process.
 
   function CreatePropertyStore(out ppStore: IPropertyStore): HResult; stdcall;
   function MFGetSupportedSchemes(out pPropVarSchemeArray: PROPVARIANT): HResult; stdcall;
   function MFGetSupportedMimeTypes(out pPropVarMimeTypeArray: PROPVARIANT): HResult; stdcall;
-
   function MFCreateSequencerSource(const pReserved: IUnknown; out ppSequencerSource: IMFSequencerSource): HResult; stdcall;
   function MFCreateSequencerSegmentOffset(const dwId: MFSequencerElementId; const hnsOffset: MFTIME; out pvarSegmentOffset: PROPVARIANT): HResult; stdcall;
-
-  // >= Windows 7
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
   function MFGetTopoNodeCurrentType(const pNode: IMFTopologyNode; const dwStreamIndex: DWord; const fOutput: Bool; out ppType: IMFMediaType): HResult; stdcall;
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7
-
-
   //todo: check: cStreamDescriptors
   function MFCreatePresentationDescriptor(const cStreamDescriptors: Dword; apStreamDescriptors: IMFStreamDescriptor; out ppPresentationDescriptor: IMFPresentationDescriptor): HResult; stdcall;
   function MFRequireProtectedEnvironment(const pPresentationDescriptor: IMFPresentationDescriptor): HResult; stdcall;
@@ -2133,57 +2058,102 @@ type
   function MFSerializePresentationDescriptor(const pPD: IMFPresentationDescriptor; out pcbData: Dword; out ppbData {with size of pcbData}: Byte): HResult; stdcall;
   //todo: find solution cbData > pbData
   function MFDeserializePresentationDescriptor(const cbData: Dword; const pbData: Byte; out ppPD: IMFPresentationDescriptor): HResult; stdcall;
-
   //todo: cMediaTypes count
   function MFCreateStreamDescriptor(const dwStreamIdentifier: DWord; const cMediaTypes: DWord; const apMediaTypes: IMFMediaType; out ppDescriptor: IMFStreamDescriptor): HResult; stdcall;
-
   function MFCreateSimpleTypeHandler(out ppHandler: IMFMediaTypeHandler): HResult; stdcall;
-
-
-  // begin >= Windows 7
   function MFCreateMPEG4MediaSink(const pIByteStream: IMFByteStream; const pVideoMediaType: IMFMediaType; const pAudioMediaType: IMFMediaType; out ppIMediaSink: IMFMediaSink): HResult; stdcall;
   function MFCreate3GPMediaSink(const pIByteStream: IMFByteStream; const pVideoMediaType: IMFMediaType; const pAudioMediaType: IMFMediaType; out ppIMediaSink: IMFMediaSink): HResult; stdcall;
   function MFCreateMP3MediaSink(const pTargetByteStream: IMFByteStream; out ppMediaSink: IMFMediaSink): HResult; stdcall;
-  // end >= Windows 7
-
   function MFCreateSampleGrabberSinkActivate(const pIMFMediaType: IMFMediaType; const pIMFSampleGrabberSinkCallback: IMFSampleGrabberSinkCallback; out ppIActivate: IMFActivate): HResult; stdcall;
-
   function MFCreateStandardQualityManager(out ppQualityManager: IMFQualityManager): HResult; stdcall;
-
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  // >= Windows 7
   function MFCreateAggregateSource(const pSourceCollection: IMFCollection; out ppAggSource: IMFMediaSource): HResult; stdcall;
-
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-  // end >= Windows 7
-
   function MFCreateCredentialCache(out ppCache: IMFNetCredentialCache): HResult; stdcall;
-
   function MFCreateNetSchemePlugin(const riid: REFIID; ppvHandler: Pointer): HResult; stdcall;  //todo: check
-
   function MFCreateRemoteDesktopPlugin(out ppPlugin: IMFRemoteDesktopPlugin): HResult; stdcall;
   function CreateNamedPropertyStore(out ppStore: INamedPropertyStore): HResult; stdcall;
-
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  // >= Windows 7
   function MFCreateSampleCopierMFT(out ppCopierMFT: IMFTransform): HResult; stdcall;
   function MFCreateTranscodeProfile(out ppTranscodeProfile: IMFTranscodeProfile): HResult; stdcall;
   function MFCreateTranscodeTopology(const pSrc: IMFMediaSource; const pwszOutputFilePath: LPCWSTR;
                                      const pProfile: IMFTranscodeProfile; out ppTranscodeTopo: IMFTopology): HResult; stdcall;
-
   function MFTranscodeGetAudioOutputAvailableTypes(const guidSubType: REFGUID; const dwMFTFlags: DWord; const pCodecConfig: IMFAttributes;
                                                    out ppAvailableTypes: IMFCollection): HResult; stdcall;
-
   function MFCreateTranscodeSinkActivate(out ppActivate: IMFActivate): HResult; stdcall;
-
   function MFCreateMFByteStreamOnStream(const pStream: IStream): HResult; stdcall;
-
   function MFEnumDeviceSources(const pAttributes: IMFAttributes; out pppSourceActivate: IMFActivate; out pcSourceActivate: UINT32): HResult; stdcall;
   function MFCreateDeviceSource(const pAttributes: IMFAttributes; out ppSource: IMFMediaSource): HResult; stdcall;
   function MFCreateDeviceSourceActivate(const pAttributes: IMFAttributes; out ppActivate: IMFActivate): HResult; stdcall;
-  // end >= Windows 7
+
+
+//--------------------- Helper functions -------------------------------------
+
+  //Creates the Media Session in the application's process.
+  //If your application does not play protected content, you can use this function to create the Media Session in
+  //the application's process. To use the Media Session for protected content, you must call MFCreatePMPMediaSession.
+  //pConfiguration > Pointer to the IMFAttributes interface. This parameter can be NIL.
+  function MFCreateMediaSession(const pConfiguration: IMFAttributes; out ppMediaSession: IMFMediaSession): HResult; stdcall;
+  function MFCreateSourceResolver(out ppISourceResolver: IMFSourceResolver): HResult; stdcall;
+  function MFCreateTopologyNode(const NodeType: MF_TOPOLOGY_TYPE; out ppNode: IMFTopologyNode): HResult; stdcall;
+  function MFCreateTopology(out ppTopo: IMFTopology): HResult; stdcall;
+  function MFCreateTopoLoader(out ppObj: IMFTopoLoader): HResult; stdcall;
+  function MFShutdownObject(const pUnk: IUnknown): HResult; stdcall;
+  function MFCreateAudioRenderer(const pAudioAttributes: IMFAttributes; out ppSink: IMFMediaSink): HResult; stdcall;
+  function MFCreateAudioRendererActivate(out ppActivate: IMFActivate): HResult; stdcall;
+  function MFCreateVideoRendererActivate(const hwndVideo: HWND; out ppActivate: IMFActivate): HResult; stdcall;
+  function MFGetService(const punkObject: IUnknown; const guidService: tGUID; const riid: tGUID; out ppvObject: IUnknown): HResult; stdcall;
+  function MFCreatePresentationClock(out ppPresentationClock: IMFPresentationClock): HResult; stdcall;
+  function MFCreateSystemTimeSource(out ppSystemTimeSource: IMFPresentationTimeSource): HResult; stdcall;
+  function MFCreatePMPMediaSession(const dwCreationFlags: DWORD;
+                                   const pConfiguration: IMFAttributes;
+                                   out ppMediaSession: IMFMediaSession;
+                                   out ppEnablerActivate: IMFActivate): HResult; stdcall;
 
 implementation
 
+  function MFCreateMediaSession;          external 'Mf.dll' name 'MFCreateMediaSession';
+  function MFCreatePMPMediaSession;       external 'Mf.dll' name 'MFCreatePMPMediaSession';
+  function MFCreateSourceResolver;        external 'Mf.dll' name 'MFCreateSourceResolver';
+  function MFCreateTopologyNode;          external 'Mf.dll' name 'MFCreateTopologyNode';
+  function MFCreateTopology;              external 'Mf.dll' name 'MFCreateTopology';
+  function MFCreateTopoLoader;            external 'Mf.dll' name 'MFCreateTopoLoader';
+  function MFShutdownObject;              external 'Mf.dll' name 'MFShutdownObject';
+  function MFCreateAudioRenderer;         external 'Mf.dll' name 'MFCreateAudioRenderer';
+  function MFCreateVideoRendererActivate; external 'Mf.dll' name 'MFCreateVideoRendererActivate';
+  function MFCreateAudioRendererActivate; external 'Mf.dll' name 'MFCreateAudioRendererActivate';
+  function MFGetService;                  external 'Mf.dll' name 'MFGetService';
+  function MFCreatePresentationClock;     external 'Mf.dll' name 'MFCreatePresentationClock';
+  function MFCreateSystemTimeSource;      external 'Mf.dll' name 'MFCreateSystemTimeSource';
+
+
+  function CreatePropertyStore;           external 'Mf.dll' name 'CreatePropertyStore';
+  function MFGetSupportedSchemes;         external 'Mf.dll' name 'MFGetSupportedSchemes';
+  function MFGetSupportedMimeTypes;       external 'Mf.dll' name 'MFGetSupportedSchemes';
+  function MFCreateSequencerSource;       external 'Mf.dll' name 'MFCreateSequencerSource';
+  function MFCreateSequencerSegmentOffset;      external 'Mf.dll' name 'MFCreateSequencerSegmentOffset';
+  function MFGetTopoNodeCurrentType;            external 'Mf.dll' name 'MFGetTopoNodeCurrentType';
+  function MFCreatePresentationDescriptor;      external 'Mf.dll' name 'MFCreatePresentationDescriptor';
+  function MFRequireProtectedEnvironment;       external 'Mf.dll' name 'MFRequireProtectedEnvironment';
+  function MFSerializePresentationDescriptor;   external 'Mf.dll' name 'MFSerializePresentationDescriptor';
+  function MFDeserializePresentationDescriptor; external 'Mf.dll' name 'MFDeserializePresentationDescriptor';
+  function MFCreateStreamDescriptor;            external 'Mf.dll' name 'MFCreateStreamDescriptor';
+  function MFCreateSimpleTypeHandler;           external 'Mf.dll' name 'MFCreateSimpleTypeHandler';
+  function MFCreateMPEG4MediaSink;        external 'Mf.dll' name 'MFCreateMPEG4MediaSink';
+  function MFCreate3GPMediaSink;          external 'Mf.dll' name 'MFCreate3GPMediaSink';
+  function MFCreateMP3MediaSink;          external 'Mf.dll' name 'MFCreateMP3MediaSink';
+  function MFCreateSampleGrabberSinkActivate; external 'Mf.dll' name 'MFCreateSampleGrabberSinkActivate';
+  function MFCreateStandardQualityManager; external 'Mf.dll' name 'MFCreateSampleGrabberSinkActivate';
+  function MFCreateAggregateSource;        external 'Mf.dll' name 'MFCreateAggregateSource';
+  function MFCreateCredentialCache;       external 'Mf.dll' name 'MFCreateCredentialCache';
+  function MFCreateNetSchemePlugin;       external 'Mf.dll' name 'MFCreateNetSchemePlugin';
+  function MFCreateRemoteDesktopPlugin;   external 'Mf.dll' name 'MFCreateRemoteDesktopPlugin';
+  function CreateNamedPropertyStore;      external 'Mf.dll' name 'CreateNamedPropertyStore';
+  function MFCreateSampleCopierMFT;       external 'Mf.dll' name 'MFCreateSampleCopierMFT';
+  function MFCreateTranscodeProfile;      external 'Mf.dll' name 'MFCreateTranscodeProfile';
+  function MFCreateTranscodeTopology;     external 'Mf.dll' name 'MFCreateTranscodeTopology';
+  function MFTranscodeGetAudioOutputAvailableTypes; external 'Mf.dll' name 'MFTranscodeGetAudioOutputAvailableTypes';
+  function MFCreateTranscodeSinkActivate; external 'Mf.dll' name 'MFCreateTranscodeSinkActivate';
+  function MFCreateMFByteStreamOnStream;  external 'Mf.dll' name 'MFCreateMFByteStreamOnStream';
+  function MFEnumDeviceSources;           external 'Mf.dll' name 'MFEnumDeviceSources';
+  function MFCreateDeviceSource;          external 'Mf.dll' name 'MFCreateDeviceSource';
+  function MFCreateDeviceSourceActivate;  external 'Mf.dll' name 'MFCreateDeviceSourceActivate';
 
 end.

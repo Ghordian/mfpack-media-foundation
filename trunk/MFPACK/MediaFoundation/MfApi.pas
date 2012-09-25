@@ -64,14 +64,17 @@ unit MfApi;
 interface
 
 uses
-//  ActiveX, Direct3d, DirectShow9,                       //updt 090812 for IMediaBuffer, includes
-//  MMSystem,                                             //updt 090812 implements MMReg
-// MmReg;
-  Windows;
-// ComObj, MfObjects;
+  ActiveX, Direct3d, DirectShow9,                       //updt 090812 for IMediaBuffer, includes
+  MMSystem,
+  MMReg,
+  Windows, MfObjects;
+// ComObj,
 
 Const
-  UnitVersion         = '01.01.0001';
+  Version               = '0.1.0001';
+
+type
+  MFWORKITEM_KEY = UInt64;
 
 const
 
@@ -191,29 +194,6 @@ const //updt 090812 replace: type
   // Application should not call MFStartup / MFShutdown from workqueue threads
   function MFShutdown: HRESULT; stdcall;
 
-implementation
-
-  function MFStartup;  external 'Mfplat.dll' name 'MFStartup';
-  function MFShutdown; external 'Mfplat.dll' name 'MFShutdown';
-
-end.
-
-
-
-
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-
-
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////    Platform    ///////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -221,25 +201,15 @@ end.
   // These functions can be used to keep the MF platform object in place.
   // Every call to MFLockPlatform should have a matching call to MFUnlockPlatform
 
-  function MFLockPlatform(): HResult; stdcall;
-  function MFUnlockPlatform(): HResult; stdcall;
+  function MFLockPlatform: HResult; stdcall;
+  function MFUnlockPlatform: HResult; stdcall;
 
 ////////////////////////////////////////////////////////////////////////////////
-
-
-// MF workitem functions ///////////////////////////////////////////////////////
-
-  {$EXTERNALSYM MFWORKITEM_KEY}
-Type  //##added
-  MFWORKITEM_KEY = UInt64;
-
+///
   function MFPutWorkItem(dwQueue: DWORD; pCallback: IMFAsyncCallback; pState: IUnknown): HResult; stdcall;
   function MFPutWorkItemEx(dwQueue: DWORD; pResult: IMFAsyncResult): HResult; stdcall;
   function MFScheduleWorkItem(pCallback: IMFAsyncCallback; pState: IUnknown; Timeout: INT64; pKey: MFWORKITEM_KEY): HResult; stdcall;
   function MFScheduleWorkItemEx(pResult: IMFAsyncResult; Timeout: INT64; pKey: MFWORKITEM_KEY): HResult; stdcall;
-
-
-
   //   The CancelWorkItem method is used by objects to cancel scheduled operation
   //   Due to asynchronous nature of timers, application might still get a
   //   timer callback after MFCancelWorkItem has returned.
@@ -620,7 +590,7 @@ const           //updt 090812 add
   // result *ppclsidMFT must be freed with CoTaskMemFree.
   function MFTEnum(const guidCategory: TGUID; const Flags: UINT32; const pInputType: MFT_REGISTER_TYPE_INFO;
                    const pOutputType: MFT_REGISTER_TYPE_INFO; const pAttributes: IMFAttributes; out ppclsidMFT: CLSID {must be freed with CoTaskMemFree};
-                   out pcMFTs: PUINT32): HResult; stdcall;
+                   out pcMFTs: UINT32): HResult; stdcall;
 
 
   //#if (WINVER >= _WIN32_WINNT_WIN7)
@@ -876,7 +846,7 @@ const
 // {e06d8026-db46-11cf-b4d1-00805f6cbbea}       MFVideoFormat_MPEG2
   MFVideoFormat_MPEG2 : TGuid = '{e06d8026-db46-11cf-b4d1-00805f6cbbea}';
 
-  {$EXTERNALSYM MFVideoFormat_MPG2}
+//  {$EXTERNALSYM MFVideoFormat_MPG2}
 //updt 090832 doesn't work  dwMFVideoFormat_MPG2                = MFVideoFormat_MPEG2;
 
 
@@ -912,8 +882,6 @@ const
   dwMFAudioFormat_AAC               = WAVE_FORMAT_MPEG_HEAAC;
   //MFAudioFormat_ADTS
   dwMFAudioFormat_ADTS              = WAVE_FORMAT_MPEG_ADTS_AAC;
-
-}
 
 // MPEG-4 media types //////////////////////////////////////////////////////////
 
@@ -966,7 +934,7 @@ const
   MF_MT_AUDIO_FLOAT_SAMPLES_PER_SECOND        : TGuid = '{fb3b724a-cfb5-4319-aefe-6e42b2406132}';
 
   // {1aab75c8-cfef-451c-ab95-ac034b8e1731}   MF_MT_AUDIO_AVG_BYTES_PER_SECOND    {UINT32}
-  MF_MT_AUDIO_AVG_BYTES_PER_SECOND            : TGuid = '{}';
+  MF_MT_AUDIO_AVG_BYTES_PER_SECOND            : TGuid = '{1aab75c8-cfef-451c-ab95-ac034b8e1731}';
 
   // {322de230-9eeb-43bd-ab7a-ff412251541d}   MF_MT_AUDIO_BLOCK_ALIGNMENT         {UINT32}
   MF_MT_AUDIO_BLOCK_ALIGNMENT                 : TGuid = '{322de230-9eeb-43bd-ab7a-ff412251541d}';
@@ -1008,7 +976,7 @@ const
   MF_MT_AUDIO_WMADRC_PEAKREF                    : TGuid = '{9d62927d-36be-4cf2-b5c4-a3926e3e8711}';
 
   // {9d62927e-36be-4cf2-b5c4-a3926e3e8711}   MF_MT_AUDIO_WMADRC_PEAKTARGET        {UINT32}
-  MF_MT_AUDIO_WMADRC_PEAKTARGET                 : TGuid = '{9d62927e-36be-4cf2-b5c4-a3926e3e8711}}';
+  MF_MT_AUDIO_WMADRC_PEAKTARGET                 : TGuid = '{9d62927e-36be-4cf2-b5c4-a3926e3e8711}';
 
   // {9d62927f-36be-4cf2-b5c4-a3926e3e8711}   MF_MT_AUDIO_WMADRC_AVGREF         {UINT32}
   MF_MT_AUDIO_WMADRC_AVGREF                     : TGuid = '{9d62927f-36be-4cf2-b5c4-a3926e3e8711}';
@@ -1067,7 +1035,7 @@ type
   _MFVideoDRMFlags                    = (
     MFVideoDRMFlag_None               = 0,
     MFVideoDRMFlag_AnalogProtected    = 1,
-    MFVideoDRMFlag_DigitallyProtected = 2,
+    MFVideoDRMFlag_DigitallyProtected = 2
   );
   {$EXTERNALSYM MFVideoDRMFlags}
   MFVideoDRMFlags = _MFVideoDRMFlags;
@@ -1076,7 +1044,7 @@ type
 
 const
   // {4d0e73e5-80ea-4354-a9d0-1176ceb028ea}     MF_MT_PAD_CONTROL_FLAGS         {UINT32 (oneof MFVideoPadFlags)}
-  DEFINE_GUID(MF_MT_PAD_CONTROL_FLAGS           : TGuid = '{4d0e73e5-80ea-4354-a9d0-1176ceb028ea}';
+  MF_MT_PAD_CONTROL_FLAGS           : TGuid = '{4d0e73e5-80ea-4354-a9d0-1176ceb028ea}';
 
 type
   PMFVideoPadFlags = ^TMFVideoPadFlags;
@@ -1150,10 +1118,10 @@ const
     MF_MT_VIDEO_NOMINAL_RANGE                   : TGuid = '{c21b8ee5-b956-4071-8daf-325edf5cab11}';
 
   // {66758743-7e5f-400d-980a-aa8596c85696}     MF_MT_GEOMETRIC_APERTURE        {BLOB (MFVideoArea)}
-  MF_MT_GEOMETRIC_APERTURE                      : TGuid = '{66758743-7e5f-400d-980a-aa8596c85696}}';
+  MF_MT_GEOMETRIC_APERTURE                      : TGuid = '{66758743-7e5f-400d-980a-aa8596c85696}';
 
   // {d7388766-18fe-48c6-a177-ee894867c8c4}     MF_MT_MINIMUM_DISPLAY_APERTURE  {BLOB (MFVideoArea)}
-  MF_MT_MINIMUM_DISPLAY_APERTURE                : TGuid = '{d7388766-18fe-48c6-a177-ee894867c8c4}}';
+  MF_MT_MINIMUM_DISPLAY_APERTURE                : TGuid = '{d7388766-18fe-48c6-a177-ee894867c8c4}';
 
   // {79614dde-9187-48fb-b8c7-4d52689de649}     MF_MT_PAN_SCAN_APERTURE         {BLOB (MFVideoArea)}
   MF_MT_PAN_SCAN_APERTURE                       : TGuid = '{79614dde-9187-48fb-b8c7-4d52689de649}';
@@ -1216,7 +1184,7 @@ const
   MF_MT_DV_AAUX_SRC_PACK_0                      : TGuid = '{84bd5d88-0fb8-4ac8-be4b-a8848bef98f3}';
 
   // {f731004e-1dd1-4515-aabe-f0c06aa536ac}     MF_MT_DV_AAUX_CTRL_PACK_0       {UINT32}
-  DEFINE_GUID(MF_MT_DV_AAUX_CTRL_PACK_0         : TGuid = '{f731004e-1dd1-4515-aabe-f0c06aa536ac}';
+  MF_MT_DV_AAUX_CTRL_PACK_0         : TGuid = '{f731004e-1dd1-4515-aabe-f0c06aa536ac}';
 
   // {720e6544-0225-4003-a651-0196563a958e}     MF_MT_DV_AAUX_SRC_PACK_1        {UINT32}
   MF_MT_DV_AAUX_SRC_PACK_1                      : TGuid = '{720e6544-0225-4003-a651-0196563a958e}';
@@ -1357,11 +1325,11 @@ type
   TAmMediaType = _AMMediaType;
 
 
-  function MFValidateMediaTypeSize(const FormatType: TGUID; const pBlock: PUINT8; const cbSize: UINT32): HResult; stdcall;
-  function MFCreateMediaType(out ppMFType: PPIMFMediaType): HResult; stdcall;
-  function MFCreateMFVideoFormatFromMFMediaType(const pMFType: PIMFMediaType; out ppMFVF: PPMFVIDEOFORMAT;{must be deleted with CoTaskMemFree} out pcbSize: PUINT32): HResult; stdcall;
+  function MFValidateMediaTypeSize(const FormatType: TGUID; const pBlock: UINT8; const cbSize: UINT32): HResult; stdcall;
+  function MFCreateMediaType(out ppMFType: IMFMediaType): HResult; stdcall;
+  function MFCreateMFVideoFormatFromMFMediaType(const pMFType: IMFMediaType; out ppMFVF: MFVIDEOFORMAT;{must be deleted with CoTaskMemFree} out pcbSize: UINT32): HResult; stdcall;
 
-
+type
   PMFWaveFormatExConvertFlags = ^TMFWaveFormatExConvertFlags;
   {$EXTERNALSYM _MFWaveFormatExConvertFlags}
   _MFWaveFormatExConvertFlags                 = (
@@ -1375,20 +1343,20 @@ type
 
   // declarations with default parameters ////////////////////////////////////////
 
-  function MFCreateWaveFormatExFromMFMediaType(const pMFType: PIMFMediaType; out ppWF: PPWAVEFORMATEX; out pcbSize: PUINT32; const Flags: UINT32{MFWaveFormatExConvertFlag_Normal}): HResult; stdcall;
-  function MFInitMediaTypeFromVideoInfoHeader(const pMFType: PIMFMediaType; const pVIH: PVIDEOINFOHEADER; const cbBufSize: UINT32; const pSubtype: PTGUID{Nil}): HResult; stdcall;
-  function MFInitMediaTypeFromVideoInfoHeader2(const pMFType: PIMFMediaType; const pVIH2: PVIDEOINFOHEADER2; const cbBufSize: UINT32; const pSubtype: PTGUID{Nil}): HResult; stdcall;
-  function MFInitMediaTypeFromMPEG1VideoInfo(const pMFType: PIMFMediaType; const pMP1VI: PMPEG1VIDEOINFO; const cbBufSize: UINT32; const pSubtype: PTGUID{Nil}): HResult; stdcall;
-  function MFInitMediaTypeFromMPEG2VideoInfo(const pMFType: PIMFMediaType const pMP2VI: PMPEG2VIDEOINFO; const cbBufSize: UINT32; const pSubtype: PTGUID{Nil}): HResult; stdcall;
-  function MFCalculateBitmapImageSize(const pBMIH: PBITMAPINFOHEADER; const cbBufSize: UINT32; out pcbImageSize: PUINT32; out pbKnown: PBOOL{Nil}): HResult; stdcall;
-  function MFCalculateImageSize(const guidSubtype: REFGUID; const unWidth: UINT32; const unHeight: UINT32; out pcbImageSize: PUINT32): HResult; stdcall;
+  function MFCreateWaveFormatExFromMFMediaType(const pMFType: IMFMediaType; out ppWF: WAVEFORMATEX; out pcbSize: UINT32; const Flags: UINT32{MFWaveFormatExConvertFlag_Normal}): HResult; stdcall;
+  function MFInitMediaTypeFromVideoInfoHeader(const pMFType: IMFMediaType; const pVIH: PVIDEOINFOHEADER; const cbBufSize: UINT32; const pSubtype: TGUID{Nil}): HResult; stdcall;
+  function MFInitMediaTypeFromVideoInfoHeader2(const pMFType: IMFMediaType; const pVIH2: PVIDEOINFOHEADER2; const cbBufSize: UINT32; const pSubtype: TGUID{Nil}): HResult; stdcall;
+  function MFInitMediaTypeFromMPEG1VideoInfo(const pMFType: IMFMediaType; const pMP1VI: PMPEG1VIDEOINFO; const cbBufSize: UINT32; const pSubtype: TGUID{Nil}): HResult; stdcall;
+  function MFInitMediaTypeFromMPEG2VideoInfo(const pMFType: IMFMediaType; const pMP2VI: PMPEG2VIDEOINFO; const cbBufSize: UINT32; const pSubtype: TGUID{Nil}): HResult; stdcall;
+  function MFCalculateBitmapImageSize(const pBMIH: PBITMAPINFOHEADER; const cbBufSize: UINT32; out pcbImageSize: UINT32; out pbKnown: PBOOL{Nil}): HResult; stdcall;
+  function MFCalculateImageSize(const guidSubtype: REFGUID; const unWidth: UINT32; const unHeight: UINT32; out pcbImageSize: UINT32): HResult; stdcall;
   function MFFrameRateToAverageTimePerFrame(const unNumerator: UINT32; const unDenominator: UINT32; out punAverageTimePerFrame: PUINT64): HResult; stdcall;
-  function MFAverageTimePerFrameToFrameRate(const unAverageTimePerFrame: UINT64; out punNumerator: PUINT32; out punDenominator: PUINT32): HResult; stdcall;
-  function MFInitMediaTypeFromMFVideoFormat(const pMFType: PIMFMediaType; const pMFVF: PMFVIDEOFORMAT; const cbBufSize: UINT32): HResult; stdcall;
-  function MFInitMediaTypeFromWaveFormatEx(const pMFType: PIMFMediaType; const pWaveFormat: PWAVEFORMATEX; const cbBufSize: UINT32): HResult; stdcall;
-  function MFInitMediaTypeFromAMMediaType(const pMFType: PIMFMediaType; const pAMType: PAM_MEDIA_TYPE): HResult; stdcall;
-  function MFInitAMMediaTypeFromMFMediaType(const pMFType: PIMFMediaType; const guidFormatBlockType: TGUID; var PAM_MEDIA_TYPE): HResult; stdcall;
-  function MFCreateAMMediaTypeFromMFMediaType(const pMFType: PIMFMediaType; const guidFormatBlockType: TGUID; var PPAM_MEDIA_TYPE): HResult; stdcall;
+  function MFAverageTimePerFrameToFrameRate(const unAverageTimePerFrame: UINT64; out punNumerator: UINT32; out punDenominator: UINT32): HResult; stdcall;
+  function MFInitMediaTypeFromMFVideoFormat(const pMFType: IMFMediaType; const pMFVF: PMFVIDEOFORMAT; const cbBufSize: UINT32): HResult; stdcall;
+  function MFInitMediaTypeFromWaveFormatEx(const pMFType: IMFMediaType; const pWaveFormat: PWAVEFORMATEX; const cbBufSize: UINT32): HResult; stdcall;
+  function MFInitMediaTypeFromAMMediaType(const pMFType: IMFMediaType; const pAMType: AM_MEDIA_TYPE): HResult; stdcall;
+  function MFInitAMMediaTypeFromMFMediaType(const pMFType: IMFMediaType; const guidFormatBlockType: TGUID; var PAM_MEDIA_TYPE): HResult; stdcall;
+  function MFCreateAMMediaTypeFromMFMediaType(const pMFType: IMFMediaType; const guidFormatBlockType: TGUID; var PPAM_MEDIA_TYPE): HResult; stdcall;
 
 
 // This function compares a full media type to a partial media type.
@@ -1406,9 +1374,9 @@ type
 // the same value.
 
   //STDAPI_(BOOL)
-  function MFCompareFullToPartialMediaType(const pMFTypeFull: PIMFMediaType; const pMFTypePartial: PIMFMediaType): Boolean; stdcall;
-  function MFWrapMediaType(const pOrig: PIMFMediaType; const MajorType: REFGUID; const SubType: REFGUID; out ppWrap: PPIMFMediaType): HResult; stdcall;
-  function MFUnwrapMediaType(const pWrap: PIMFMediaType; out ppOrig: PPIMFMediaType): HResult; stdcall;
+  function MFCompareFullToPartialMediaType(const pMFTypeFull: IMFMediaType; const pMFTypePartial: IMFMediaType): Boolean; stdcall;
+  function MFWrapMediaType(const pOrig: IMFMediaType; const MajorType: REFGUID; const SubType: REFGUID; out ppWrap: IMFMediaType): HResult; stdcall;
+  function MFUnwrapMediaType(const pWrap: IMFMediaType; out ppOrig: IMFMediaType): HResult; stdcall;
 
 
 // MFCreateVideoMediaType //////////////////////////////////////////////////////
@@ -1416,13 +1384,13 @@ type
   //#ifdef _KSMEDIA_
   function MFCreateVideoMediaTypeFromVideoInfoHeader(const pVideoInfoHeader: PKS_VIDEOINFOHEADER; const cbVideoInfoHeader: DWORD; const dwPixelAspectRatioX: DWORD;
                                                     const dwPixelAspectRatioY: DWORD; const InterlaceMode: MFVideoInterlaceMode; const VideoFlags: QWORD;
-                                                    const pSubtype: PTGUID; out ppIVideoMediaType: PPIMFVideoMediaType): HResult; stdcall;
+                                                    const pSubtype: TGUID; out ppIVideoMediaType: IMFVideoMediaType): HResult; stdcall;
   function MFCreateVideoMediaTypeFromVideoInfoHeader2(const pVideoInfoHeader: PKS_VIDEOINFOHEADER2; const cbVideoInfoHeader: DWORD; const AdditionalVideoFlags: QWORD;
-                                                      const pSubtype: PTGUID; out ppIVideoMediaType: PPIMFVideoMediaType): HResult; stdcall;
+                                                      const pSubtype: TGUID; out ppIVideoMediaType: IMFVideoMediaType): HResult; stdcall;
   // #endif
 
-  function MFCreateVideoMediaType(const pVideoFormat: PMFVIDEOFORMAT; out ppIVideoMediaType: PPIMFVideoMediaType): HResult; stdcall;
-  function MFCreateVideoMediaTypeFromSubtype(const pAMSubtype: PTGUID; out ppIVideoMediaType: PPIMFVideoMediaType): HResult; stdcall;
+  function MFCreateVideoMediaType(const pVideoFormat: PMFVIDEOFORMAT; out ppIVideoMediaType: IMFVideoMediaType): HResult; stdcall;
+  function MFCreateVideoMediaTypeFromSubtype(const pAMSubtype: TGUID; out ppIVideoMediaType: IMFVideoMediaType): HResult; stdcall;
 
 
   //STDAPI_(BOOL)
@@ -1434,9 +1402,9 @@ type
   //This function is not implemented.
   function MFCreateVideoMediaTypeFromBitMapInfoHeader(const pbmihBitMapInfoHeader: PBITMAPINFOHEADER; const dwPixelAspectRatioX: DWORD; const dwPixelAspectRatioY: DWORD;
                                                       const InterlaceMode: MFVideoInterlaceMode; const VideoFlags: QWORD; const qwFramesPerSecondNumerator: QWORD;
-                                                      const qwFramesPerSecondDenominator: QWORD; const dwMaxBitRate: DWORD; out ppIVideoMediaType: PPIMFVideoMediaType): HResult; stdcall;
+                                                      const qwFramesPerSecondDenominator: QWORD; const dwMaxBitRate: DWORD; out ppIVideoMediaType: IMFVideoMediaType): HResult; stdcall;
   //Calculates the minimum surface stride for a video format.
-  function MFGetStrideForBitmapInfoHeader(const format: DWORD; const dwWidth: DWORD; out pStride: PLONG): HResult; stdcall;
+  function MFGetStrideForBitmapInfoHeader(const format: DWORD; const dwWidth: DWORD; out pStride: LONG): HResult; stdcall;
   //Retrieves the image size, in bytes, for an uncompressed video format.
   function MFGetPlaneSize(const format: DWORD; const dwWidth: DWORD; const dwHeight: DWORD; out pdwPlaneSize: PDWORD): HResult; stdcall;
 
@@ -1447,25 +1415,25 @@ type
   function MFCreateVideoMediaTypeFromBitMapInfoHeaderEx(const pbmihBitMapInfoHeader: PBITMAPINFOHEADER; const cbBitMapInfoHeader: UINT32; const dwPixelAspectRatioX: DWORD;
                                                         const dwPixelAspectRatioY: DWORD; const InterlaceMode: MFVideoInterlaceMode; const VideoFlags: QWORD;
                                                         const dwFramesPerSecondNumerator: DWORD; const dwFramesPerSecondDenominator: DWORD; const dwMaxBitRate: DWORD;
-                                                        out ppIVideoMediaType: PPIMFVideoMediaType): HResult; stdcall;
+                                                        out ppIVideoMediaType: IMFVideoMediaType): HResult; stdcall;
   //#endif // (WINVER >= _WIN32_WINNT_WIN7)
   // end >= Windows 7
 
 
   //MFCreateMediaTypeFromRepresentation
   //Creates a Media Foundation media type from another format representation.
-  function MFCreateMediaTypeFromRepresentation(guidRepresentation: TGUID; const pvRepresentation: Pointer; out ppIMediaType: PPIMFMediaType): HResult; stdcall;
+  function MFCreateMediaTypeFromRepresentation(guidRepresentation: TGUID; const pvRepresentation: Pointer; out ppIMediaType: IMFMediaType): HResult; stdcall;
   //MFCreateAudioMediaType
   //Creates an audio media type from a WAVEFORMATEX structure.
   //NOTE: This API is not supported and may be altered or unavailable in the future.
-  function MFCreateAudioMediaType(const pAudioFormat: PWAVEFORMATEX; out ppIAudioMediaType: PPIMFAudioMediaType): HResult; stdcall;
+  function MFCreateAudioMediaType(const pAudioFormat: PWAVEFORMATEX; out ppIAudioMediaType: IMFAudioMediaType): HResult; stdcall;
 
 
   //Returns the FOURCC or D3DFORMAT value for an uncompressed video format.
   //NOTE: This API is not supported and may be altered or unavailable in the future.
   //Applications should avoid using the MFVIDEOFORMAT structure,
   //and use media type attributes instead. For more information, see Video Media Types.
-  function MFGetUncompressedVideoFormat(const pVideoFormat: PMFVIDEOFORMAT): DWord; stdcall;
+  function MFGetUncompressedVideoFormat(const pVideoFormat: MFVIDEOFORMAT): DWord; stdcall;
 
   //Initializes an MFVIDEOFORMAT structure for a standard video format such as DVD, analog television, or ATSC digital television.
   //NOTE: This API is not supported and may be altered or unavailable in the future.
@@ -1512,15 +1480,12 @@ type
 // IMFAttributes inline UTILITY FUNCTIONS - used for IMFMediaType as well //////
 
 
-  //inline
   {$EXTERNALSYM HI32}
   function HI32(unPacked: UINT64): UINT32; stdcall;
-  //return (UINT32)(unPacked >> 32);
 
-  //inline
   {$EXTERNALSYM LO32}
   function LO32(unPacked: UINT64): UINT32; stdcall;
-  //return (UINT32)unPacked;  
+  //return (UINT32)unPacked;
 
   //inline
   {$EXTERNALSYM Pack2UINT32AsUINT64}
@@ -1540,36 +1505,36 @@ type
   //*punLow = LO32(unPacked);
 
   //inline
-  {$EXTERNALSYM PackSize}
+//  {$EXTERNALSYM PackSize}
   //Packs a UINT32 width value and a UINT32 height value into a UINT64 value that represents a size.
   //Returns the packed UINT64 value.
   //NOTE: This function stores two 32-bit values in a 64-bit value that is suitable for
   //      the IMFAttributes.SetUINT64 method.
-  function PackSize(unWidth: UINT32; unHeight: UINT32): UINT64; stdcall;
+//#### TO DO ####  function PackSize(unWidth: UINT32; unHeight: UINT32): UINT64; stdcall;
   //Return Pack2UINT32AsUINT64(unWidth, unHeight);
 
   //inline
-  {$EXTERNALSYM UnpackSize}
+//  {$EXTERNALSYM UnpackSize}
   //Gets the low-order and high-order UINT32 values from a UINT64 value that represnets a size.
   //You can use this function to unpack a UINT64 value that you receive from the IMFAttributes.GetUINT64 method.
-  procedure UnpackSize(unPacked: UINT64; var punWidth: UINT32; var punHeight: UINT32); stdcall;
+//#### TO DO ####  procedure UnpackSize(unPacked: UINT64; var punWidth: UINT32; var punHeight: UINT32); stdcall;
   // return Unpack2UINT32AsUINT64(unPacked, punWidth, punHeight);
 
   //inline
-  {$EXTERNALSYM PackRatio}
+//  {$EXTERNALSYM PackRatio}
   //Packs two UINT32 values, which represent a ratio, into a UINT64 value.
   //Returns the packed UINT64 value.
   //NOTE: This function stores two 32-bit values in a 64-bit value that is suitable for
   //      the IMFAttributes.SetUINT64 method.
-  function PackRatio(nNumerator: INT32; unDenominator: UINT32): UINT64; stdcall;
+//#### TO DO ####  function PackRatio(nNumerator: INT32; unDenominator: UINT32): UINT64; stdcall;
   // return Pack2UINT32AsUINT64((UINT32)nNumerator, unDenominator);
 
   //inline
-  {$EXTERNALSYM UnpackRatio}
+//  {$EXTERNALSYM UnpackRatio}
   //Gets the low-order and high-order UINT32 values from a UINT64 value that represents a ratio.
   //NOTE: You can use this function to unpack a UINT64 value that you receive from
   //      the IMFAttributes.GetUINT64 method.
-  procedure UnpackRatio(unPacked: UINT64; var pnNumerator: INT32; var punDenominator: UINT32); stdcall;
+//#### TO DO ####  procedure UnpackRatio(unPacked: UINT64; var pnNumerator: INT32; var punDenominator: UINT32); stdcall;
   // Unpack2UINT32AsUINT64(unPacked, (UINT32*)pnNumerator, punDenominator);
 
 
@@ -1577,11 +1542,11 @@ type
 // "failsafe" inline get methods - return the stored value or return a default /
 
   //inline
-  {$EXTERNALSYM MFGetAttributeUINT32}
+//  {$EXTERNALSYM MFGetAttributeUINT32}
   //Returns a UINT32 value from an attribute store, or a default value if the attribute is not present.
   //NOTE: This helper function queries the attribute store for the UINT32 value specified by guidKey.
   //      If the value is not present or does not have type UINT32, the function returns unDefault.
-  function MFGetAttributeUINT32(const pAttributes: IMFAttributes; const guidKey: REFGUID; unDefault: UINT32): UINT32; stdcall;
+//#### TO DO ####  function MFGetAttributeUINT32(const pAttributes: IMFAttributes; const guidKey: REFGUID; unDefault: UINT32): UINT32; stdcall;
   //UINT32 unRet;
   //    if (FAILED(pAttributes->GetUINT32(guidKey, &unRet))) {
   //        unRet = unDefault;
@@ -1590,11 +1555,11 @@ type
 
 
   //inline
-  {$EXTERNALSYM MFGetAttributeUINT64}
+//  {$EXTERNALSYM MFGetAttributeUINT64}
   //Returns a UINT64 value from an attribute store, or a default value if the attribute is not present.
   //NOTE: This helper function queries the attribute store for the UINT64 value specified by guidKey.
   //      If the value is not present, the function returns unDefault.
-  function MFGetAttributeUINT64(const pAttributes: IMFAttributes; const guidKey: REFGUID; unDefault: UINT64): UINT64; stdcall;
+//#### TO DO ####  function MFGetAttributeUINT64(const pAttributes: IMFAttributes; const guidKey: REFGUID; unDefault: UINT64): UINT64; stdcall;
   //UINT64 unRet;
   //    if (FAILED(pAttributes->GetUINT64(guidKey, &unRet))) {
   //        unRet = unDefault;
@@ -1602,14 +1567,14 @@ type
   //    return unRet;
 
   //inline
-  {$EXTERNALSYM MFGetAttributeDouble}
+//  {$EXTERNALSYM MFGetAttributeDouble}
   //Returns a double value from an attribute store, or a default value if the attribute is not present.
   //NOTE: This helper function queries the attribute store for the attribute specified by guidKey.
   //      If the attribute is not present or does not have type double, the function returns fDefault.
   //      This function is convenient because it never returns a failure code.
   //      However, if the attribute in question does not have a meaningful default value,
   //      you should call IMFAttributes.GetDouble and check for MF_E_ATTRIBUTENOTFOUND.
-  function MFGetAttributeDouble(const pAttributes: IMFAttributes; const guidKey: REFGUID; fDefault: Double ): Double; stdcall;
+//#### TO DO ####  function MFGetAttributeDouble(const pAttributes: IMFAttributes; const guidKey: REFGUID; fDefault: Double ): Double; stdcall;
   //double fRet;
   //    if (FAILED(pAttributes->GetDouble(guidKey, &fRet))) {
   //       fRet = fDefault;
@@ -1622,11 +1587,11 @@ type
 
 
   //inline
-  {$EXTERNALSYM MFGetAttribute2UINT32asUINT64}
+//  {$EXTERNALSYM MFGetAttribute2UINT32asUINT64}
   //Gets an attribute whose value is two UINT32 values packed into a UINT64.
   //NOTE: Internally, this function calls IMFAttributes.GetUINT64 to get the UINT64 value,
   //      and Unpack2UINT32AsUINT64 to unpack the two 32-bit values.
-  function MFGetAttribute2UINT32asUINT64(const pAttributes: IMFAttributes; const guidKey: REFGUID; out punHigh32: UINT32; out punLow32: UINT32): HResult; stdcall;
+//#### TO DO ####  function MFGetAttribute2UINT32asUINT64(const pAttributes: IMFAttributes; const guidKey: REFGUID; out punHigh32: UINT32; out punLow32: UINT32): HResult; stdcall;
   //{
   //  NT64 unPacked;
   //  HRESULT hr = S_OK;
@@ -1641,48 +1606,48 @@ type
   //}
 
   //inline
-  {$EXTERNALSYM MFSetAttribute2UINT32asUINT64}
+//  {$EXTERNALSYM MFSetAttribute2UINT32asUINT64}
   //Packs two UINT32 values into a UINT64 attribute value.
   //NOTE: Internally, this functions calls Pack2UINT32AsUINT64 to create the 64-bit value,
   //      and IMFAttributes.SetUINT64 to set the attribute.
-  function MFSetAttribute2UINT32asUINT64(const pAttributes: IMFAttributes; const guidKey: REFGUID; unHigh32: UINT32; unLow32: UINT32): HResult; stdcall;
+//#### TO DO ####  function MFSetAttribute2UINT32asUINT64(const pAttributes: IMFAttributes; const guidKey: REFGUID; unHigh32: UINT32; unLow32: UINT32): HResult; stdcall;
   // {
   //  return pAttributes->SetUINT64(guidKey, Pack2UINT32AsUINT64(unHigh32, unLow32));
   // }
 
   //inline
-  {$EXTERNALSYM MFGetAttributeRatio}
+//  {$EXTERNALSYM MFGetAttributeRatio}
   //Retrieves an attribute whose value is a ratio.
   //NOTE: Some attributes specify a ratio as a packed UINT64 value.
   //      Use this function to get the numerator and denominator as separate 32-bit values.
-  function MFGetAttributeRatio(const pAttributes: IMFAttributes; const guidKey: REFGUID; out punNumerator: UINT32; out punDenominator: UINT32): HResult; stdcall;
+//#### TO DO ####  function MFGetAttributeRatio(const pAttributes: IMFAttributes; const guidKey: REFGUID; out punNumerator: UINT32; out punDenominator: UINT32): HResult; stdcall;
   {
     return MFGetAttribute2UINT32asUINT64(pAttributes, guidKey, punNumerator, punDenominator);
   }
 
   //inline
-  {$EXTERNALSYM MFGetAttributeSize}
+//  {$EXTERNALSYM MFGetAttributeSize}
   //Retrieves an attribute whose value is a size, expressed as a width and height.
   //NOTE: Some attributes specify a size as a packed UINT64 value.
   //      Use this function to get the numerator and denominator as separate 32-bit values.
-  function MFGetAttributeSize(const pAttributes: IMFAttributes; const guidKey: REFGUID; out punWidth: UINT32; out punHeight: UINT32): HResult; stdcall;
+//#### TO DO ####  function MFGetAttributeSize(const pAttributes: IMFAttributes; const guidKey: REFGUID; out punWidth: UINT32; out punHeight: UINT32): HResult; stdcall;
   {
     return MFGetAttribute2UINT32asUINT64(pAttributes, guidKey, punWidth, punHeight);
   }
 
   //inline
-  {$EXTERNALSYM MFSetAttributeRatio}
+//  {$EXTERNALSYM MFSetAttributeRatio}
   //Sets a ratio as a 64-bit attribute value.
   //NOTE: Some attributes specify a ratio as a packed UINT64 value.
   //      This function packs the numerator and denominator into a single UINT64 value.
-  function MFSetAttributeRatio(const pAttributes: IMFAttributes; const guidKey: REFGUID; unNumerator: UINT32; unDenominator: UINT32): HResult; stdcall;
+//#### TO DO ####  function MFSetAttributeRatio(const pAttributes: IMFAttributes; const guidKey: REFGUID; unNumerator: UINT32; unDenominator: UINT32): HResult; stdcall;
   {
     return MFSetAttribute2UINT32asUINT64(pAttributes, guidKey, unNumerator, unDenominator);
   }
 
   //inline
-  {$EXTERNALSYM MFSetAttributeSize}
-  function MFSetAttributeSize(const pAttributes: IMFAttributes; const guidKey: REFGUID; out unWidth: UINT32; out unHeight: UINT32): HResult; stdcall;
+//  {$EXTERNALSYM MFSetAttributeSize}
+//#### TO DO ####  function MFSetAttributeSize(const pAttributes: IMFAttributes; const guidKey: REFGUID; out unWidth: UINT32; out unHeight: UINT32): HResult; stdcall;
   {
     return MFSetAttribute2UINT32asUINT64(pAttributes, guidKey, unWidth, unHeight);
   }
@@ -1720,7 +1685,7 @@ type
 ////////////////////////////////////////////////////////////////////////////////
 
   // Instantiates the MF-provided IMFCollection implementation
-  function MFCreateCollection(out ppIMFCollection: PPIMFCollection): HResult; stdcall;
+  function MFCreateCollection(out ppIMFCollection: IMFCollection): HResult; stdcall;
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -1728,42 +1693,55 @@ type
 ////////////////////////////////////////////////////////////////////////////////
 
 const
-  CLSID_MFSourceResolver                         : TGuid = '{90eab60f-e43a-4188-bcc4-e47fdf04868c);
+  CLSID_MFSourceResolver                         : TGuid = '{90eab60f-e43a-4188-bcc4-e47fdf04868c}';
 
-type
-  //#if (WINVER >= _WIN32_WINNT_WIN7)
-  // >= Windows 7
 
   //  Return (a * b + d) / c
   //  Returns _I64_MAX or LLONG_MIN on failure or _I64_MAX if mplat.dll is not available
   {$EXTERNALSYM MFllMulDiv}
   function MFllMulDiv(a: LONGLONG; b: LONGLONG; c: LONGLONG; d: LONGLONG): LONGLONG; winapi;
 
-  //#endif // (WINVER >= _WIN32_WINNT_WIN7)
-  // end >= Windows 7
-
-
-
 ////////////////////////////////////////////////////////////////////////////////
 //// Delphi Helpers  ///////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
 
   //See for usage:  function FCC(ch4: TCh4) and function DEFINE_MEDIATYPE_GUID(format: DWord)
-  function DefineMediaTypeGuidByFourCC(sFcc: string = ''): TGuid;
+  function DefineMediaTypeGuidByFourCC(sFcc: TCh4): TGuid;
   //See for usage:  function FCC(ch4: TCh4) and function DEFINE_MEDIATYPE_GUID(format: DWord)
   function DefineMediaTypeGuidByDWord(dwConst: DWord = 0): TGuid;
 
 
 implementation
 
+  function HI32(unPacked: UINT64): UINT32; stdcall;
+  Begin
+    Result:=unPacked shr 32;
+  End;
+
+  function LO32(unPacked: UINT64): UINT32; stdcall;
+  Begin
+    Result:=unPacked and $0ffffffff;
+  End;
+
+  function Pack2UINT32AsUINT64(unHigh: UINT32; unLow: UINT32): UINT64; stdcall;
+  Begin
+    Result:= unHigh shl 32 or unLow;
+  End;
+
+  procedure Unpack2UINT32AsUINT64(unPacked: UINT64; var punHigh: UINT32; var punLow: UINT32); stdcall;
+  Begin
+    punHigh:= HI32(unPacked);
+    punLow:= LO32(unPacked);
+  End;
+
   // Helper function to access the macro translations, mentioned under REMARK#1
-  function DefineMediaTypeGuidByFourCC(const sFcc: string): TGuid;
+  function DefineMediaTypeGuidByFourCC(sFcc: TCh4): TGuid;
     begin
 	    Result:= DEFINE_MEDIATYPE_GUID(FCC(sFcc));
     end;
 
   // Helper function to access the macro translations, mentioned under REMARK#1
-  function DefineMediaTypeGuidByDWord(const dwConst: DWord): TGuid;
+  function DefineMediaTypeGuidByDWord(dwConst: DWord): TGuid;
     begin
       Result:= DEFINE_MEDIATYPE_GUID(dwConst);
     end;
@@ -1782,112 +1760,112 @@ end;
 // Tony
 function DEFINE_MEDIATYPE_GUID(format: DWord): TGuid;
 begin
-	 with Result do
-		begin
-			D1:= format;
-			D2:= $0000;
-			D3:= $0010;
-			D4[0]:= $80; D4[1]:= $00; D4[2]:= $00; D4[3]:= $aa;
-			D4[4]:= $00; D4[5]:= $38; D4[6]:= $9b; D4[7]:= $71;
-		end;
+//  with Result do
+//		begin
+			Result.D1:= format;
+			Result.D2:= $0000;
+			Result.D3:= $0010;
+			Result.D4[0]:= $80; Result.D4[1]:= $00; Result.D4[2]:= $00; Result.D4[3]:= $aa;
+			Result.D4[4]:= $00; Result.D4[5]:= $38; Result.D4[6]:= $9b; Result.D4[7]:= $71;
+//		end;
 end;
 
 //--------------------- External definitions ---------------------------------
 
-  function MFLockPlatform: HRESULT;      external Mfplat.dll name 'MFLockPlatform';
-  function MFUnlockPlatform: HRESULT;    external Mfplat.dll name 'MFUnlockPlatform';
-  function MFPutWorkItem: HRESULT;       external Mfplat.dll name 'MFPutWorkItem';
-  function MFPutWorkItemEx: HRESULT;     external Mfplat.dll name 'MFPutWorkItemEx';
-  function MFScheduleWorkItem: HRESULT;  external Mfplat.dll name 'MFScheduleWorkItem';
-  function MFScheduleWorkItemEx: HRESULT;  external Mfplat.dll name 'MFScheduleWorkItemEx';
-  function MFCancelWorkItem: HRESULT;    external Mfplat.dll name 'MFCancelWorkItem';
-  function MFGetTimerPeriodicity: HRESULT;  external Mfplat.dll name 'MFGetTimerPeriodicity';
-  function MFAddPeriodicCallback: HRESULT;  external Mfplat.dll name 'MFAddPeriodicCallback';
-  function MFRemovePeriodicCallback: HRESULT;  external Mfplat.dll name 'MFRemovePeriodicCallback';
-  function MFAllocateWorkQueueEx: HRESULT;  external Mfplat.dll name 'MFAllocateWorkQueueEx';
-  function MFAllocateWorkQueue: HRESULT;  external Mfplat.dll name 'MFAllocateWorkQueue';
-  function MFLockWorkQueue: HRESULT;     external Mfplat.dll name 'MFLockWorkQueue';
-  function MFUnlockWorkQueue: HRESULT;   external Mfplat.dll name 'MFUnlockWorkQueue';
-  function MFBeginRegisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFBeginRegisterWorkQueueWithMMCSS';
-  function MFEndRegisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFEndRegisterWorkQueueWithMMCSS';
-  function MFBeginUnregisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFBeginUnregisterWorkQueueWithMMCSS';
-  function MFEndUnregisterWorkQueueWithMMCSS: HRESULT;  external Mfplat.dll name 'MFEndUnregisterWorkQueueWithMMCSS';
-  function MFGetWorkQueueMMCSSClass: HRESULT;  external Mfplat.dll name 'MFGetWorkQueueMMCSSClass';
-  function MFGetWorkQueueMMCSSTaskId: HRESULT;  external Mfplat.dll name 'MFGetWorkQueueMMCSSTaskId';
-  function MFCreateAsyncResult: HRESULT;  external Mfplat.dll name 'MFCreateAsyncResult';
-  function MFInvokeCallback: HRESULT;    external Mfplat.dll name 'MFInvokeCallback';
-  function MFCreateFile: HRESULT;        external Mfplat.dll name 'MFCreateFile';
-  function MFCreateTempFile: HRESULT;    external Mfplat.dll name 'MFCreateTempFile';
-  function MFBeginCreateFile: HRESULT;   external Mfplat.dll name 'MFBeginCreateFile';
-  function MFEndCreateFile: HRESULT;     external Mfplat.dll name 'MFEndCreateFile';
-  function MFCancelCreateFile: HRESULT;  external Mfplat.dll name 'MFCancelCreateFile';
-  function MFCreateMemoryBuffer: HRESULT;  external Mfplat.dll name 'MFCreateMemoryBuffer';
-  function MFCreateMediaBufferWrapper: HRESULT;  external Mfplat.dll name 'MFCreateMediaBufferWrapper';
-  function MFCreateLegacyMediaBufferOnMFMediaBuffer: HRESULT;  external Mfplat.dll name 'MFCreateLegacyMediaBufferOnMFMediaBuffer';
-  function MFCreateDXSurfaceBuffer: HRESULT;  external Mfplat.dll name 'MFCreateDXSurfaceBuffer';
-  function MFCreateAlignedMemoryBuffer: HRESULT;  external Mfplat.dll name 'MFCreateAlignedMemoryBuffer';
-  function MFCreateMediaEvent: HRESULT;  external Mfplat.dll name 'MFCreateMediaEvent';
-  function MFCreateEventQueue: HRESULT;  external Mfplat.dll name 'MFCreateEventQueue';
-  function MFCreateSample: HRESULT;      external Mfplat.dll name 'MFCreateSample';
-  function MFCreateAttributes: HRESULT;  external Mfplat.dll name 'MFCreateAttributes';
-  function MFInitAttributesFromBlob: HRESULT;  external Mfplat.dll name 'MFInitAttributesFromBlob';
-  function MFGetAttributesAsBlobSize: HRESULT;  external Mfplat.dll name 'MFGetAttributesAsBlobSize';
-  function MFGetAttributesAsBlob: HRESULT;  external Mfplat.dll name 'MFGetAttributesAsBlob';
-  function MFTRegister: HRESULT;         external Mfplat.dll name 'MFTRegister';
-  function MFTUnregister: HRESULT;       external Mfplat.dll name 'MFTUnregister';
-  function MFTRegisterLocal: HRESULT;    external Mfplat.dll name 'MFTRegisterLocal';
-  function MFTUnregisterLocal: HRESULT;  external Mfplat.dll name 'MFTUnregisterLocal';
-  function MFTRegisterLocalByCLSID: HRESULT;  external Mfplat.dll name 'MFTRegisterLocalByCLSID';
-  function MFTUnregisterLocalByCLSID: HRESULT;  external Mfplat.dll name 'MFTUnregisterLocalByCLSID';
-  function MFTEnum: HRESULT;             external Mfplat.dll name 'MFTEnum';
-  function MFTEnumEx: HRESULT;           external Mfplat.dll name 'MFTEnumEx';
-  function MFTGetInfo: HRESULT;          external Mfplat.dll name 'MFTGetInfo';
-  function MFGetPluginControl: HRESULT;  external Mfplat.dll name 'MFGetPluginControl';
-  function MFGetMFTMerit: HRESULT;       external Mfplat.dll name 'MFGetMFTMerit';
-  function MFValidateMediaTypeSize: HRESULT;  external Mfplat.dll name 'MFValidateMediaTypeSize';
-  function MFCreateMediaType: HRESULT;   external Mfplat.dll name 'MFCreateMediaType';
-  function MFCreateMFVideoFormatFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateMFVideoFormatFromMFMediaType';
-  function MFCreateWaveFormatExFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateWaveFormatExFromMFMediaType';
-  function MFInitMediaTypeFromVideoInfoHeader: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader';
-  function MFInitMediaTypeFromVideoInfoHeader2: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader2';
-  function MFInitMediaTypeFromMPEG1VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG1VideoInfo';
-  function MFInitMediaTypeFromMPEG2VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG2VideoInfo';
-  function MFCalculateBitmapImageSize: HRESULT;  external Mfplat.dll name 'MFCalculateBitmapImageSize';
-  function MFCreateWaveFormatExFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateWaveFormatExFromMFMediaType';
-  function MFInitMediaTypeFromVideoInfoHeader: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader';
-  function MFInitMediaTypeFromVideoInfoHeader2: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromVideoInfoHeader2';
-  function MFInitMediaTypeFromMPEG1VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG1VideoInfo';
-  function MFInitMediaTypeFromMPEG2VideoInfo: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMPEG2VideoInfo';
-  function MFCalculateBitmapImageSize: HRESULT;  external Mfplat.dll name 'MFCalculateBitmapImageSize';
-  function MFCalculateImageSize: HRESULT;  external Mfplat.dll name 'MFCalculateImageSize';
-  function MFFrameRateToAverageTimePerFrame: HRESULT;  external Mfplat.dll name 'MFFrameRateToAverageTimePerFrame';
-  function MFAverageTimePerFrameToFrameRate: HRESULT;  external Mfplat.dll name 'MFAverageTimePerFrameToFrameRate';
-  function MFInitMediaTypeFromMFVideoFormat: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromMFVideoFormat';
-  function MFInitMediaTypeFromWaveFormatEx: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromWaveFormatEx';
-  function MFInitMediaTypeFromAMMediaType: HRESULT;  external Mfplat.dll name 'MFInitMediaTypeFromAMMediaType';
-  function MFInitAMMediaTypeFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFInitAMMediaTypeFromMFMediaType';
-  function MFCreateAMMediaTypeFromMFMediaType: HRESULT;  external Mfplat.dll name 'MFCreateAMMediaTypeFromMFMediaType';
-  function MFCompareFullToPartialMediaType: BOOL;  external Mfplat.dll name 'MFCompareFullToPartialMediaType';
-  function MFWrapMediaType: HRESULT;     external Mfplat.dll name 'MFWrapMediaType';
-  function MFUnwrapMediaType: HRESULT;   external Mfplat.dll name 'MFUnwrapMediaType';
-  function MFCreateVideoMediaTypeFromVideoInfoHeader: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromVideoInfoHeader';
-  function MFCreateVideoMediaTypeFromVideoInfoHeader2: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromVideoInfoHeader2';
-  function MFCreateVideoMediaType: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaType';
-  function MFCreateVideoMediaTypeFromSubtype: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromSubtype';
-  function MFIsFormatYUV: BOOL;          external Mfplat.dll name 'MFIsFormatYUV';
-  function MFCreateVideoMediaTypeFromBitMapInfoHeader: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromBitMapInfoHeader';
-  function MFGetStrideForBitmapInfoHeader: HRESULT;  external Mfplat.dll name 'MFGetStrideForBitmapInfoHeader';
-  function MFGetPlaneSize: HRESULT;      external Mfplat.dll name 'MFGetPlaneSize';
-  function MFCreateVideoMediaTypeFromBitMapInfoHeaderEx: HRESULT;  external Mfplat.dll name 'MFCreateVideoMediaTypeFromBitMapInfoHeaderEx';
-  function MFCreateMediaTypeFromRepresentation: HRESULT;  external Mfplat.dll name 'MFCreateMediaTypeFromRepresentation';
-  function MFCreateAudioMediaType: HRESULT;  external Mfplat.dll name 'MFCreateAudioMediaType';
-  function MFInitVideoFormat: HRESULT;   external Mfplat.dll name 'MFInitVideoFormat';
-  function MFInitVideoFormat_RGB: HRESULT;  external Mfplat.dll name 'MFInitVideoFormat_RGB';
-  function MFConvertColorInfoToDXVA: HRESULT;  external Mfplat.dll name 'MFConvertColorInfoToDXVA';
-  function MFConvertColorInfoFromDXVA: HRESULT;  external Mfplat.dll name 'MFConvertColorInfoFromDXVA';
-  function MFCopyImage: HRESULT;         external Mfplat.dll name 'MFCopyImage';
-  function MFConvertFromFP16Array: HRESULT;  external Mfplat.dll name 'MFConvertFromFP16Array';
-  function MFConvertToFP16Array: HRESULT;  external Mfplat.dll name 'MFConvertToFP16Array';
-  function MFCreateCollection: HRESULT;  external Mfplat.dll name 'MFCreateCollection';
+  function MFStartup;                external 'Mfplat.dll' name 'MFStartup';
+  function MFShutdown;               external 'Mfplat.dll' name 'MFShutdown';
+  function MFLockPlatform;           external 'Mfplat.dll' name 'MFLockPlatform';
+  function MFUnlockPlatform;         external 'Mfplat.dll' name 'MFUnlockPlatform';
+  function MFPutWorkItem;            external 'Mfplat.dll' name 'MFPutWorkItem';
+  function MFPutWorkItemEx;          external 'Mfplat.dll' name 'MFPutWorkItemEx';
+  function MFScheduleWorkItem;       external 'Mfplat.dll' name 'MFScheduleWorkItem';
+  function MFScheduleWorkItemEx;     external 'Mfplat.dll' name 'MFScheduleWorkItemEx';
+  function MFCancelWorkItem;         external 'Mfplat.dll' name 'MFCancelWorkItem';
+  function MFGetTimerPeriodicity;    external 'Mfplat.dll' name 'MFGetTimerPeriodicity';
+  function MFAddPeriodicCallback;    external 'Mfplat.dll' name 'MFAddPeriodicCallback';
+  function MFRemovePeriodicCallback; external 'Mfplat.dll' name 'MFRemovePeriodicCallback';
+  function MFAllocateWorkQueueEx;    external 'Mfplat.dll' name 'MFAllocateWorkQueueEx';
+  function MFAllocateWorkQueue;      external 'Mfplat.dll' name 'MFAllocateWorkQueue';
+  function MFLockWorkQueue;          external 'Mfplat.dll' name 'MFLockWorkQueue';
+  function MFUnlockWorkQueue;        external 'Mfplat.dll' name 'MFUnlockWorkQueue';
+  function MFBeginRegisterWorkQueueWithMMCSS;   external 'Mfplat.dll' name 'MFBeginRegisterWorkQueueWithMMCSS';
+  function MFEndRegisterWorkQueueWithMMCSS;     external 'Mfplat.dll' name 'MFEndRegisterWorkQueueWithMMCSS';
+  function MFBeginUnregisterWorkQueueWithMMCSS; external 'Mfplat.dll' name 'MFBeginUnregisterWorkQueueWithMMCSS';
+  function MFEndUnregisterWorkQueueWithMMCSS;   external 'Mfplat.dll' name 'MFEndUnregisterWorkQueueWithMMCSS';
+  function MFGetWorkQueueMMCSSClass;   external 'Mfplat.dll' name 'MFGetWorkQueueMMCSSClass';
+  function MFGetWorkQueueMMCSSTaskId;  external 'Mfplat.dll' name 'MFGetWorkQueueMMCSSTaskId';
+  function MFCreateAsyncResult;        external 'Mfplat.dll' name 'MFCreateAsyncResult';
+  function MFInvokeCallback;           external 'Mfplat.dll' name 'MFInvokeCallback';
+  function MFCreateFile;               external 'Mfplat.dll' name 'MFCreateFile';
+  function MFCreateTempFile;           external 'Mfplat.dll' name 'MFCreateTempFile';
+  function MFBeginCreateFile;          external 'Mfplat.dll' name 'MFBeginCreateFile';
+  function MFEndCreateFile;            external 'Mfplat.dll' name 'MFEndCreateFile';
+  function MFCancelCreateFile;         external 'Mfplat.dll' name 'MFCancelCreateFile';
+  function MFCreateMemoryBuffer;       external 'Mfplat.dll' name 'MFCreateMemoryBuffer';
+  function MFCreateMediaBufferWrapper; external 'Mfplat.dll' name 'MFCreateMediaBufferWrapper';
+  function MFCreateLegacyMediaBufferOnMFMediaBuffer; external 'Mfplat.dll' name 'MFCreateLegacyMediaBufferOnMFMediaBuffer';
+  function MFCreateDXSurfaceBuffer;     external 'Mfplat.dll' name 'MFCreateDXSurfaceBuffer';
+  function MFCreateAlignedMemoryBuffer; external 'Mfplat.dll' name 'MFCreateAlignedMemoryBuffer';
+  function MFCreateMediaEvent;          external 'Mfplat.dll' name 'MFCreateMediaEvent';
+  function MFCreateEventQueue;          external 'Mfplat.dll' name 'MFCreateEventQueue';
+  function MFCreateSample;              external 'Mfplat.dll' name 'MFCreateSample';
+  function MFCreateAttributes;          external 'Mfplat.dll' name 'MFCreateAttributes';
+  function MFInitAttributesFromBlob;    external 'Mfplat.dll' name 'MFInitAttributesFromBlob';
+  function MFGetAttributesAsBlobSize;   external 'Mfplat.dll' name 'MFGetAttributesAsBlobSize';
+  function MFGetAttributesAsBlob;       external 'Mfplat.dll' name 'MFGetAttributesAsBlob';
+  function MFTRegister;                 external 'Mfplat.dll' name 'MFTRegister';
+  function MFTUnregister;               external 'Mfplat.dll' name 'MFTUnregister';
+  function MFTRegisterLocal;            external 'Mfplat.dll' name 'MFTRegisterLocal';
+  function MFTUnregisterLocal;          external 'Mfplat.dll' name 'MFTUnregisterLocal';
+  function MFTRegisterLocalByCLSID;     external 'Mfplat.dll' name 'MFTRegisterLocalByCLSID';
+  function MFTUnregisterLocalByCLSID;   external 'Mfplat.dll' name 'MFTUnregisterLocalByCLSID';
+  function MFTEnum;                     external 'Mfplat.dll' name 'MFTEnum';
+  function MFTEnumEx;                   external 'Mfplat.dll' name 'MFTEnumEx';
+  function MFTGetInfo;                  external 'Mfplat.dll' name 'MFTGetInfo';
+  function MFGetPluginControl;          external 'Mfplat.dll' name 'MFGetPluginControl';
+  function MFGetMFTMerit;               external 'Mfplat.dll' name 'MFGetMFTMerit';
+  function MFValidateMediaTypeSize;     external 'Mfplat.dll' name 'MFValidateMediaTypeSize';
+  function MFCreateMediaType;           external 'Mfplat.dll' name 'MFCreateMediaType';
+  function MFCreateMFVideoFormatFromMFMediaType; external 'Mfplat.dll' name 'MFCreateMFVideoFormatFromMFMediaType';
+  function MFCreateWaveFormatExFromMFMediaType;  external 'Mfplat.dll' name 'MFCreateWaveFormatExFromMFMediaType';
+  function MFInitMediaTypeFromVideoInfoHeader;   external 'Mfplat.dll' name 'MFInitMediaTypeFromVideoInfoHeader';
+  function MFInitMediaTypeFromVideoInfoHeader2;  external 'Mfplat.dll' name 'MFInitMediaTypeFromVideoInfoHeader2';
+  function MFInitMediaTypeFromMPEG1VideoInfo;    external 'Mfplat.dll' name 'MFInitMediaTypeFromMPEG1VideoInfo';
+  function MFInitMediaTypeFromMPEG2VideoInfo;    external 'Mfplat.dll' name 'MFInitMediaTypeFromMPEG2VideoInfo';
+  function MFCalculateBitmapImageSize;           external 'Mfplat.dll' name 'MFCalculateBitmapImageSize';
+  function MFCalculateImageSize;                 external 'Mfplat.dll' name 'MFCalculateImageSize';
+  function MFFrameRateToAverageTimePerFrame;     external 'Mfplat.dll' name 'MFFrameRateToAverageTimePerFrame';
+  function MFAverageTimePerFrameToFrameRate;     external 'Mfplat.dll' name 'MFAverageTimePerFrameToFrameRate';
+  function MFInitMediaTypeFromMFVideoFormat;     external 'Mfplat.dll' name 'MFInitMediaTypeFromMFVideoFormat';
+  function MFInitMediaTypeFromWaveFormatEx;      external 'Mfplat.dll' name 'MFInitMediaTypeFromWaveFormatEx';
+  function MFInitMediaTypeFromAMMediaType;       external 'Mfplat.dll' name 'MFInitMediaTypeFromAMMediaType';
+  function MFInitAMMediaTypeFromMFMediaType;     external 'Mfplat.dll' name 'MFInitAMMediaTypeFromMFMediaType';
+  function MFCreateAMMediaTypeFromMFMediaType;   external 'Mfplat.dll' name 'MFCreateAMMediaTypeFromMFMediaType';
+  function MFCompareFullToPartialMediaType;      external 'Mfplat.dll' name 'MFCompareFullToPartialMediaType';
+  function MFWrapMediaType;                      external 'Mfplat.dll' name 'MFWrapMediaType';
+  function MFUnwrapMediaType;                    external 'Mfplat.dll' name 'MFUnwrapMediaType';
+  function MFCreateVideoMediaTypeFromVideoInfoHeader;  external 'Mfplat.dll' name 'MFCreateVideoMediaTypeFromVideoInfoHeader';
+  function MFCreateVideoMediaTypeFromVideoInfoHeader2; external 'Mfplat.dll' name 'MFCreateVideoMediaTypeFromVideoInfoHeader2';
+  function MFCreateVideoMediaType;               external 'Mfplat.dll' name 'MFCreateVideoMediaType';
+  function MFCreateVideoMediaTypeFromSubtype;    external 'Mfplat.dll' name 'MFCreateVideoMediaTypeFromSubtype';
+  function MFIsFormatYUV;                        external 'Mfplat.dll' name 'MFIsFormatYUV';
+  function MFCreateVideoMediaTypeFromBitMapInfoHeader; external 'Mfplat.dll' name 'MFCreateVideoMediaTypeFromBitMapInfoHeader';
+  function MFGetStrideForBitmapInfoHeader;       external 'Mfplat.dll' name 'MFGetStrideForBitmapInfoHeader';
+  function MFGetPlaneSize;                       external 'Mfplat.dll' name 'MFGetPlaneSize';
+  function MFCreateVideoMediaTypeFromBitMapInfoHeaderEx; external 'Mfplat.dll' name 'MFCreateVideoMediaTypeFromBitMapInfoHeaderEx';
+  function MFCreateMediaTypeFromRepresentation;  external 'Mfplat.dll' name 'MFCreateMediaTypeFromRepresentation';
+  function MFCreateAudioMediaType;               external 'Mfplat.dll' name 'MFCreateAudioMediaType';
+  function MFInitVideoFormat;                    external 'Mfplat.dll' name 'MFInitVideoFormat';
+  function MFInitVideoFormat_RGB;                external 'Mfplat.dll' name 'MFInitVideoFormat_RGB';
+  function MFConvertColorInfoToDXVA;             external 'Mfplat.dll' name 'MFConvertColorInfoToDXVA';
+  function MFConvertColorInfoFromDXVA;           external 'Mfplat.dll' name 'MFConvertColorInfoFromDXVA';
+  function MFCopyImage;                          external 'Mfplat.dll' name 'MFCopyImage';
+  function MFConvertFromFP16Array;               external 'Mfplat.dll' name 'MFConvertFromFP16Array';
+  function MFConvertToFP16Array;                 external 'Mfplat.dll' name 'MFConvertToFP16Array';
+  function MFCreateCollection;                   external 'Mfplat.dll' name 'MFCreateCollection';
+  function MFGetUncompressedVideoFormat;         external 'Mfplat.dll' name 'MFGetUncompressedVideoFormat';
+  function MFHeapAlloc;                          external 'Mfplat.dll' name 'MFHeapAlloc';
+  procedure MFHeapFree;                          external 'Mfplat.dll' name 'MFHeapFree';
+  function MFllMulDiv;                           external 'Mfplat.dll' name 'MFllMulDiv';
 
 end.
