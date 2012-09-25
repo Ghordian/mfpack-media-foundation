@@ -53,7 +53,7 @@ uses
   Windows, ActiveX;
 
 Const
-  UnitVersion         = '01.01.0001';
+  Version               = '0.1.0001';
 
 type
   REFGUID =             tGUID;

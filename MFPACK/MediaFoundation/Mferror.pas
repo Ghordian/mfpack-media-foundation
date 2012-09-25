@@ -113,7 +113,7 @@ Uses
   windows;
                                                                                           // 00061.001
 Const
-  UnitVersion         = '01.01.0001';
+  Version               = '0.1.0001';
                                                                                           // 00062.001                                                                                          // 00063.001#ifndef _MFERROR_H
 //_MFERROR_H                            = true;                                           // 00064.001#define _MFERROR_H
                                                                                           // 00065.001
@@ -277,7 +277,7 @@ Const                                                                           
 //                                                                                        // 00221.001 
 // MessageText:                                                                           // 00222.001 
 //                                                                                        // 00223.001 
-// The object does not support the specified service.%0                                   // 00224.001 
+// The object does not support the specified service.%0                                   // 00224.001
 //                                                                                        // 00225.001 
   MF_E_UNSUPPORTED_SERVICE              = _HRESULT_TYPEDEF_($C00D36BA);                   // 00226.001#define MF_E_UNSUPPORTED_SERVICE         _HRESULT_TYPEDEF_(0xC00D36BAL)
                                                                                           // 00227.001 
@@ -285,11 +285,11 @@ Const                                                                           
 // MessageId: MF_E_UNEXPECTED                                                             // 00229.001 
 //                                                                                        // 00230.001 
 // MessageText:                                                                           // 00231.001 
-//                                                                                        // 00232.001 
-// An unexpected error has occurred in the operation requested.%0                         // 00233.001 
+//                                                                                        // 00232.001
+// An unexpected error has occurred in the operation requested.%0                         // 00233.001
 //                                                                                        // 00234.001 
   MF_E_UNEXPECTED                       = _HRESULT_TYPEDEF_($C00D36BB);                   // 00235.001#define MF_E_UNEXPECTED                  _HRESULT_TYPEDEF_(0xC00D36BBL)
-                                                                                          // 00236.001 
+                                                                                          // 00236.001
 //                                                                                        // 00237.001 
 // MessageId: MF_E_INVALIDNAME                                                            // 00238.001 
 //                                                                                        // 00239.001 
