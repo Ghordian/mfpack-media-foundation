@@ -1,0 +1,69 @@
+MFPack - Core Audio headers
+
+
+Headers and libraries that define all of the Core Audio APIs.
+
+The Core Audio APIs are:
+ - Multimedia Device (MMDevice) API: 
+   Clients use this API to enumerate the audio endpoint devices in the system.
+ - Windows Audio Session API (WASAPI):
+   Clients use this API to create and manage audio streams to and from audio endpoint devices.
+ - DeviceTopology API:
+   Clients use this API to directly access the topological features (for example, volume controls and multiplexers) that 
+   lie along the data paths inside hardware devices in audio adapters.
+ - EndpointVolume API. Clients use this API to directly access the volume controls on audio endpoint devices. 
+   This API is primarily used by applications that manage exclusive-mode audio streams.
+
+
+
+To find the header and library for a specific API element,
+please consult the reference pages in the Core Audio Programming Reference on 
+MSDN (http://msdn.microsoft.com/en-us/library/windows/desktop/dd370851)
+
+
+
+
+
+
+HEADERS
+
+Core Audio component 	        Header file(s) 
+====================            ===================
+MMDevice API 	                Mmdeviceapi.h
+WASAPI 	                        Audioclient.h, 
+                                Audiopolicy.h, 
+                                Audiosessiontypes.h (defines constants that are used by WASAPI)
+DeviceTopology API 	        Devicetopology.h
+EndpointVolume API 	        Endpointvolume.h
+
+
+
+DELPHI UNITS
+
+Location                        Unit(s)
+====================            ===================
+CoreAudio/Common                AudEvCod.pas
+                                AudioAPOTypes.pas
+                                DeviceCategories.pas
+CoreAudio/DeviceTopology        DeviceTopology.pas
+CoreAudio/EndpointVolume        Endpointvolume.pas
+CoreAudio/MMDeviceAPI           MMDeviceApi.pas
+CoreAudio/WASAPI                AudioClient.pas
+                                AudioPolicy.pas
+                                AudioSessionTypes.pas
+CoreAudio/Utilities             MMDevApiUtils.pas (This unit contains some usefull functions and helpers)
+CoreAudio/Samples               Win78Mixer.pas (A sample unit how to access the mixer device in XP, Vista and Windows 7)
+
+
+
+LIBRARIES
+
+
+
+REMARKS:
+
+The main root holds a directory "/Common", this directory contains shared units used by MF AND AC.
+Every Delphi unit has a section that contains helpers specific for the Delphi programming language.
+If, however, a helper or utility covers more units, then this will be added in the Delphi helper unit (MfpUtils.pas) or the MfpTypes.pas that holds common types.
+CoreAudio/Common however only contains units shared by all AC units.
+
