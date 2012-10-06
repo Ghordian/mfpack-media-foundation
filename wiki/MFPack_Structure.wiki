@@ -122,4 +122,22 @@ Path: MFPack/MediaFoundation
 Every MFPack unit has a section that contains helpers specific for the Delphi programming language.
 If, however, a Media Foundation (MF) helper or utility covers more units or shares units with CoreAudio, then this will be added in the helper unit MFPack/Common/MfUtils.pas respectivly MFPack/Common/MfPUtils.pas
 
- 
+==Common==
+Here you find the support headers need to be included with both CoreAudio and/or MediaFoundation.
+
+The following headers have been added*:
+
+Path: MFPack/Common
+
+|| *Header* || *Unit(s)* || *Comment* ||
+||||
+||functiondiscoverykeys_devpkey.h||FunctionDiscoveryKeys_devpkey.pas||||
+||mmstream.h||MMStream.pas||||
+||mediaobj.h||MediaObj.pas||||
+||          ||MfpTypes.pas||Delphi specific types and translations||
+||          ||MfpUtils.pas||Delphi specific helper routines||
+||mmreg.h||MmReg.pas||||
+||propidl.h||PropIdl.pas||||
+||propsys.h||PropSys.pas||||
+||unknwn.h||Unknwn.pas||||
+||WTypes.pas||WTypes.pas||||
