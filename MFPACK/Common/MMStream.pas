@@ -151,7 +151,7 @@ type
 
 	//Forward Interface Declarations
 	IMultiMediaStream = interface;
-	PIMultiMediaStream = ^PIMultiMediaStream;
+	PIMultiMediaStream = ^IMultiMediaStream;
 	IMediaStream = interface;
 	PIMediaStream = ^IMediaStream;
 	IStreamSample = interface;

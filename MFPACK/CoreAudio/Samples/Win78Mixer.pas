@@ -73,8 +73,10 @@ function CreateVis78Mixer: TBasicMixer;
 implementation
 
 uses
-	Windows, SysUtils, ShlObj, ComObj, ActiveX, MMSystem, MMDeviceApi, PropSys,
-	Endpointvolume, DXUtil;
+	Windows, SysUtils, ShlObj, ComObj, ActiveX, MMSystem, MMDeviceApiOrg, PropSys,
+	Endpointvolume
+//**, DXUtil
+  , MfpUtils;
 
 type
 

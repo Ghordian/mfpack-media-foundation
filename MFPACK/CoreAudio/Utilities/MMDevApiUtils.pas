@@ -44,8 +44,11 @@ interface
 
 uses
 	Windows, Classes, SysUtils, ActiveX, ComObj, shlobj,
-	MMSystem, MMDeviceApi, PropSys, AudioPolicy, Audiosessiontypes,
-	DXUtil, DXTypes, DirectShow9;
+	MMSystem, PropSys, DXTypes, DirectShow9
+//* project units
+, MMDeviceApiOrg, AudioPolicy, AudioSessionTypes, MfpUtils
+//**, DXUtil
+;
 
 
 type
@@ -108,7 +111,7 @@ try
 
   // Get the enumerator for the audio endpoint devices
   // on this system.
-	_hrStatus:= CoCreateInstance(CLSID_MMDeviceEnumerator, nil, CLSCTX_INPROC_SERVER, IID_IMMDeviceEnumerator, pEnumerator);
+	_hrStatus:= CoCreateInstance(IID_IMMDeviceEnumerator, nil, CLSCTX_INPROC_SERVER, IID_IMMDeviceEnumerator, pEnumerator);
 
 	if Failed(_hrStatus) then
     exit;

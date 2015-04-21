@@ -54,8 +54,11 @@ unit AudioPolicy;
 interface
 
 uses
-	Windows, ComObj, AudioClient, AudioSessionTypes, PropSys;
-
+	Windows, ComObj, PropSys
+//* project units
+, AudioClient
+, AudioSessionTypes
+;
 
 const
   IID_IAudioSessionEvents               : TGUID = '{24918ACC-64B3-37C1-8CA9-74A66E9957A8}';

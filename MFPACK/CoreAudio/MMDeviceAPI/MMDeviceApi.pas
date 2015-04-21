@@ -1,347 +1,1295 @@
-// FactoryX
-//
-// Copyright ©2003 - 2012 by FactoryX, Sefferweich Germany (EU)
-// Project: Media Foundation - MFPack
-// Module: Media Foundation interfaces - MMDeviceApi.pas
-// Kind: Pascal Unit
-// Release date: 27-06-2012
-// Language: ENU
-//
-// Version: 1.0.0.2 
-// Description: Requires Windows Vista or later. 
-// 
-// Intiator(s): Tony (maXcomX), Peter (OzShips) 
-// 
-// LastEdited by: Tony (maXcomX)
-// EditDate: updt 270612a
-//
-// Remarks:
-//
-// Related objects: -
-// Related projects: -
-// Known Issues: -
-// Compiler version: 23, upd 4
-// Todo: -
-// =============================================================================
-// Source: mmdeviceapi.h
-//
-// Copyright (c) 1997-2012 Microsoft Corporation. All rights reserved
-//==============================================================================
-// The contents of this file are subject to the Mozilla Public
-// License Version 1.1 (the "License"). you may not use this file
-// except in compliance with the License. You may obtain a copy of
-// the License at http://www.mozilla.org/MPL/MPL-1.1.html
-//
-// Software distributed under the License is distributed on an
-// "AS IS" basis, WITHOUT WARRANTY OF ANY KIND, either express or
-// implied. See the License for the specific language governing
-// rights and limitations under the License.
-//==============================================================================
+// (c) Ter-Osipov Alex V. as known as Eraser on delphimaster.ru. 2009
 
-unit MMDeviceApi;
+unit MMDeviceAPI;
 
-	{$MINENUMSIZE 4}
-	{$WEAKPACKAGEUNIT}
+// ************************************************************************ //
+// WARNING                                                                    
+// -------                                                                    
+// The types declared in this file were generated from data read from a       
+// Type Library. If this type library is explicitly or indirectly (via        
+// another type library referring to this type library) re-imported, or the   
+// 'Refresh' command of the Type Library Editor activated while editing the   
+// Type Library, the contents of this file will be regenerated and all        
+// manual modifications will be lost.                                         
+// ************************************************************************ //
 
+// $Rev: 8291 $
+// File generated on 31.08.2008 1:59:22 from Type Library described below.
+
+// ************************************************************************  //
+// Type Lib: C:\tlb\mmdeviceapi.tlb (1)
+// LIBID: {2FDAAFA3-7523-4F66-9957-9D5E7FE698F6}
+// LCID: 0
+// Helpfile: 
+// HelpString: MM Device API 1.0 Type Library
+// DepndLst: 
+//   (1) v2.0 stdole, (C:\Windows\system32\stdole2.tlb)
+// Errors:
+//   Hint: Symbol 'type' renamed to 'type_'
+//   Error creating palette bitmap of (TMMDeviceEnumerator) : Server C:\Windows\System32\MMDevApi.dll contains no icons
+// ************************************************************************ //
+// *************************************************************************//
+// NOTE:                                                                      
+// Items guarded by $IFDEF_LIVE_SERVER_AT_DESIGN_TIME are used by properties  
+// which return objects that may need to be explicitly created via a function 
+// call prior to any access via the property. These items have been disabled  
+// in order to prevent accidental use from within the object inspector. You   
+// may enable them by defining LIVE_SERVER_AT_DESIGN_TIME or by selectively   
+// removing them from the $IFDEF blocks. However, such items must still be    
+// programmatically created via a method of the appropriate CoClass before    
+// they can be used.                                                          
+{$TYPEDADDRESS OFF} // Unit must be compiled without type-checked pointers. 
+{$WARN SYMBOL_PLATFORM OFF}
+{$WRITEABLECONST ON}
+{$VARPROPSETTER ON}
 interface
 
-uses
-	Windows, ActiveX, ComObj, PropSys, DeviceTopology, DXTypes, MMSystem, WinError;
+uses Windows, ActiveX, Classes, Graphics, OleServer, StdVCL, Variants, MMSystem;
+  
 
+// *********************************************************************//
+// GUIDS declared in the TypeLibrary. Following prefixes are used:        
+//   Type Libraries     : LIBID_xxxx                                      
+//   CoClasses          : CLASS_xxxx
+//   DISPInterfaces     : DIID_xxxx                                       
+//   Non-DISP interfaces: IID_xxxx                                        
+// *********************************************************************//
 const
-	//Error types
-	{$EXTERNALSYM E_NOTFOUND}
-	E_NOTFOUND                          = HRESULT(ERROR_NOT_FOUND);
-	{$EXTERNALSYM E_UNSUPPORTED_TYPE}
-	E_UNSUPPORTED_TYPE                  = HRESULT(ERROR_UNSUPPORTED_TYPE);
+  // TypeLibrary Major and minor versions
+  MMDeviceAPILibMajorVersion = 1;
+  MMDeviceAPILibMinorVersion = 0;
 
-	//The DEVICE_STATE_XXX constants indicate the current state of an audio endpoint device.
-	{$EXTERNALSYM DEVICE_STATE_ACTIVE}
-	DEVICE_STATE_ACTIVE                 = $00000001;  //The audio endpoint device is active.
-																										//That is, the audio adapter that connects to the endpoint device is present and enabled.
-																										//In addition, if the endpoint device plugs into a jack on the adapter,
-																										//then the endpoint device is plugged in.
-	{$EXTERNALSYM DEVICE_STATE_DISABLED}
-	DEVICE_STATE_DISABLED               = $00000002;  //The audio endpoint device is disabled.
-																										//The user has disabled the device in the Windows multimedia control panel,
-																										//Mmsys.cpl.
+  LIBID_MMDeviceAPILib: TGUID = '{2FDAAFA3-7523-4F66-9957-9D5E7FE698F6}';
 
-  {$EXTERNALSYM DEVICE_STATE_NOTPRESENT}
-	DEVICE_STATE_NOTPRESENT             = $00000004;  //The audio endpoint device is not present because the audio adapter that connects to
-																										//the endpoint device has been removed from the system,
-																										//or the user has disabled the adapter device in Device Manager.
+  IID_IMMDeviceEnumerator: TGUID = '{A95664D2-9614-4F35-A746-DE8DB63617E6}';
+  CLASS_MMDeviceEnumerator: TGUID = '{BCDE0395-E52F-467C-8E3D-C4579291692E}';
+  IID_IMMDeviceCollection: TGUID = '{0BD7A1BE-7A1A-44DB-8397-CC5392387B5E}';
+  IID_IMMDevice: TGUID = '{D666063F-1587-4E43-81F1-B948E807363F}';
+  IID_ISequentialStream: TGUID = '{0C733A30-2A1C-11CE-ADE5-00AA0044773D}';
+  IID_IStream: TGUID = '{0000000C-0000-0000-C000-000000000046}';
+  IID_IStorage: TGUID = '{0000000B-0000-0000-C000-000000000046}';
+  IID_IEnumSTATSTG: TGUID = '{0000000D-0000-0000-C000-000000000046}';
+  IID_IRecordInfo: TGUID = '{0000002F-0000-0000-C000-000000000046}';
+  IID_ITypeInfo: TGUID = '{00020401-0000-0000-C000-000000000046}';
+  IID_ITypeComp: TGUID = '{00020403-0000-0000-C000-000000000046}';
+  IID_ITypeLib: TGUID = '{00020402-0000-0000-C000-000000000046}';
+  IID_IPropertyStore: TGUID = '{886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99}';
+  IID_IMMNotificationClient: TGUID = '{7991EEC9-7E89-4D85-8390-6C703CEC60C0}';
 
-	{$EXTERNALSYM DEVICE_STATE_UNPLUGGED}
-	DEVICE_STATE_UNPLUGGED              = $00000008;  //The audio endpoint device is unplugged.
-																										//The audio adapter that contains the jack for the endpoint device is present and enabled,
-																										//but the endpoint device is not plugged into the jack.
-																										//Only a device with jack-presence detection can be in this state.
-																										//For more information about jack-presence detection, see Audio Endpoint Devices.
+  IID_IAudioEndpointVolume: TGUID = '{5CDF2C82-841E-4546-9722-0CF74078229A}';
+  IID_IAudioMeterInformation : TGUID = '{C02216F6-8C67-4B5B-9D00-D008E73E0064}';
+  IID_IAudioEndpointVolumeCallback: TGUID = '{657804FA-D6AD-4496-8A60-352752AF4F89}';
 
-	{$EXTERNALSYM DEVICE_STATEMASK_ALL}
-	DEVICE_STATEMASK_ALL                = $0000000F;  //Includes audio endpoint devices in all states—active, disabled, not present, and unplugged.
+  IID_IAudioClient: TGUID = '{1CB9AD4C-DBFA-4c32-B178-C2F568A703B2}';
+  IID_IAudioCaptureClient: TGUID = '{C8ADBD64-E71E-48a0-A4DE-185C395CD317}';
 
+// *********************************************************************//
+// Declaration of Enumerations defined in Type Library                    
+// *********************************************************************//
+// Constants for enum __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0001
+type
+  __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0001 = TOleEnum;
+const
+  eRender = $00000000;
+  eCapture = $00000001;
+  eAll = $00000002;
+  EDataFlow_enum_count = $00000003;
 
-	//PKEY_AUDIOENDPOINT_XXX
-	//Indicates the physical attributes of the audio endpoint device.
-	PKEY_AudioEndpoint_FormFactor: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 0);
-	//Specifies the CLSID of the registered provider of the device-properties extension for the audio endpoint device.
-	PKEY_AudioEndpoint_ControlPanelPageProvider: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 1);
-	//Associates a kernel-streaming (KS) pin category with an audio endpoint device.
-	PKEY_AudioEndpoint_Association: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 2);
-	//Defines the physical speaker configuration for the audio endpoint device.
-	PKEY_AudioEndpoint_PhysicalSpeakers: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 3);
-	//Specifies the CLSID of the registered provider of the device-properties extension for the audio endpoint device.
-	PKEY_AudioEndpoint_GUID: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 4);
-	//FX - Indicates whether system effects are enabled in the shared-mode stream that flows to or from the audio endpoint device.
-	//Note: You may also access the DirectSound FX interfaces to do this. (See also: DSFx.pas (not included with Media Foundation))
-	PKEY_AudioEndpoint_Disable_SysFx: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 5);
+// Constants for enum tagTYPEKIND
+type
+  tagTYPEKIND = TOleEnum;
+const
+  TKIND_ENUM = $00000000;
+  TKIND_RECORD = $00000001;
+  TKIND_MODULE = $00000002;
+  TKIND_INTERFACE = $00000003;
+  TKIND_DISPATCH = $00000004;
+  TKIND_COCLASS = $00000005;
+  TKIND_ALIAS = $00000006;
+  TKIND_UNION = $00000007;
+  TKIND_MAX = $00000008;
 
-	ENDPOINT_SYSFX_ENABLED 						= $00000000;  // System Effects are enabled.
-	ENDPOINT_SYSFX_DISABLED 					= $00000001;  // System Effects are disabled.
+// Constants for enum tagDESCKIND
+type
+  tagDESCKIND = TOleEnum;
+const
+  DESCKIND_NONE = $00000000;
+  DESCKIND_FUNCDESC = $00000001;
+  DESCKIND_VARDESC = $00000002;
+  DESCKIND_TYPECOMP = $00000003;
+  DESCKIND_IMPLICITAPPOBJ = $00000004;
+  DESCKIND_MAX = $00000005;
 
-	//Specifies the channel-configuration mask for the full-range speakers that are connected to the audio endpoint device.
-	PKEY_AudioEndpoint_FullRangeSpeakers: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 6);
-	//Indicates whether the endpoint supports the event-driven mode. The values are populated by the OEM in an .inf file.
-	PKEY_AudioEndpoint_Supports_EventDriven_Mode: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 7);
-	//Contains an output category GUID for an audio endpoint device.
-	PKEY_AudioEndpoint_JackSubType: PROPERTYKEY = (
-								fmtid: (D1:$1da5d803; D2:$d492; D3:$4edd;
-								D4: ($8c, $23, $e0, $c0, $ff, $ee, $7f, $0e));
-								pid: 8);
+// Constants for enum tagFUNCKIND
+type
+  tagFUNCKIND = TOleEnum;
+const
+  FUNC_VIRTUAL = $00000000;
+  FUNC_PUREVIRTUAL = $00000001;
+  FUNC_NONVIRTUAL = $00000002;
+  FUNC_STATIC = $00000003;
+  FUNC_DISPATCH = $00000004;
 
-	//The following properties are defined in Functiondiscoverykeys_devpkey.h in Windows Vista and later.
-	//
-	PKEY_Device_FriendlyName: PROPERTYKEY = (
-								fmtid: (D1:$a45c254e; D2:$df1c; D3:$4efd;
-								D4: ($80, $20, $67, $d1, $46, $a8, $50, $e0));
-								pid: 14);
+// Constants for enum tagINVOKEKIND
+type
+  tagINVOKEKIND = TOleEnum;
+const
+  INVOKE_FUNC = $00000001;
+  INVOKE_PROPERTYGET = $00000002;
+  INVOKE_PROPERTYPUT = $00000004;
+  INVOKE_PROPERTYPUTREF = $00000008;
 
-	//PKEY_AudioEndpoint_XXX
-	PKEY_AudioEngine_DeviceFormat: PROPERTYKEY = (
-								fmtid: (D1:$f19f064d; D2:$82c; D3:$4e27;
-								D4: ($bc, $73, $68, $82, $a1, $bb, $8e, $4c));
-								pid: 0);
-	PKEY_AudioEngine_OEMFormat: PROPERTYKEY = (
-								fmtid: (D1:$e4870e26; D2:$3cc5; D3:$4cd2;
-								D4: ($ba, $46, $ca, $a, $9a, $70, $ed, $4));
-								pid: 3);
+// Constants for enum tagCALLCONV
+type
+  tagCALLCONV = TOleEnum;
+const
+  CC_FASTCALL = $00000000;
+  CC_CDECL = $00000001;
+  CC_MSCPASCAL = $00000002;
+  CC_PASCAL = $00000002;
+  CC_MACPASCAL = $00000003;
+  CC_STDCALL = $00000004;
+  CC_FPFASTCALL = $00000005;
+  CC_SYSCALL = $00000006;
+  CC_MPWCDECL = $00000007;
+  CC_MPWPASCAL = $00000008;
+  CC_MAX = $00000009;
 
+// Constants for enum tagVARKIND
+type
+  tagVARKIND = TOleEnum;
+const
+  VAR_PERINSTANCE = $00000000;
+  VAR_STATIC = $00000001;
+  VAR_CONST = $00000002;
+  VAR_DISPATCH = $00000003;
 
-	//IID
-	CLSID_MMDeviceEnumerator              : TGUID = '{BCDE0395-E52F-467C-8E3D-C4579291692E}';
-	IID_IMMDeviceEnumerator               : TGUID = '{A95664D2-9614-4F35-A746-DE8DB63617E6}';
-	IID_IMMDevice                         : TGUID = '{D666063F-1587-4E43-81F1-B948E807363F}';
-	IID_IMMDeviceCollection               : TGUID = '{0BD7A1BE-7A1A-44DB-8397-CC5392387B5E}';
+// Constants for enum tagSYSKIND
+type
+  tagSYSKIND = TOleEnum;
+const
+  SYS_WIN16 = $00000000;
+  SYS_WIN32 = $00000001;
+  SYS_MAC = $00000002;
+  SYS_WIN64 = $00000003;
 
+// Constants for enum __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0002
+type
+  __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0002 = TOleEnum;
+const
+  eConsole = $00000000;
+  eMultimedia = $00000001;
+  eCommunications = $00000002;
+  ERole_enum_count = $00000003;
 
 type
-	LPCGUID = PGUID;   //See: ComObj for TGuid specs
-	HANDLE = System.THandle;
 
-  //Note: Skip the auto wrapper classnames generated for COM enumerations (__MIDL___MIDL_itf_name_xxx_xxx)
-	//Also the generated pointers and Tobjects, because they are of little use here, and when needed, you need them localy most of the time.
-	//Example: A pointer to EDataFlow will be: PEDataFlow = ^EDataFlow and a TEDataFlow = EDataFlow  etc.
-
-type
-	{$EXTERNALSYM tagDIRECTX_AUDIO_ACTIVATION_PARAMS}
-	tagDIRECTX_AUDIO_ACTIVATION_PARAMS = record
-		cbDirectXAudioActivationParams: DWORD;
-		guidAudioSession: TGUID;
-    dwAudioStreamFlags: DWORD;
-  end;
-  {$EXTERNALSYM DIRECTX_AUDIO_ACTIVATION_PARAMS}
-  DIRECTX_AUDIO_ACTIVATION_PARAMS = tagDIRECTX_AUDIO_ACTIVATION_PARAMS;
-	{$EXTERNALSYM PDIRECTX_AUDIO_ACTIVATION_PARAMS}
-	PDIRECTX_AUDIO_ACTIVATION_PARAMS = ^tagDIRECTX_AUDIO_ACTIVATION_PARAMS;
-
-type
-	{$EXTERNALSYM EDataFlow}
-	_tagEDataFlow = (
-		eRender              = 0,
-		eCapture             = (eRender + 1),
-		eAll                 = (eCapture + 1),
-		EDataFlow_enum_count = (eAll + 1)      //
-  );
-	EDataFlow = _tagEDataFlow;
-
-type
-	//ERole
-	_tagERole = (
-		eConsole         = 0,
-		eMultimedia      = (eConsole  + 1),
-		eCommunications  = (eMultimedia  + 1),
-		ERole_enum_count = (eCommunications  + 1)
-	);
-	{$EXTERNALSYM ERole}
-	ERole = _tagERole;
-
-type
-	//EndpointFormFactor enum
-	_tagEndpointFormFactor = (
-		RemoteNetworkDevice           = 0,
-		Speakers                      = (RemoteNetworkDevice  + 1),
-    LineLevel                     = (Speakers  + 1),
-		Headphones                    = (LineLevel  + 1),
-    Microphone                    = (Headphones  + 1),
-    Headset                       = (Microphone  + 1),
-    Handset                       = (Headset  + 1),
-		UnknownDigitalPassthrough     = (Handset  + 1),
-    SPDIF                         = (UnknownDigitalPassthrough  + 1),
-    DigitalAudioDisplayDevice     = (SPDIF  + 1),
-		UnknownFormFactor             = (DigitalAudioDisplayDevice  + 1),
-		EndpointFormFactor_enum_count = (UnknownFormFactor  + 1)
-  );
-	{$EXTERNALSYM EndpointFormFactor}
-	EndpointFormFactor = _tagEndpointFormFactor;
-
-
-type
-	//Forward declarations of the interfaces
-	{$EXTERNALSYM IMMNotificationClient}
-	IMMNotificationClient = interface;
-	{$EXTERNALSYM IMMDevice}
-	IMMDevice = interface;
-	{$EXTERNALSYM IMMDeviceCollection}
-	IMMDeviceCollection = interface;
-	{$EXTERNALSYM IMMEndpoint}
-	IMMEndpoint = interface;
-	{$EXTERNALSYM IMMDeviceEnumerator}
+// *********************************************************************//
+// Forward declaration of types defined in TypeLibrary                    
+// *********************************************************************//
   IMMDeviceEnumerator = interface;
-	{$EXTERNALSYM IMMDeviceActivator}
-	IMMDeviceActivator = interface;
-	//{$EXTERNALSYM MMDeviceEnumerator}
-	//MMDeviceEnumerator = class;
+  IMMDeviceCollection = interface;
+  IMMDevice = interface;
+  ISequentialStream = interface;
+  IStream = interface;
+  IStorage = interface;
+  IEnumSTATSTG = interface;
+  IRecordInfo = interface;
+  ITypeInfo = interface;
+  ITypeComp = interface;
+  ITypeLib = interface;
+  IPropertyStore = interface;
+  IMMNotificationClient = interface;
+
+// *********************************************************************//
+// Declaration of CoClasses defined in Type Library                       
+// (NOTE: Here we map each CoClass to its Default Interface)              
+// *********************************************************************//
+  MMDeviceEnumerator = IMMDeviceEnumerator;
 
 
-  //Interface IMMNotificationClient
-  {
-   The IMMNotificationClient interface provides notifications when an audio endpoint device
-   is added or removed, when the state or properties of an endpoint device change,
-   or when there is a change in the default role assigned to an endpoint device.
-   Unlike the other interfaces in this section, which are implemented by the MMDevice API system component,
-   an MMDevice API client implements the IMMNotificationClient interface.
-   To receive notifications, the client passes a pointer to its IMMNotificationClient interface instance
-   as a parameter to the IMMDeviceEnumerator.RegisterEndpointNotificationCallback method.
-  }
-	IMMNotificationClient = interface(IUnknown)
-	['{7991EEC9-7E89-4D85-8390-6C703CEC60C0}']
-		function OnDefaultDeviceChanged(flow: EDataFlow; role: ERole; pwstrDefaultDevice: PAnsiChar): HRESULT; stdcall;
-		function OnDeviceAdded(pwstrDeviceId: PAnsiChar): HRESULT; stdcall;
-		function OnDeviceRemoved(pwstrDeviceId: PAnsiChar): HRESULT; stdcall;
-		function OnDeviceStateChanged(pwstrDeviceIdl: PAnsiChar; dwNewState: DWord): HRESULT; stdcall;
-		function OnPropertyValueChanged(pwstrDeviceId: PAnsiChar; const key: PPROPERTYKEY): HRESULT; stdcall;
-	end;
+// *********************************************************************//
+// Declaration of structures, unions and aliases.                         
+// *********************************************************************//
+  wirePSAFEARRAY = ^PUserType4; 
+  wireSNB = ^tagRemSNB; 
+  PUserType5 = ^_FLAGGED_WORD_BLOB; {*}
+  PUserType6 = ^_wireVARIANT; {*}
+  PUserType13 = ^_wireBRECORD; {*}
+  PUserType4 = ^_wireSAFEARRAY; {*}
+  PPUserType1 = ^PUserType4; {*}
+  PUserType10 = ^tagTYPEDESC; {*}
+  PUserType11 = ^tagARRAYDESC; {*}
+  PUserType2 = ^tag_inner_PROPVARIANT; {*}
+  PUserType1 = ^TGUID; {*}
+  PByte1 = ^Byte; {*}
+  PUserType3 = ^_FILETIME; {*}
+  POleVariant1 = ^OleVariant; {*}
+  PUserType7 = ^tagTYPEATTR; {*}
+  PUserType8 = ^tagFUNCDESC; {*}
+  PUserType9 = ^tagVARDESC; {*}
+  PUserType12 = ^tagTLIBATTR; {*}
+  PUserType14 = ^_tagpropertykey; {*}
 
-  //Interface IMMDevice
-  {
-   The IMMDevice interface encapsulates the generic features of a multimedia device resource.
-   In the current implementation of the MMDevice API, the only type of device resource that an
-   IMMDevice interface can represent is an audio endpoint device.
+  EDataFlow = __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0001; 
 
-   NOTE:
-    A client can obtain an IMMDevice interface from one of the following methods:
-      IMMDeviceCollection.Item
-      IMMDeviceEnumerator.GetDefaultAudioEndpoint
-      IMMDeviceEnumerator.GetDevice
-  }
-	IMMDevice = interface(IUnknown)
-	['{D666063F-1587-4E43-81F1-B948E807363F}']
-		function Activate(const iid: TGUID; dwClsCtx: UINT; pActivationParams: PPropVariant; out ppInterface: IUnknown): HRESULT; stdcall;
-		function OpenPropertyStore(stgmAccess: integer; out ppProperties: IPropertyStore): HRESULT; stdcall;
-		function GetId(ppstrId: LPWSTR): HRESULT; stdcall;
-		function GetState(var pdwState: UINT): HRESULT; stdcall;
-	end;
+  _LARGE_INTEGER = packed record
+    QuadPart: Int64;
+  end;
 
-  //Interface IMMDeviceCollection
-  {
-   The IMMDeviceCollection interface represents a collection of multimedia device resources.
-   In the current implementation, the only device resources that the MMDevice API can create collections
-   of are audio endpoint devices.
-   A client can obtain a reference to an IMMDeviceCollection interface instance by calling the
-   IMMDeviceEnumerator.EnumAudioEndpoints method.
-   This method creates a collection of endpoint objects, each of which represents an
-   audio endpoint device in the system.
-   Each endpoint object in the collection supports the IMMDevice and IMMEndpoint interfaces.
-  }
-	IMMDeviceCollection = interface(IUnknown)
-	['{0BD7A1BE-7A1A-44DB-8397-CC5392387B5E}']
-		function GetCount(var pcDevices: UINT): HRESULT; stdcall;
-		function Item(nDevice: uint; out ppDevice: IMMDevice): HRESULT; stdcall;
-	end;
+  _ULARGE_INTEGER = packed record
+    QuadPart: Largeuint;
+  end;
 
-  //Interface IMMEndpoint
-  {
-   The IMMEndpoint interface represents an audio endpoint device.
-   A client obtains a reference to an IMMEndpoint interface instance by following these steps:
-    By using one of the techniques described in IMMDevice Interface,
-    obtain a reference to the IMMDevice interface of an audio endpoint device.
-   Call the IMMDevice.QueryInterface method with parameter iid set to REFIID IID_IMMEndpoint.
-  }
-	IMMEndpoint = interface(IUnknown)
-	['{1BE09788-6894-4089-8586-9A2A6C265AC5}']
-		function GetDataFlow(out pDataFlow: eDataFlow): HRESULT; stdcall;
-	end;
+  _FILETIME = packed record
+    dwLowDateTime: LongWord;
+    dwHighDateTime: LongWord;
+  end;
 
-  //Interface IMMDeviceEnumerator
-  {
-   The IMMDeviceEnumerator interface provides methods for enumerating multimedia device resources.
-   In the current implementation of the MMDevice API, the only device resources that this interface
-   can enumerate are audio endpoint devices.
-   A client obtains a reference to an IMMDeviceEnumerator interface by calling the CoCreateInstance function,
-   as described previously (see MMDevice API).
+  tagCLIPDATA = packed record
+    cbSize: LongWord;
+    ulClipFmt: Integer;
+    pClipData: ^Byte;
+  end;
 
-   NOTE:
-     The device resources enumerated by the methods in the IMMDeviceEnumerator interface are represented
-     as collections of objects with IMMDevice interfaces.
-     A collection has an IMMDeviceCollection interface.
-     The IMMDeviceEnumerator.EnumAudioEndpoints method creates a device collection.
+  tagBSTRBLOB = packed record
+    cbSize: LongWord;
+    pData: ^Byte;
+  end;
 
-   To obtain a pointer to the IMMDevice interface of an item in a device collection,
-   the client calls the IMMDeviceCollection.Item method.
-  }
-	IMMDeviceEnumerator = interface(IUnknown)
-	['{A95664D2-9614-4F35-A746-DE8DB63617E6}']
-		function EnumAudioEndpoints(dataFlow: EDataFlow; dwStateMask: DWORD; out ppDevices: IMMDeviceCollection): HRESULT; stdcall;
-		function GetDefaultAudioEndpoint(dataFlow: EDataFlow; role: eRole; out ppEndpoint: IMMDevice): HRESULT; stdcall;
-		function GetDevice(pwstrId: PWChar; out ppDevice: IMMDevice): HRESULT; stdcall;
-		function RegisterEndpointNotificationCallback(var pClient: IMMNotificationClient): HRESULT; stdcall;
-		function UnregisterEndpointNotificationCallback(var pClient: IMMNotificationClient): HRESULT; stdcall;
-	end;
+  tagBLOB = packed record
+    cbSize: LongWord;
+    pBlobData: ^Byte;
+  end;
 
-  //Interface IMMDeviceActivator
-  {
+  tagVersionedStream = packed record
+    guidVersion: TGUID;
+    pStream: IStream;
+  end;
 
-  }
-	IMMDeviceActivator = interface(IUnknown)
-	['{3B0D0EA4-D0A9-4B0E-935B-09516746FAC0}']
-		function Activate(const iid: REFIID; const pDevice: IMMDevice; const pActivationParams: PROPVARIANT; out ppInterface: Pointer): HRESULT; stdcall;
-	end;
+
+  tagSTATSTG = packed record
+    pwcsName: PWideChar;
+    type_: LongWord;
+    cbSize: _ULARGE_INTEGER;
+    mtime: _FILETIME;
+    ctime: _FILETIME;
+    atime: _FILETIME;
+    grfMode: LongWord;
+    grfLocksSupported: LongWord;
+    clsid: TGUID;
+    grfStateBits: LongWord;
+    reserved: LongWord;
+  end;
+
+
+  tagRemSNB = packed record
+    ulCntStr: LongWord;
+    ulCntChar: LongWord;
+    rgString: ^Word;
+  end;
+
+  tagCAC = packed record
+    cElems: LongWord;
+    pElems: ^Shortint;
+  end;
+
+  tagCAUB = packed record
+    cElems: LongWord;
+    pElems: ^Byte;
+  end;
+
+
+  _wireSAFEARR_BSTR = packed record
+    Size: LongWord;
+    aBstr: ^PUserType5;
+  end;
+
+  _wireSAFEARR_UNKNOWN = packed record
+    Size: LongWord;
+    apUnknown: ^IUnknown;
+  end;
+
+  _wireSAFEARR_DISPATCH = packed record
+    Size: LongWord;
+    apDispatch: ^IDispatch;
+  end;
+
+  _FLAGGED_WORD_BLOB = packed record
+    fFlags: LongWord;
+    clSize: LongWord;
+    asData: ^Word;
+  end;
+
+
+  _wireSAFEARR_VARIANT = packed record
+    Size: LongWord;
+    aVariant: ^PUserType6;
+  end;
+
+
+  _wireBRECORD = packed record
+    fFlags: LongWord;
+    clSize: LongWord;
+    pRecInfo: IRecordInfo;
+    pRecord: ^Byte;
+  end;
+
+
+  __MIDL_IOleAutomationTypes_0005 = record
+    case Integer of
+      0: (lptdesc: PUserType10);
+      1: (lpadesc: PUserType11);
+      2: (hreftype: LongWord);
+  end;
+
+  tagTYPEDESC = packed record
+    __MIDL__IOleAutomationTypes0004: __MIDL_IOleAutomationTypes_0005;
+    vt: Word;
+  end;
+
+  tagSAFEARRAYBOUND = packed record
+    cElements: LongWord;
+    lLbound: Integer;
+  end;
+
+  ULONG_PTR = LongWord; 
+
+  tagIDLDESC = packed record
+    dwReserved: ULONG_PTR;
+    wIDLFlags: Word;
+  end;
+
+  DWORD = LongWord; 
+
+  tagPARAMDESCEX = packed record
+    cBytes: LongWord;
+    varDefaultValue: OleVariant;
+  end;
+
+  tagPARAMDESC = packed record
+    pparamdescex: ^tagPARAMDESCEX;
+    wParamFlags: Word;
+  end;
+
+  tagELEMDESC = packed record
+    tdesc: tagTYPEDESC;
+    paramdesc: tagPARAMDESC;
+  end;
+
+  tagFUNCDESC = packed record
+    memid: Integer;
+    lprgscode: ^SCODE;
+    lprgelemdescParam: ^tagELEMDESC;
+    funckind: tagFUNCKIND;
+    invkind: tagINVOKEKIND;
+    callconv: tagCALLCONV;
+    cParams: Smallint;
+    cParamsOpt: Smallint;
+    oVft: Smallint;
+    cScodes: Smallint;
+    elemdescFunc: tagELEMDESC;
+    wFuncFlags: Word;
+  end;
+
+  __MIDL_IOleAutomationTypes_0006 = record
+    case Integer of
+      0: (oInst: LongWord);
+      1: (lpvarValue: ^OleVariant);
+  end;
+
+  tagVARDESC = packed record
+    memid: Integer;
+    lpstrSchema: PWideChar;
+    __MIDL__IOleAutomationTypes0005: __MIDL_IOleAutomationTypes_0006;
+    elemdescVar: tagELEMDESC;
+    wVarFlags: Word;
+    varkind: tagVARKIND;
+  end;
+
+  tagTLIBATTR = packed record
+    guid: TGUID;
+    lcid: LongWord;
+    syskind: tagSYSKIND;
+    wMajorVerNum: Word;
+    wMinorVerNum: Word;
+    wLibFlags: Word;
+  end;
+
+  _wireSAFEARR_BRECORD = packed record
+    Size: LongWord;
+    aRecord: ^PUserType13;
+  end;
+
+  _wireSAFEARR_HAVEIID = packed record
+    Size: LongWord;
+    apUnknown: ^IUnknown;
+    iid: TGUID;
+  end;
+
+  _BYTE_SIZEDARR = packed record
+    clSize: LongWord;
+    pData: ^Byte;
+  end;
+
+  _SHORT_SIZEDARR = packed record
+    clSize: LongWord;
+    pData: ^Word;
+  end;
+
+  _LONG_SIZEDARR = packed record
+    clSize: LongWord;
+    pData: ^LongWord;
+  end;
+
+  _HYPER_SIZEDARR = packed record
+    clSize: LongWord;
+    pData: ^Int64;
+  end;
+
+  tagCAI = packed record
+    cElems: LongWord;
+    pElems: ^Smallint;
+  end;
+
+  tagCAUI = packed record
+    cElems: LongWord;
+    pElems: ^Word;
+  end;
+
+  tagCAL = packed record
+    cElems: LongWord;
+    pElems: ^Integer;
+  end;
+
+  tagCAUL = packed record
+    cElems: LongWord;
+    pElems: ^LongWord;
+  end;
+
+  tagCAH = packed record
+    cElems: LongWord;
+    pElems: ^_LARGE_INTEGER;
+  end;
+
+  tagCAUH = packed record
+    cElems: LongWord;
+    pElems: ^_ULARGE_INTEGER;
+  end;
+
+  tagCAFLT = packed record
+    cElems: LongWord;
+    pElems: ^Single;
+  end;
+
+  tagCADBL = packed record
+    cElems: LongWord;
+    pElems: ^Double;
+  end;
+
+  tagCABOOL = packed record
+    cElems: LongWord;
+    pElems: ^WordBool;
+  end;
+
+  tagCASCODE = packed record
+    cElems: LongWord;
+    pElems: ^SCODE;
+  end;
+
+  tagCACY = packed record
+    cElems: LongWord;
+    pElems: ^Currency;
+  end;
+
+  tagCADATE = packed record
+    cElems: LongWord;
+    pElems: ^TDateTime;
+  end;
+
+  tagCAFILETIME = packed record
+    cElems: LongWord;
+    pElems: ^_FILETIME;
+  end;
+
+  tagCACLSID = packed record
+    cElems: LongWord;
+    pElems: ^TGUID;
+  end;
+
+  tagCACLIPDATA = packed record
+    cElems: LongWord;
+    pElems: ^tagCLIPDATA;
+  end;
+
+  tagCABSTR = packed record
+    cElems: LongWord;
+    pElems: ^WideString;
+  end;
+
+  tagCABSTRBLOB = packed record
+    cElems: LongWord;
+    pElems: ^tagBSTRBLOB;
+  end;
+
+  tagCALPSTR = packed record
+    cElems: LongWord;
+    pElems: ^PChar;
+  end;
+
+  tagCALPWSTR = packed record
+    cElems: LongWord;
+    pElems: ^PWideChar;
+  end;
+
+
+  tagCAPROPVARIANT = packed record
+    cElems: LongWord;
+    pElems: PUserType2;
+  end;
+
+  __MIDL___MIDL_itf_mmdeviceapi_0003_0081_0001 = record
+    case Integer of
+      0: (cVal: Shortint);
+      1: (bVal: Byte);
+      2: (iVal: Smallint);
+      3: (uiVal: Word);
+      4: (lVal: Integer);
+      5: (ulVal: LongWord);
+      6: (intVal: SYSINT);
+      7: (uintVal: SYSUINT);
+      8: (hVal: _LARGE_INTEGER);
+      9: (uhVal: _ULARGE_INTEGER);
+      10: (fltVal: Single);
+      11: (dblVal: Double);
+      12: (boolVal: WordBool);
+      13: (bool: WordBool);
+      14: (scode: SCODE);
+      15: (cyVal: Currency);
+      16: (date: TDateTime);
+      17: (filetime: _FILETIME);
+      18: (puuid: ^TGUID);
+      19: (pClipData: ^tagCLIPDATA);
+      20: (bstrVal: {!!WideString}Pointer);
+      21: (bstrblobVal: tagBSTRBLOB);
+      22: (blob: tagBLOB);
+      23: (pszVal: PChar);
+      24: (pwszVal: PWideChar);
+      25: (punkVal: {!!IUnknown}Pointer);
+      26: (pdispVal: {!!IDispatch}Pointer);
+      27: (pStream: {!!IStream}Pointer);
+      28: (pStorage: {!!IStorage}Pointer);
+      29: (pVersionedStream: ^tagVersionedStream);
+      30: (parray: wirePSAFEARRAY);
+      31: (cac: tagCAC);
+      32: (caub: tagCAUB);
+      33: (cai: tagCAI);
+      34: (caui: tagCAUI);
+      35: (cal: tagCAL);
+      36: (caul: tagCAUL);
+      37: (cah: tagCAH);
+      38: (cauh: tagCAUH);
+      39: (caflt: tagCAFLT);
+      40: (cadbl: tagCADBL);
+      41: (cabool: tagCABOOL);
+      42: (cascode: tagCASCODE);
+      43: (cacy: tagCACY);
+      44: (cadate: tagCADATE);
+      45: (cafiletime: tagCAFILETIME);
+      46: (cauuid: tagCACLSID);
+      47: (caclipdata: tagCACLIPDATA);
+      48: (cabstr: tagCABSTR);
+      49: (cabstrblob: tagCABSTRBLOB);
+      50: (calpstr: tagCALPSTR);
+      51: (calpwstr: tagCALPWSTR);
+      52: (capropvar: tagCAPROPVARIANT);
+      53: (pcVal: ^Shortint);
+      54: (pbVal: ^Byte);
+      55: (piVal: ^Smallint);
+      56: (puiVal: ^Word);
+      57: (plVal: ^Integer);
+      58: (pulVal: ^LongWord);
+      59: (pintVal: ^SYSINT);
+      60: (puintVal: ^SYSUINT);
+      61: (pfltVal: ^Single);
+      62: (pdblVal: ^Double);
+      63: (pboolVal: ^WordBool);
+      64: (pdecVal: ^TDecimal);
+      65: (pscode: ^SCODE);
+      66: (pcyVal: ^Currency);
+      67: (pdate: ^TDateTime);
+      68: (pbstrVal: ^WideString);
+      69: (ppunkVal: {!!^IUnknown}Pointer);
+      70: (ppdispVal: {!!^IDispatch}Pointer);
+      71: (pparray: ^wirePSAFEARRAY);
+      72: (pvarVal: PUserType2);
+  end;
+
+  _tagpropertykey = packed record
+    fmtid: TGUID;
+    pid: LongWord;
+  end;
+
+  ERole = __MIDL___MIDL_itf_mmdeviceapi_0000_0000_0002; 
+
+  tag_inner_PROPVARIANT = packed record
+    vt: Word;
+    wReserved1: Byte;
+    wReserved2: Byte;
+    wReserved3: LongWord;
+    __MIDL____MIDL_itf_mmdeviceapi_0003_00810001: __MIDL___MIDL_itf_mmdeviceapi_0003_0081_0001;
+  end;
+
+
+  __MIDL_IOleAutomationTypes_0004 = record
+    case Integer of
+      0: (llVal: Int64);
+      1: (lVal: Integer);
+      2: (bVal: Byte);
+      3: (iVal: Smallint);
+      4: (fltVal: Single);
+      5: (dblVal: Double);
+      6: (boolVal: WordBool);
+      7: (scode: SCODE);
+      8: (cyVal: Currency);
+      9: (date: TDateTime);
+      10: (bstrVal: ^_FLAGGED_WORD_BLOB);
+      11: (punkVal: {!!IUnknown}Pointer);
+      12: (pdispVal: {!!IDispatch}Pointer);
+      13: (parray: ^PUserType4);
+      14: (brecVal: ^_wireBRECORD);
+      15: (pbVal: ^Byte);
+      16: (piVal: ^Smallint);
+      17: (plVal: ^Integer);
+      18: (pllVal: ^Int64);
+      19: (pfltVal: ^Single);
+      20: (pdblVal: ^Double);
+      21: (pboolVal: ^WordBool);
+      22: (pscode: ^SCODE);
+      23: (pcyVal: ^Currency);
+      24: (pdate: ^TDateTime);
+      25: (pbstrVal: ^PUserType5);
+      26: (ppunkVal: {!!^IUnknown}Pointer);
+      27: (ppdispVal: {!!^IDispatch}Pointer);
+      28: (pparray: ^PPUserType1);
+      29: (pvarVal: ^PUserType6);
+      30: (cVal: Shortint);
+      31: (uiVal: Word);
+      32: (ulVal: LongWord);
+      33: (ullVal: Largeuint);
+      34: (intVal: SYSINT);
+      35: (uintVal: SYSUINT);
+      36: (decVal: TDecimal);
+      37: (pdecVal: ^TDecimal);
+      38: (pcVal: ^Shortint);
+      39: (puiVal: ^Word);
+      40: (pulVal: ^LongWord);
+      41: (pullVal: ^Largeuint);
+      42: (pintVal: ^SYSINT);
+      43: (puintVal: ^SYSUINT);
+  end;
+
+  __MIDL_IOleAutomationTypes_0001 = record
+    case Integer of
+      0: (BstrStr: _wireSAFEARR_BSTR);
+      1: (UnknownStr: _wireSAFEARR_UNKNOWN);
+      2: (DispatchStr: _wireSAFEARR_DISPATCH);
+      3: (VariantStr: _wireSAFEARR_VARIANT);
+      4: (RecordStr: _wireSAFEARR_BRECORD);
+      5: (HaveIidStr: _wireSAFEARR_HAVEIID);
+      6: (ByteStr: _BYTE_SIZEDARR);
+      7: (WordStr: _SHORT_SIZEDARR);
+      8: (LongStr: _LONG_SIZEDARR);
+      9: (HyperStr: _HYPER_SIZEDARR);
+  end;
+
+  _wireSAFEARRAY_UNION = packed record
+    sfType: LongWord;
+    u: __MIDL_IOleAutomationTypes_0001;
+  end;
+
+  _wireVARIANT = packed record
+    clSize: LongWord;
+    rpcReserved: LongWord;
+    vt: Word;
+    wReserved1: Word;
+    wReserved2: Word;
+    wReserved3: Word;
+    __MIDL__IOleAutomationTypes0002: __MIDL_IOleAutomationTypes_0004;
+  end;
+
+
+  tagTYPEATTR = packed record
+    guid: TGUID;
+    lcid: LongWord;
+    dwReserved: LongWord;
+    memidConstructor: Integer;
+    memidDestructor: Integer;
+    lpstrSchema: PWideChar;
+    cbSizeInstance: LongWord;
+    typekind: tagTYPEKIND;
+    cFuncs: Word;
+    cVars: Word;
+    cImplTypes: Word;
+    cbSizeVft: Word;
+    cbAlignment: Word;
+    wTypeFlags: Word;
+    wMajorVerNum: Word;
+    wMinorVerNum: Word;
+    tdescAlias: tagTYPEDESC;
+    idldescType: tagIDLDESC;
+  end;
+
+  tagARRAYDESC = packed record
+    tdescElem: tagTYPEDESC;
+    cDims: Word;
+    rgbounds: ^tagSAFEARRAYBOUND;
+  end;
+
+
+  _wireSAFEARRAY = packed record
+    cDims: Word;
+    fFeatures: Word;
+    cbElements: LongWord;
+    cLocks: LongWord;
+    uArrayStructs: _wireSAFEARRAY_UNION;
+    rgsabound: ^tagSAFEARRAYBOUND;
+  end;
+
+
+// *********************************************************************//
+// Interface: IMMDeviceEnumerator
+// Flags:     (128) NonExtensible
+// GUID:      {A95664D2-9614-4F35-A746-DE8DB63617E6}
+// *********************************************************************//
+  IMMDeviceEnumerator = interface(IUnknown)
+    ['{A95664D2-9614-4F35-A746-DE8DB63617E6}']
+    function EnumAudioEndpoints(dataFlow: EDataFlow; dwStateMask: LongWord; 
+                                out ppDevices: IMMDeviceCollection): HResult; stdcall;
+    function GetDefaultAudioEndpoint(dataFlow: EDataFlow; role: ERole; out ppEndpoint: IMMDevice): HResult; stdcall;
+    function GetDevice(pwstrId: PWideChar; out ppDevice: IMMDevice): HResult; stdcall;
+    function RegisterEndpointNotificationCallback(const pClient: IMMNotificationClient): HResult; stdcall;
+    function UnregisterEndpointNotificationCallback(const pClient: IMMNotificationClient): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IMMDeviceCollection
+// Flags:     (128) NonExtensible
+// GUID:      {0BD7A1BE-7A1A-44DB-8397-CC5392387B5E}
+// *********************************************************************//
+  IMMDeviceCollection = interface(IUnknown)
+    ['{0BD7A1BE-7A1A-44DB-8397-CC5392387B5E}']
+    function GetCount(out pcDevices: SYSUINT): HResult; stdcall;
+    function Item(nDevice: SYSUINT; out ppDevice: IMMDevice): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IMMDevice
+// Flags:     (128) NonExtensible
+// GUID:      {D666063F-1587-4E43-81F1-B948E807363F}
+// *********************************************************************//
+  IMMDevice = interface(IUnknown)
+    ['{D666063F-1587-4E43-81F1-B948E807363F}']
+    function Activate(var iid: TGUID; dwClsCtx: LongWord;
+                      var pActivationParams: tag_inner_PROPVARIANT; out ppInterface: Pointer): HResult; stdcall;
+    function OpenPropertyStore(stgmAccess: LongWord; out ppProperties: IPropertyStore): HResult; stdcall;
+    function GetId(out ppstrId: PWideChar): HResult; stdcall;
+    function GetState(out pdwState: LongWord): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: ISequentialStream
+// Flags:     (0)
+// GUID:      {0C733A30-2A1C-11CE-ADE5-00AA0044773D}
+// *********************************************************************//
+  ISequentialStream = interface(IUnknown)
+    ['{0C733A30-2A1C-11CE-ADE5-00AA0044773D}']
+    function RemoteRead(out pv: Byte; cb: LongWord; out pcbRead: LongWord): HResult; stdcall;
+    function RemoteWrite(var pv: Byte; cb: LongWord; out pcbWritten: LongWord): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IStream
+// Flags:     (0)
+// GUID:      {0000000C-0000-0000-C000-000000000046}
+// *********************************************************************//
+  IStream = interface(ISequentialStream)
+    ['{0000000C-0000-0000-C000-000000000046}']
+    function RemoteSeek(dlibMove: _LARGE_INTEGER; dwOrigin: LongWord; 
+                        out plibNewPosition: _ULARGE_INTEGER): HResult; stdcall;
+    function SetSize(libNewSize: _ULARGE_INTEGER): HResult; stdcall;
+    function RemoteCopyTo(const pstm: IStream; cb: _ULARGE_INTEGER; out pcbRead: _ULARGE_INTEGER; 
+                          out pcbWritten: _ULARGE_INTEGER): HResult; stdcall;
+    function Commit(grfCommitFlags: LongWord): HResult; stdcall;
+    function Revert: HResult; stdcall;
+    function LockRegion(libOffset: _ULARGE_INTEGER; cb: _ULARGE_INTEGER; dwLockType: LongWord): HResult; stdcall;
+    function UnlockRegion(libOffset: _ULARGE_INTEGER; cb: _ULARGE_INTEGER; dwLockType: LongWord): HResult; stdcall;
+    function Stat(out pstatstg: tagSTATSTG; grfStatFlag: LongWord): HResult; stdcall;
+    function Clone(out ppstm: IStream): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IStorage
+// Flags:     (0)
+// GUID:      {0000000B-0000-0000-C000-000000000046}
+// *********************************************************************//
+  IStorage = interface(IUnknown)
+    ['{0000000B-0000-0000-C000-000000000046}']
+    function CreateStream(pwcsName: PWideChar; grfMode: LongWord; reserved1: LongWord; 
+                          reserved2: LongWord; out ppstm: IStream): HResult; stdcall;
+    function RemoteOpenStream(pwcsName: PWideChar; cbReserved1: LongWord; var reserved1: Byte; 
+                              grfMode: LongWord; reserved2: LongWord; out ppstm: IStream): HResult; stdcall;
+    function CreateStorage(pwcsName: PWideChar; grfMode: LongWord; reserved1: LongWord; 
+                           reserved2: LongWord; out ppstg: IStorage): HResult; stdcall;
+    function OpenStorage(pwcsName: PWideChar; const pstgPriority: IStorage; grfMode: LongWord; 
+                         var snbExclude: tagRemSNB; reserved: LongWord; out ppstg: IStorage): HResult; stdcall;
+    function RemoteCopyTo(ciidExclude: LongWord; var rgiidExclude: TGUID; 
+                          var snbExclude: tagRemSNB; const pstgDest: IStorage): HResult; stdcall;
+    function MoveElementTo(pwcsName: PWideChar; const pstgDest: IStorage; pwcsNewName: PWideChar; 
+                           grfFlags: LongWord): HResult; stdcall;
+    function Commit(grfCommitFlags: LongWord): HResult; stdcall;
+    function Revert: HResult; stdcall;
+    function RemoteEnumElements(reserved1: LongWord; cbReserved2: LongWord; var reserved2: Byte; 
+                                reserved3: LongWord; out ppenum: IEnumSTATSTG): HResult; stdcall;
+    function DestroyElement(pwcsName: PWideChar): HResult; stdcall;
+    function RenameElement(pwcsOldName: PWideChar; pwcsNewName: PWideChar): HResult; stdcall;
+    function SetElementTimes(pwcsName: PWideChar; var pctime: _FILETIME; var patime: _FILETIME; 
+                             var pmtime: _FILETIME): HResult; stdcall;
+    function SetClass(var clsid: TGUID): HResult; stdcall;
+    function SetStateBits(grfStateBits: LongWord; grfMask: LongWord): HResult; stdcall;
+    function Stat(out pstatstg: tagSTATSTG; grfStatFlag: LongWord): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IEnumSTATSTG
+// Flags:     (0)
+// GUID:      {0000000D-0000-0000-C000-000000000046}
+// *********************************************************************//
+  IEnumSTATSTG = interface(IUnknown)
+    ['{0000000D-0000-0000-C000-000000000046}']
+    function RemoteNext(celt: LongWord; out rgelt: tagSTATSTG; out pceltFetched: LongWord): HResult; stdcall;
+    function Skip(celt: LongWord): HResult; stdcall;
+    function Reset: HResult; stdcall;
+    function Clone(out ppenum: IEnumSTATSTG): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IRecordInfo
+// Flags:     (0)
+// GUID:      {0000002F-0000-0000-C000-000000000046}
+// *********************************************************************//
+  IRecordInfo = interface(IUnknown)
+    ['{0000002F-0000-0000-C000-000000000046}']
+    function RecordInit(out pvNew: Pointer): HResult; stdcall;
+    function RecordClear(var pvExisting: Pointer): HResult; stdcall;
+    function RecordCopy(var pvExisting: Pointer; out pvNew: Pointer): HResult; stdcall;
+    function GetGuid(out pguid: TGUID): HResult; stdcall;
+    function GetName(out pbstrName: WideString): HResult; stdcall;
+    function GetSize(out pcbSize: LongWord): HResult; stdcall;
+    function GetTypeInfo(out ppTypeInfo: ITypeInfo): HResult; stdcall;
+    function GetField(var pvData: Pointer; szFieldName: PWideChar; out pvarField: OleVariant): HResult; stdcall;
+    function GetFieldNoCopy(var pvData: Pointer; szFieldName: PWideChar; out pvarField: OleVariant; 
+                            out ppvDataCArray: Pointer): HResult; stdcall;
+    function PutField(wFlags: LongWord; var pvData: Pointer; szFieldName: PWideChar; 
+                      var pvarField: OleVariant): HResult; stdcall;
+    function PutFieldNoCopy(wFlags: LongWord; var pvData: Pointer; szFieldName: PWideChar; 
+                            var pvarField: OleVariant): HResult; stdcall;
+    function GetFieldNames(var pcNames: LongWord; out rgBstrNames: WideString): HResult; stdcall;
+    function IsMatchingType(const pRecordInfo: IRecordInfo): Integer; stdcall;
+    function RecordCreate: Pointer; stdcall;
+    function RecordCreateCopy(var pvSource: Pointer; out ppvDest: Pointer): HResult; stdcall;
+    function RecordDestroy(var pvRecord: Pointer): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: ITypeInfo
+// Flags:     (0)
+// GUID:      {00020401-0000-0000-C000-000000000046}
+// *********************************************************************//
+  ITypeInfo = interface(IUnknown)
+    ['{00020401-0000-0000-C000-000000000046}']
+    function RemoteGetTypeAttr(out ppTypeAttr: PUserType7; out pDummy: DWORD): HResult; stdcall;
+    function GetTypeComp(out ppTComp: ITypeComp): HResult; stdcall;
+    function RemoteGetFuncDesc(index: SYSUINT; out ppFuncDesc: PUserType8; out pDummy: DWORD): HResult; stdcall;
+    function RemoteGetVarDesc(index: SYSUINT; out ppVarDesc: PUserType9; out pDummy: DWORD): HResult; stdcall;
+    function RemoteGetNames(memid: Integer; out rgBstrNames: WideString; cMaxNames: SYSUINT; 
+                            out pcNames: SYSUINT): HResult; stdcall;
+    function GetRefTypeOfImplType(index: SYSUINT; out pRefType: LongWord): HResult; stdcall;
+    function GetImplTypeFlags(index: SYSUINT; out pImplTypeFlags: SYSINT): HResult; stdcall;
+    function LocalGetIDsOfNames: HResult; stdcall;
+    function LocalInvoke: HResult; stdcall;
+    function RemoteGetDocumentation(memid: Integer; refPtrFlags: LongWord; 
+                                    out pbstrName: WideString; out pBstrDocString: WideString; 
+                                    out pdwHelpContext: LongWord; out pBstrHelpFile: WideString): HResult; stdcall;
+    function RemoteGetDllEntry(memid: Integer; invkind: tagINVOKEKIND; refPtrFlags: LongWord; 
+                               out pBstrDllName: WideString; out pbstrName: WideString; 
+                               out pwOrdinal: Word): HResult; stdcall;
+    function GetRefTypeInfo(hreftype: LongWord; out ppTInfo: ITypeInfo): HResult; stdcall;
+    function LocalAddressOfMember: HResult; stdcall;
+    function RemoteCreateInstance(var riid: TGUID; out ppvObj: IUnknown): HResult; stdcall;
+    function GetMops(memid: Integer; out pBstrMops: WideString): HResult; stdcall;
+    function RemoteGetContainingTypeLib(out ppTLib: ITypeLib; out pIndex: SYSUINT): HResult; stdcall;
+    function LocalReleaseTypeAttr: HResult; stdcall;
+    function LocalReleaseFuncDesc: HResult; stdcall;
+    function LocalReleaseVarDesc: HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: ITypeComp
+// Flags:     (0)
+// GUID:      {00020403-0000-0000-C000-000000000046}
+// *********************************************************************//
+  ITypeComp = interface(IUnknown)
+    ['{00020403-0000-0000-C000-000000000046}']
+    function RemoteBind(szName: PWideChar; lHashVal: LongWord; wFlags: Word; 
+                        out ppTInfo: ITypeInfo; out pDescKind: tagDESCKIND; 
+                        out ppFuncDesc: PUserType8; out ppVarDesc: PUserType9; 
+                        out ppTypeComp: ITypeComp; out pDummy: DWORD): HResult; stdcall;
+    function RemoteBindType(szName: PWideChar; lHashVal: LongWord; out ppTInfo: ITypeInfo): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: ITypeLib
+// Flags:     (0)
+// GUID:      {00020402-0000-0000-C000-000000000046}
+// *********************************************************************//
+  ITypeLib = interface(IUnknown)
+    ['{00020402-0000-0000-C000-000000000046}']
+    function RemoteGetTypeInfoCount(out pcTInfo: SYSUINT): HResult; stdcall;
+    function GetTypeInfo(index: SYSUINT; out ppTInfo: ITypeInfo): HResult; stdcall;
+    function GetTypeInfoType(index: SYSUINT; out pTKind: tagTYPEKIND): HResult; stdcall;
+    function GetTypeInfoOfGuid(var guid: TGUID; out ppTInfo: ITypeInfo): HResult; stdcall;
+    function RemoteGetLibAttr(out ppTLibAttr: PUserType12; out pDummy: DWORD): HResult; stdcall;
+    function GetTypeComp(out ppTComp: ITypeComp): HResult; stdcall;
+    function RemoteGetDocumentation(index: SYSINT; refPtrFlags: LongWord; 
+                                    out pbstrName: WideString; out pBstrDocString: WideString; 
+                                    out pdwHelpContext: LongWord; out pBstrHelpFile: WideString): HResult; stdcall;
+    function RemoteIsName(szNameBuf: PWideChar; lHashVal: LongWord; out pfName: Integer; 
+                          out pBstrLibName: WideString): HResult; stdcall;
+    function RemoteFindName(szNameBuf: PWideChar; lHashVal: LongWord; out ppTInfo: ITypeInfo; 
+                            out rgMemId: Integer; var pcFound: Word; out pBstrLibName: WideString): HResult; stdcall;
+    function LocalReleaseTLibAttr: HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IPropertyStore
+// Flags:     (0)
+// GUID:      {886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99}
+// *********************************************************************//
+  IPropertyStore = interface(IUnknown)
+    ['{886D8EEB-8CF2-4446-8D02-CDBA1DBDCF99}']
+    function GetCount(out cProps: LongWord): HResult; stdcall;
+    function GetAt(iProp: LongWord; out pkey: _tagpropertykey): HResult; stdcall;
+    function GetValue(var key: _tagpropertykey; out pv: tag_inner_PROPVARIANT): HResult; stdcall;
+    function SetValue(var key: _tagpropertykey; var propvar: tag_inner_PROPVARIANT): HResult; stdcall;
+    function Commit: HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// Interface: IMMNotificationClient
+// Flags:     (128) NonExtensible
+// GUID:      {7991EEC9-7E89-4D85-8390-6C703CEC60C0}
+// *********************************************************************//
+  IMMNotificationClient = interface(IUnknown)
+    ['{7991EEC9-7E89-4D85-8390-6C703CEC60C0}']
+    function OnDeviceStateChanged(pwstrDeviceId: PWideChar; dwNewState: LongWord): HResult; stdcall;
+    function OnDeviceAdded(pwstrDeviceId: PWideChar): HResult; stdcall;
+    function OnDeviceRemoved(pwstrDeviceId: PWideChar): HResult; stdcall;
+    function OnDefaultDeviceChanged(flow: EDataFlow; role: ERole; pwstrDefaultDeviceId: PWideChar): HResult; stdcall;
+    function OnPropertyValueChanged(pwstrDeviceId: PWideChar; key: _tagpropertykey): HResult; stdcall;
+  end;
+
+// *********************************************************************//
+// The Class CoMMDeviceEnumerator provides a Create and CreateRemote method to          
+// create instances of the default interface IMMDeviceEnumerator exposed by              
+// the CoClass MMDeviceEnumerator. The functions are intended to be used by             
+// clients wishing to automate the CoClass objects exposed by the         
+// server of this typelibrary.                                            
+// *********************************************************************//
+  CoMMDeviceEnumerator = class
+    class function Create: IMMDeviceEnumerator;
+    class function CreateRemote(const MachineName: string): IMMDeviceEnumerator;
+  end;
+
+
+// *********************************************************************//
+// OLE Server Proxy class declaration
+// Server Object    : TMMDeviceEnumerator
+// Help String      : 
+// Default Interface: IMMDeviceEnumerator
+// Def. Intf. DISP? : No
+// Event   Interface: 
+// TypeFlags        : (2) CanCreate
+// *********************************************************************//
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+  TMMDeviceEnumeratorProperties= class;
+{$ENDIF}
+  TMMDeviceEnumerator = class(TOleServer)
+  private
+    FIntf: IMMDeviceEnumerator;
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+    FProps: TMMDeviceEnumeratorProperties;
+    function GetServerProperties: TMMDeviceEnumeratorProperties;
+{$ENDIF}
+    function GetDefaultInterface: IMMDeviceEnumerator;
+  protected
+    procedure InitServerData; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor  Destroy; override;
+    procedure Connect; override;
+    procedure ConnectTo(svrIntf: IMMDeviceEnumerator);
+    procedure Disconnect; override;
+    function EnumAudioEndpoints(dataFlow: EDataFlow; dwStateMask: LongWord; 
+                                out ppDevices: IMMDeviceCollection): HResult;
+    function GetDefaultAudioEndpoint(dataFlow: EDataFlow; role: ERole; out ppEndpoint: IMMDevice): HResult;
+    function GetDevice(pwstrId: PWideChar; out ppDevice: IMMDevice): HResult;
+    function RegisterEndpointNotificationCallback(const pClient: IMMNotificationClient): HResult;
+    function UnregisterEndpointNotificationCallback(const pClient: IMMNotificationClient): HResult;
+    property DefaultInterface: IMMDeviceEnumerator read GetDefaultInterface;
+  published
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+    property Server: TMMDeviceEnumeratorProperties read GetServerProperties;
+{$ENDIF}
+  end;
+
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+// *********************************************************************//
+// OLE Server Properties Proxy Class
+// Server Object    : TMMDeviceEnumerator
+// (This object is used by the IDE's Property Inspector to allow editing
+//  of the properties of this server)
+// *********************************************************************//
+ TMMDeviceEnumeratorProperties = class(TPersistent)
+  private
+    FServer:    TMMDeviceEnumerator;
+    function    GetDefaultInterface: IMMDeviceEnumerator;
+    constructor Create(AServer: TMMDeviceEnumerator);
+  protected
+  public
+    property DefaultInterface: IMMDeviceEnumerator read GetDefaultInterface;
+  published
+  end;
+{$ENDIF}
+
+{ Custom }
+const
+  AUDCLNT_STREAMFLAGS_CROSSPROCESS  = $00010000;
+  AUDCLNT_STREAMFLAGS_LOOPBACK      = $00020000;
+  AUDCLNT_STREAMFLAGS_EVENTCALLBACK = $00040000;
+  AUDCLNT_STREAMFLAGS_NOPERSIST     = $00080000;
+
+type
+  AUDIO_VOLUME_NOTIFICATION_DATA = packed record
+    guidEventContext: TGUID;
+    bMuted: BOOL;
+    fMasterVolume: Single;
+    nChannels: UINT;
+    afChannelVolumes: array[0..1] of Single;
+  end;
+
+  PAUDIO_VOLUME_NOTIFICATION_DATA = ^AUDIO_VOLUME_NOTIFICATION_DATA;
+
+  _AUDCLNT_SHAREMODE = (
+    AUDCLNT_SHAREMODE_SHARED,
+    AUDCLNT_SHAREMODE_EXCLUSIVE
+    );
+
+  _AUDCLNT_BUFFERFLAGS = (
+    AUDCLNT_BUFFERFLAGS_DATA_DISCONTINUITY = $1,
+    AUDCLNT_BUFFERFLAGS_SILENT = $2,
+    AUDCLNT_BUFFERFLAGS_TIMESTAMP_ERROR = $4
+    );
+
+type
+  IAudioEndpointVolumeCallback = interface(IUnknown)
+    ['{657804FA-D6AD-4496-8A60-352752AF4F89}']
+    function OnNotify(pNotify: PAUDIO_VOLUME_NOTIFICATION_DATA): HRESULT; stdcall;
+  end;
+
+  IAudioEndpointVolume = interface(IUnknown)
+    ['{5CDF2C82-841E-4546-9722-0CF74078229A}']
+    function RegisterControlChangeNotify(AudioEndPtVol: IAudioEndpointVolumeCallback): Integer; stdcall;
+    function UnregisterControlChangeNotify(AudioEndPtVol: IAudioEndpointVolumeCallback): Integer; stdcall;
+    function GetChannelCount(out PInteger): Integer; stdcall;
+    function SetMasterVolumeLevel(fLevelDB: single; pguidEventContext: PGUID):Integer; stdcall;
+    function SetMasterVolumeLevelScalar(fLevelDB: single; pguidEventContext: PGUID):Integer; stdcall;
+    function GetMasterVolumeLevel(out fLevelDB: single):Integer; stdcall;
+    function GetMasterVolumeLevelScalar(out fLevel: single):Integer; stdcall;
+    function SetChannelVolumeLevel(nChannel: Integer; fLevelDB: double; pguidEventContext: TGUID):Integer; stdcall;
+    function SetChannelVolumeLevelScalar(nChannel: Integer; fLevelDB: single; pguidEventContext: TGUID):Integer; stdcall;
+    function GetChannelVolumeLevel(nChannel: Integer; out fLevelDB: double) : Integer; stdcall;
+    function GetChannelVolumeLevelScalar(nChannel: Integer; out fLevel: double) : Integer; stdcall;
+    function SetMute(bMute: Boolean ; pguidEventContext: PGUID) :Integer; stdcall;
+    function GetMute(out bMute: Boolean) :Integer; stdcall;
+    function GetVolumeStepInfo(pnStep: Integer; out pnStepCount: Integer):Integer; stdcall;
+    function VolumeStepUp(pguidEventContext: TGUID) :Integer; stdcall;
+    function VolumeStepDown(pguidEventContext: TGUID) :Integer; stdcall;
+    function QueryHardwareSupport(out pdwHardwareSupportMask): Integer; stdcall;
+    function GetVolumeRange(out pflVolumeMindB: Double; out pflVolumeMaxdB: Double; out pflVolumeIncrementdB: Double): Integer; stdcall;
+  end;
+
+  IAudioClient = interface(IUnknown)
+    ['{1CB9AD4C-DBFA-4c32-B178-C2F568A703B2}']
+    function Initialize(ShareMode: _AUDCLNT_SHAREMODE; StreamFlags: Cardinal;
+      hnsBufferDuration, hnsPeriodicity: Int64; pFormat: PWaveFormatEx;
+      AudioSessionGuid: PGUID): HRESULT; stdcall;
+    function GetBufferSize(var NumBufferFrames: Cardinal): HRESULT; stdcall;
+    function GetStreamLatency(var hnsLatency: Int64): HRESULT; stdcall;
+    function GetCurrentPadding(var NumPaddingFrames: Cardinal): HRESULT; stdcall;
+    function IsFormatSupported(ShareMode: _AUDCLNT_SHAREMODE; pFormat: PWaveFormatEx;
+      var pClosestMatch: PWaveFormatEx): HRESULT; stdcall;
+    function GetMixFormat(var pDeviceFormat: PWaveFormatEx): HRESULT; stdcall;
+    function GetDevicePeriod(var hnsDefaultDevicePeriod, hnsMinimumDevicePeriod: Int64): HRESULT; stdcall;
+    function Start(): HRESULT; stdcall;
+    function Stop(): HRESULT; stdcall;
+    function Reset(): HRESULT; stdcall;
+    function SetEventHandle(eventHandle: THandle): HRESULT; stdcall;
+    function GetService(var riid: TGUID; var pv: Pointer): HRESULT; stdcall;
+  end;
+
+  IAudioCaptureClient = interface(IUnknown)
+    ['{C8ADBD64-E71E-48a0-A4DE-185C395CD317}']
+    function GetBuffer(var pData: PByte; var NumFramesToRead: Cardinal;
+      var dwFlags: Cardinal; var u64DevicePosition, u64QPCPosition: UInt64): HRESULT; stdcall;
+    function ReleaseBuffer(NumFramesRead: Cardinal): HRESULT; stdcall;
+    function GetNextPacketSize(var NumFramesInNextPacket: Cardinal): HRESULT; stdcall;
+  end;
+
+
+procedure Register;
+
+resourcestring
+  dtlServerPage = 'MMDevice';
+
+  dtlOcxPage = 'MMDevice';
 
 implementation
+
+uses ComObj;
+
+class function CoMMDeviceEnumerator.Create: IMMDeviceEnumerator;
+begin
+  Result := CreateComObject(CLASS_MMDeviceEnumerator) as IMMDeviceEnumerator;
+end;
+
+class function CoMMDeviceEnumerator.CreateRemote(const MachineName: string): IMMDeviceEnumerator;
+begin
+  Result := CreateRemoteComObject(MachineName, CLASS_MMDeviceEnumerator) as IMMDeviceEnumerator;
+end;
+
+procedure TMMDeviceEnumerator.InitServerData;
+const
+  CServerData: TServerData = (
+    ClassID:   '{BCDE0395-E52F-467C-8E3D-C4579291692E}';
+    IntfIID:   '{A95664D2-9614-4F35-A746-DE8DB63617E6}';
+    EventIID:  '';
+    LicenseKey: nil;
+    Version: 500);
+begin
+  ServerData := @CServerData;
+end;
+
+procedure TMMDeviceEnumerator.Connect;
+var
+  punk: IUnknown;
+begin
+  if FIntf = nil then
+  begin
+    punk := GetServer;
+    Fintf:= punk as IMMDeviceEnumerator;
+  end;
+end;
+
+procedure TMMDeviceEnumerator.ConnectTo(svrIntf: IMMDeviceEnumerator);
+begin
+  Disconnect;
+  FIntf := svrIntf;
+end;
+
+procedure TMMDeviceEnumerator.DisConnect;
+begin
+  if Fintf <> nil then
+  begin
+    FIntf := nil;
+  end;
+end;
+
+function TMMDeviceEnumerator.GetDefaultInterface: IMMDeviceEnumerator;
+begin
+  if FIntf = nil then
+    Connect;
+  Assert(FIntf <> nil, 'DefaultInterface is NULL. Component is not connected to Server. You must call "Connect" or "ConnectTo" before this operation');
+  Result := FIntf;
+end;
+
+constructor TMMDeviceEnumerator.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+  FProps := TMMDeviceEnumeratorProperties.Create(Self);
+{$ENDIF}
+end;
+
+destructor TMMDeviceEnumerator.Destroy;
+begin
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+  FProps.Free;
+{$ENDIF}
+  inherited Destroy;
+end;
+
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+function TMMDeviceEnumerator.GetServerProperties: TMMDeviceEnumeratorProperties;
+begin
+  Result := FProps;
+end;
+{$ENDIF}
+
+function TMMDeviceEnumerator.EnumAudioEndpoints(dataFlow: EDataFlow; dwStateMask: LongWord; 
+                                                out ppDevices: IMMDeviceCollection): HResult;
+begin
+  Result := DefaultInterface.EnumAudioEndpoints(dataFlow, dwStateMask, ppDevices);
+end;
+
+function TMMDeviceEnumerator.GetDefaultAudioEndpoint(dataFlow: EDataFlow; role: ERole; 
+                                                     out ppEndpoint: IMMDevice): HResult;
+begin
+  Result := DefaultInterface.GetDefaultAudioEndpoint(dataFlow, role, ppEndpoint);
+end;
+
+function TMMDeviceEnumerator.GetDevice(pwstrId: PWideChar; out ppDevice: IMMDevice): HResult;
+begin
+  Result := DefaultInterface.GetDevice(pwstrId, ppDevice);
+end;
+
+function TMMDeviceEnumerator.RegisterEndpointNotificationCallback(const pClient: IMMNotificationClient): HResult;
+begin
+  Result := DefaultInterface.RegisterEndpointNotificationCallback(pClient);
+end;
+
+function TMMDeviceEnumerator.UnregisterEndpointNotificationCallback(const pClient: IMMNotificationClient): HResult;
+begin
+  Result := DefaultInterface.UnregisterEndpointNotificationCallback(pClient);
+end;
+
+{$IFDEF LIVE_SERVER_AT_DESIGN_TIME}
+constructor TMMDeviceEnumeratorProperties.Create(AServer: TMMDeviceEnumerator);
+begin
+  inherited Create;
+  FServer := AServer;
+end;
+
+function TMMDeviceEnumeratorProperties.GetDefaultInterface: IMMDeviceEnumerator;
+begin
+  Result := FServer.DefaultInterface;
+end;
+
+{$ENDIF}
+
+procedure Register;
+begin
+  RegisterComponents(dtlServerPage, [TMMDeviceEnumerator]);
+end;
 
 end.

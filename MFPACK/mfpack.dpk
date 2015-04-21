@@ -1,0 +1,62 @@
+package mfpack;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl;
+
+contains
+  MediaObj in 'Common\MediaObj.pas',
+  MfpTypes in 'Common\MfpTypes.pas',
+  MfpUtils in 'Common\MfpUtils.pas',
+  MmReg in 'Common\MmReg.pas',
+  MMStream in 'Common\MMStream.pas',
+  PropIdl in 'Common\PropIdl.pas',
+  PropSys in 'Common\PropSys.pas',
+  Unknwn in 'Common\Unknwn.pas',
+  WTypes in 'Common\WTypes.pas',
+  AudEvCod in 'CoreAudio\Common\AudEvCod.pas',
+  AudioAPOTypes in 'CoreAudio\Common\AudioAPOTypes.pas',
+  DeviceCategories in 'CoreAudio\Common\DeviceCategories.pas',
+  Winapi.DirectShow9 in 'DirectShow\Winapi.DirectShow9\Winapi.DirectShow9.pas',
+  DeviceTopology in 'CoreAudio\DeviceTopology\DeviceTopology.pas',
+  Endpointvolume in 'CoreAudio\EndpointVolume\Endpointvolume.pas',
+  MMDeviceAPI in 'CoreAudio\MMDeviceAPI\MMDeviceAPI.pas',
+  MMDevApiUtils in 'CoreAudio\Utilities\MMDevApiUtils.pas',
+  AudioClient in 'CoreAudio\WASAPI\AudioClient.pas',
+  AudioPolicy in 'CoreAudio\WASAPI\AudioPolicy.pas',
+  AudioSessionTypes in 'CoreAudio\WASAPI\AudioSessionTypes.pas',
+  WinError in 'JEDI\WinError.pas',
+  WinNT in 'JEDI\WinNT.pas',
+  WinType in 'JEDI\WinType.pas',
+  Win78Mixer in 'CoreAudio\Samples\Win78Mixer.pas',
+  MMCSSApi in 'MMCSS\MMCSSApi.pas',
+  MMDeviceApiOrg in 'CoreAudio\MMDeviceAPI\MMDeviceApiOrg.pas';
+
+end.
